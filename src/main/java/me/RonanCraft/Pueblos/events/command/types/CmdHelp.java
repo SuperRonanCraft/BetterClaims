@@ -31,11 +31,6 @@ public class CmdHelp implements PueblosCommand, PueblosCommandHelpable {
         Messages.core.sms(sendi, list);
     }
 
-    public List<String> tabComplete(CommandSender sendi, String[] args) {
-        return null;
-    }
-
-
     public boolean permission(CommandSender sendi) {
         return true;
     }

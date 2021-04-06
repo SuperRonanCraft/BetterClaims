@@ -20,18 +20,8 @@ public class CmdReload implements PueblosCommand, PueblosCommandHelpable {
         Pueblos.getInstance().reload(sendi);
     }
 
-    public List<String> tabComplete(CommandSender sendi, String[] args) {
-        List<String> list = new ArrayList<>();
-
-        return list;
-    }
-
     public boolean permission(CommandSender sendi) {
         return Pueblos.getInstance().getPermissions().getReload(sendi);
-    }
-
-    public void usage(CommandSender sendi, String label) {
-        //Pueblos.getInstance().getMessages().getUsageWorld(sendi, label);
     }
 
     @Override

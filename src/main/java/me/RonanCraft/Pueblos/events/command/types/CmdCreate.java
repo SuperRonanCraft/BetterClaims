@@ -4,6 +4,7 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.events.command.PueblosCommand;
 import me.RonanCraft.Pueblos.events.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimChunk;
 import me.RonanCraft.Pueblos.resources.claims.ClaimEvents;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
@@ -36,7 +37,7 @@ public class CmdCreate implements PueblosCommand, PueblosCommandHelpable {
             claim = handler.getClaim(p.getUniqueId());
 
         //Add chunks
-        claim.addChunk(p.getLocation().getChunk());
+        claim.addChunk(new ClaimChunk(p.getLocation().getChunk()));
 
         //Event
         if (handler.getClaim(p.getUniqueId()) == null) {
@@ -55,12 +56,6 @@ public class CmdCreate implements PueblosCommand, PueblosCommandHelpable {
         claim.addChunk(world.getChunkAt(0, 1));
         sendi.sendMessage("Console added chunk at 0,0 and 0,1");
         Pueblos.getInstance().getSystems().getDatabase().createClaim(claim);
-    }
-
-    public List<String> tabComplete(CommandSender sendi, String[] args) {
-        List<String> list = new ArrayList<>();
-
-        return list;
     }
 
     public boolean permission(CommandSender sendi) {

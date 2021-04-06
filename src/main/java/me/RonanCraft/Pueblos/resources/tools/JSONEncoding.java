@@ -1,15 +1,16 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
-import me.RonanCraft.Pueblos.resources.Systems;
+import me.RonanCraft.Pueblos.resources.claims.ClaimChunk;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("ALL")
 public class JSONEncoding {
@@ -23,11 +24,11 @@ public class JSONEncoding {
         return obj.toString();
     }
 
-    public static String getJsonFromChunk(List<Chunk> chunks) {
+    public static String getJsonFromChunk(List<ClaimChunk> chunks) {
         if (chunks == null)
             return null;
         List<JSONObject> chunk_info = new ArrayList<>();
-        for (Chunk chunk : chunks) {
+        for (ClaimChunk chunk : chunks) {
             Map obj = new LinkedHashMap();
             obj.put("x", chunk.getX());
             obj.put("z", chunk.getZ());

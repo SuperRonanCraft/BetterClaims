@@ -12,7 +12,7 @@ public class Claim {
     public final UUID ownerId;
     public final String ownerName;
     public final World world;
-    private final List<Chunk> chunks = new ArrayList<>();
+    private final List<ClaimChunk> chunks = new ArrayList<>();
 
     public Claim(UUID ownerId, String ownerName, World world) {
         this.ownerId = ownerId;
@@ -21,14 +21,19 @@ public class Claim {
     }
 
     public void addChunk(Chunk chunk) {
+        chunks.add(new ClaimChunk(chunk));
+    }
+
+    public void addChunk(ClaimChunk chunk) {
         chunks.add(chunk);
     }
 
-    public void addChunk(List<Chunk> chunk) {
-        chunks.addAll(chunk);
+    public void addChunk(List<Chunk> chunks) {
+        for (Chunk chunk : chunks)
+            this.chunks.add(new ClaimChunk(chunk));
     }
 
-    public List<Chunk> getChunks() {
+    public List<ClaimChunk> getChunks() {
         return chunks;
     }
 

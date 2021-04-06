@@ -16,11 +16,11 @@ public class ClaimHandler {
     private final HashMap<UUID, Claim> claims = new HashMap<>();
 
     public void load() {
+        claims.clear();
         List<Claim> claims = Pueblos.getInstance().getSystems().getDatabase().getClaims();
         for (Claim claim : claims) {
             this.claims.put(claim.ownerId, claim);
         }
-        System.out.println("Claims loaded: " + claims.size());
     }
 
     public void addClaim(Claim claim) {

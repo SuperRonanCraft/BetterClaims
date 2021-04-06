@@ -2,6 +2,7 @@ package me.RonanCraft.Pueblos.events.move;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimChunk;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
@@ -48,9 +49,10 @@ public class EventListener implements Listener {
     }
 
     private boolean isProtected(Chunk chunk) {
+        ClaimChunk claimChunk = new ClaimChunk(chunk);
         for (Map.Entry<UUID, Claim> entry : Pueblos.getInstance().getSystems().getClaimHandler().getClaims()) {
             Claim claim = entry.getValue();
-            if (claim.getChunks().contains(chunk)) {
+            if (claim.getChunks().contains(claimChunk)) {
                 return true;
             }
         }

@@ -63,9 +63,9 @@ public class Commands {
             }
         } else if (args.length > 1) {
             for (PueblosCommand cmd : commands) {
-                if (cmd.getName().equalsIgnoreCase(args[0]))
+                if (cmd.getName().equalsIgnoreCase(args[0]) && cmd instanceof PueblosCommandTabComplete)
                     if (cmd.permission(sendi)) {
-                        List<String> _cmdlist = cmd.tabComplete(sendi, args);
+                        List<String> _cmdlist = ((PueblosCommandTabComplete) cmd).tabComplete(sendi, args);
                         if (_cmdlist != null)
                             list.addAll(_cmdlist);
                     }
