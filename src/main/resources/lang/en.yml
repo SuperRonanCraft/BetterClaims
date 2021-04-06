@@ -1,0 +1,15 @@
+# Help translate this file into more languages!
+Messages:
+  Prefix: '&7[&6Pueblos&7] '
+  InvalidCommand: '&cInvalid argument! Try &7/%command% help'
+  NoPermission: '&cSorry! &7You don''t have permission to do this!'
+  Reload: '&eReloaded config and language file.'
+
+Help:
+  Prefix: '&e&m-----&6&l Pueblos &8| Help &e&m-----'
+  Help: ' &7- &e/%command% help &7- Shows help list'
+  Reload: ' &7- &e/%command% reload &7- Reload the plugin'
+  Create: ' &7- &e/%command% create &7- Create a claim'
+
+Usage:
+  Player: '&cUsage&7: /%command% player <player> [world] [biome1, biome2]'

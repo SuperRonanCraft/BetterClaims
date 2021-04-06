@@ -1,0 +1,8 @@
+MySQL:
+  enabled: false
+  host: 'localhost'
+  port: 3306
+  database: 'root'
+  tablePrefix: 'Pueblos_'
+  username: 'root'
+  password: 'password'

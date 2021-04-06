@@ -1,0 +1,16 @@
+main: me.RonanCraft.Pueblos.Pueblos
+version: '1.1'
+name: Pueblos
+author: RonanCraft
+softdepend: []
+api-version: '1.13'
+
+commands:
+    pueblos:
+        aliases: [pueblo, claim, town, towns]
+        description: Main pueblos command
+
+permissions:
+    pueblos.user:
+        description: Basic user permissions
+        default: true
