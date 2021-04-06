@@ -1,6 +1,6 @@
 package me.RonanCraft.Pueblos.resources;
 
-import me.RonanCraft.Pueblos.events.move.EventListener;
+import me.RonanCraft.Pueblos.events.EventListener;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.database.Database;
 import me.RonanCraft.Pueblos.resources.database.SQLite;

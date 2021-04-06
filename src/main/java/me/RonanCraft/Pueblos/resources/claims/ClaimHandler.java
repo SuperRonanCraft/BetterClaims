@@ -1,7 +1,6 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.Systems;
 import me.RonanCraft.Pueblos.resources.database.Database;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import org.bukkit.Bukkit;
@@ -46,9 +45,8 @@ public class ClaimHandler {
         String name = result.getString(Database.COLUMNS.OWNER_NAME.name);
         World world = Bukkit.getWorld(Database.COLUMNS.WORLD.name);
         Claim claim = new Claim(id, name, world);
-        List<Chunk> chunks = JSONEncoding.getChunks(result.getString(Database.COLUMNS.CHUNKS.name), world);
-        if (chunks != null && !chunks.isEmpty())
-            claim.addChunk(chunks);
+        ClaimPosition position = JSONEncoding.getPosition(result.getString(Database.COLUMNS.CHUNKS.name));
+        claim.setPosition(position);
         return claim;
     }
 }

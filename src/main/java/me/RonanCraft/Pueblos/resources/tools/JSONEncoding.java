@@ -1,6 +1,6 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
-import me.RonanCraft.Pueblos.resources.claims.ClaimChunk;
+import me.RonanCraft.Pueblos.resources.claims.ClaimPosition;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.json.simple.JSONArray;
@@ -24,31 +24,27 @@ public class JSONEncoding {
         return obj.toString();
     }
 
-    public static String getJsonFromChunk(List<ClaimChunk> chunks) {
-        if (chunks == null)
+    public static String getJsonFromClaim(ClaimPosition position) {
+        if (position == null)
             return null;
-        List<JSONObject> chunk_info = new ArrayList<>();
-        for (ClaimChunk chunk : chunks) {
-            Map obj = new LinkedHashMap();
-            obj.put("x", chunk.getX());
-            obj.put("z", chunk.getZ());
-            chunk_info.add(new JSONObject(obj));
-        }
-        String json = JSONArray.toJSONString(chunk_info);
+        Map obj = new LinkedHashMap();
+        obj.put("x_1", position.getX_1());
+        obj.put("z_1", position.getZ_1());
+        obj.put("x_2", position.getX_2());
+        obj.put("z_2", position.getZ_2());
+        String json = JSONObject.toJSONString(obj);
         return json.toString();
     }
 
-    public static List<Chunk> getChunks(String json, World world) {
+    public static ClaimPosition getPosition(String json) {
         try {
-            List<Chunk> chunks = new ArrayList<>();
-            JSONArray array = (JSONArray) JSONValue.parse(json);
-            for (Object obj : array) {
-                Map chunk_info = (Map) obj;
-                int x = Integer.valueOf(chunk_info.get("x").toString());
-                int z = Integer.valueOf(chunk_info.get("z").toString());
-                chunks.add(world.getChunkAt(x, z));
-            }
-            return chunks;
+            JSONObject obj = (JSONObject) JSONValue.parse(json);
+            Map chunk_info = (Map) obj;
+            int x_1 = Integer.valueOf(chunk_info.get("x_1").toString());
+            int z_1 = Integer.valueOf(chunk_info.get("z_1").toString());
+            int x_2 = Integer.valueOf(chunk_info.get("x_2").toString());
+            int z_2 = Integer.valueOf(chunk_info.get("z_2").toString());
+            return new ClaimPosition(x_1, z_1, x_2, z_2);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return null;

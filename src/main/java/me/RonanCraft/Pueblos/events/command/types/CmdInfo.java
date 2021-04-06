@@ -4,14 +4,9 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.events.command.PueblosCommand;
 import me.RonanCraft.Pueblos.events.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimChunk;
-import me.RonanCraft.Pueblos.resources.claims.ClaimEvents;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
-import org.bukkit.Bukkit;
-import org.bukkit.World;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.*;
 
