@@ -31,7 +31,7 @@ public class Commands {
                     if (cmd.getName().equalsIgnoreCase(args[0])) {
                         if (cmd.isPlayerOnly() && !(sendi instanceof Player))
                             Messages.core.sms(sendi, "Console is not allowed to run this command!");
-                        else if (cmd.permission(sendi)) {
+                        /*else */if (cmd.permission(sendi)) {
                             cmd.execute(sendi, label, args);
                         } else
                             noPerm(sendi);

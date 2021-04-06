@@ -45,12 +45,7 @@ public class Pueblos extends JavaPlugin {
     private void loadAll() {
         files.loadAll();
         commands.load();
-        /*settings.load();
-        invs.load();
-        rtp.load();
-        cmd.load();
-        listener.load();
-        eco.load();*/
+        systems.load();
         permissions.register();
     }
 

@@ -10,6 +10,11 @@ public class Systems {
     private final ClaimHandler claim = new ClaimHandler();
     private final EventListener events = new EventListener();
 
+    public void load() {
+        database.load();
+        claim.load();
+    }
+
     public Database getDatabase() {
         return database;
     }

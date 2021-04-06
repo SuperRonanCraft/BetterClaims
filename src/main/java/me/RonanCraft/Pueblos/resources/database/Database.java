@@ -1,46 +1,44 @@
 package me.RonanCraft.Pueblos.resources.database;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 
 public abstract class Database {
 
     boolean sqlEnabled;
     Connection connection;
-    public String table_ticket = "AMR_Data";
-    public String table_nextid = "AMR_NextID";
+    public String table;
 
-    private final String column_nextTicketID = "NextTicketID";
-
-    public enum COLUMNS { //FIX COLUMNS
-        TICKET_ID("TicketID", "int PRIMARY KEY"),
-        UUID("uuid", "varchar(32)"),
-        AUTHOR("name", "varchar(16)"),
-        MESSAGE("msg", "text"),
-        OPEN("open", "boolean DEFAULT true"),
+    public enum COLUMNS {
+        OWNER_UUID("uuid", "varchar(32) PRIMARY KEY"),
+        OWNER_NAME("name", "varchar(32)"),
         //Integers
-        X("x", "int"),
-        Y("y", "int"),
-        Z("z", "int"),
-        IMPORTANCE("importance", "int"),
-        RATING("rating", "int"),
+        //X("x", "int"),
+        //Y("y", "int"),
+        //Z("z", "int"),
+        //IMPORTANCE("importance", "int"),
+        //RATING("rating", "int"),
         //Strings
         WORLD("world", "text"),
-        TIME("time", "text"),
-        CATEGORY("category", "text"),
-        REPLY("reply", "text"),
-        REPLIER("replier", "text"),
-        RESOLVED("resolved", "text DEFAULT null"),
-        CLAIMED_BY("claimedBy", "text DEFAULT null"),
-        SERVER("server", "text DEFAULT null"),
+        //TIME("time", "text"),
+        //CATEGORY("category", "text"),
+        CHUNKS("chunks", "text");
+        //REPLIER("replier", "text"),
+        //RESOLVED("resolved", "text DEFAULT null"),
+        //CLAIMED_BY("claimedBy", "text DEFAULT null"),
+        //SERVER("server", "text DEFAULT null"),
         //Booleans
-        FLAGGED("flagged", "boolean"),
-        BROADCAST("broadcast", "boolean DEFAULT false");
+        //FLAGGED("flagged", "boolean"),
+        //BROADCAST("broadcast", "boolean DEFAULT false");
 
         public String name;
         public String type;
@@ -61,7 +59,7 @@ public abstract class Database {
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table_ticket + " WHERE " + COLUMNS.TICKET_ID.name + " = 0");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE " + COLUMNS.OWNER_UUID.name + " = 0");
 
             rs = ps.executeQuery();
         } catch (SQLException ex) {
@@ -71,68 +69,23 @@ public abstract class Database {
         }
     }
 
-    public void setNextId(int id) {
+    public List<Claim> getClaims() {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
+            List<Claim> list = new ArrayList<>();
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT " + column_nextTicketID + " FROM " + table_nextid);
-
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                int _id = rs.getInt(1);
-                ps = conn.prepareStatement("UPDATE " + table_nextid + " SET " + column_nextTicketID + " = " + (id) + " WHERE " + column_nextTicketID + " = " + _id);
-                ps.executeUpdate();
-            }
-        } catch (SQLException ex) {
-            Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
-        } finally {
-            close(ps, rs, conn);
-        }
-    }
-
-    public int getNextId() {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT " + column_nextTicketID + " FROM " + table_nextid);
-
-            rs = ps.executeQuery();
-            if (rs.next()) {
-                int id = rs.getInt(1);
-                // nextTicketID
-                ps = conn.prepareStatement("UPDATE " + table_nextid + " SET " + column_nextTicketID + " = " + (id + 1) + " WHERE " + column_nextTicketID + " = " + id);
-                ps.executeUpdate();
-                return id;
-            }
-        } catch (SQLException ex) {
-            Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
-        } finally {
-            close(ps, rs, conn);
-        }
-        return -1;
-    }
-
-    /*public List<Ticket> getTickets() {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            List<Ticket> list = new ArrayList<>();
-            conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table_ticket + ";");
+            ps = conn.prepareStatement("SELECT * FROM " + table + ";");
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                Ticket ticket = AdvancedModreq.getInstance().getSystems().getTicket().loadTicket(rs);
-                list.add(ticket);
+                Claim claim = Pueblos.getInstance().getSystems().getClaimHandler().loadClaim(rs);
+                list.add(claim);
             }
             return list;
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
         } finally {
             close(ps, rs, conn);
         }
@@ -140,14 +93,14 @@ public abstract class Database {
     }
 
     //Create a ticket
-    public boolean createTicket(Ticket ticket) {
+    public boolean createClaim(Claim claim) {
         String pre;
         if (sqlEnabled) pre = "INSERT IGNORE INTO ";
         else pre = "INSERT OR IGNORE INTO ";
-        String sql = pre + table_ticket + " ("
-                + COLUMNS.TICKET_ID.name + ", "
-                + COLUMNS.UUID.name + ", "
-                + COLUMNS.AUTHOR.name + ", "
+        String sql = pre + table + " ("
+                + COLUMNS.OWNER_UUID.name + ", "
+                + COLUMNS.OWNER_NAME.name + ", "
+                /*+ COLUMNS.AUTHOR.name + ", "
                 + COLUMNS.MESSAGE.name + ", "
                 + COLUMNS.OPEN.name + ", "
                 //Ints
@@ -155,11 +108,12 @@ public abstract class Database {
                 + COLUMNS.Y.name + ", "
                 + COLUMNS.Z.name + ", "
                 + COLUMNS.IMPORTANCE.name + ", "
-                + COLUMNS.RATING.name + ", "
+                + COLUMNS.RATING.name + ", "*/
                 //Strings
                 + COLUMNS.WORLD.name + ", "
-                + COLUMNS.TIME.name + ", "
-                + COLUMNS.CATEGORY.name + ", "
+                + COLUMNS.CHUNKS.name + ""
+                //+ COLUMNS.TIME.name + ", "
+                /*+ COLUMNS.CATEGORY.name + ", "
                 + COLUMNS.REPLY.name + ", "
                 + COLUMNS.REPLIER.name + ", "
                 + COLUMNS.RESOLVED.name + ", "
@@ -167,18 +121,18 @@ public abstract class Database {
                 + COLUMNS.SERVER.name + ", "
                 //Booleans
                 + COLUMNS.FLAGGED.name + ", "
-                + COLUMNS.BROADCAST.name
-                + ") VALUES(?, ?, ?, ?, ?, " +
+                + COLUMNS.BROADCAST.name*/
+                + ") VALUES(?, ?, ?, ?)";/*, ?, " +
                 //Ints
                 "?, ?, ?, ?, ?, " +
                 //Strings
                 "?, ?, ?, ?, ?, ?, ?, ?, " +
                 //Booleans
-                "?, ?)";
-        List<Object> params = new ArrayList<Object>() {{
-                add(ticket.getId());
-                add(ticket.getUUIDs());
-                add(ticket.getAuthorName());
+                "?, ?)";*/
+        List<Object> params = new ArrayList<>() {{
+                add(claim.ownerId != null ? claim.ownerId : "null");
+                add(claim.ownerName);
+                /*add(ticket.getAuthorName());
                 add(ticket.getMsg());
                 add(ticket.getOpen());
                 //Ints
@@ -187,9 +141,10 @@ public abstract class Database {
                 add(ticket.getZ());
                 add(ticket.getImportance());
                 add(ticket.getRating());
-                //Strings
-                add(ticket.getWorld());
-                add(ticket.getTime());
+                //Strings*/
+                add(claim.world.getName());
+                add(claim.getChunksJSON());
+                /*add(ticket.getTime());
                 add(ticket.getCategory());
                 add(JSONEncoding.getJsonFromList(COLUMNS.REPLY.name, ticket.getReply()));
                 add(JSONEncoding.getJsonFromList(COLUMNS.REPLIER.name, ticket.getReplier()));
@@ -198,12 +153,12 @@ public abstract class Database {
                 add(ticket.getServer());
                 //Booleans
                 add(ticket.getFlagged());
-                add(ticket.getBroadcast());
+                add(ticket.getBroadcast());*/
         }};
         return sqlUpdate(sql, params);
     }
 
-    //Set Open/Closed Status
+    /*//Set Open/Closed Status
     public boolean setStatus(Ticket ticket, boolean open) {
         String sql = "UPDATE " + table_ticket + " SET " + COLUMNS.OPEN.name + " = ?  WHERE" + " " + COLUMNS.TICKET_ID.name + " = ?";
         List<Object> params = new ArrayList<Object>() {{
@@ -309,7 +264,7 @@ public abstract class Database {
             add(ticket.getId()); }};
         return sqlUpdate(sql, params);
     }
-
+*/
     //Tools
     private boolean sqlUpdate(String statement, List<Object> params) {
         Connection conn = null;
@@ -328,7 +283,7 @@ public abstract class Database {
             }
             ps.executeUpdate();
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
             success = false;
         } finally {
             close(ps, null, conn);
@@ -359,13 +314,13 @@ public abstract class Database {
                 ps.close();
             }
         } catch (SQLException ex) {
-            plugin.getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
             success = false;
         } finally {
             close(ps, null, conn);
         }
         return success;
-    }*/
+    }
 
     //Processing
     private void close(PreparedStatement ps, ResultSet rs, Connection conn) {

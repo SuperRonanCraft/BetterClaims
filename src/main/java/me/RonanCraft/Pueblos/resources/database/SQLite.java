@@ -10,8 +10,7 @@ import java.util.logging.Level;
 
 public class SQLite extends Database {
 
-    String db_name = "amr_data";
-    String col_nextTicketId = "NextTicketID";
+    private static final String db_file_name = "database";
     //private final boolean sqlEnabled;
     private String host, database, username, password;
     private int port;
@@ -41,7 +40,7 @@ public class SQLite extends Database {
     }
 
     private Connection getLocal() {
-        File dataFolder = new File(Pueblos.getInstance().getDataFolder().getPath() + File.separator + "data", db_name + ".db");
+        File dataFolder = new File(Pueblos.getInstance().getDataFolder().getPath() + File.separator + "data", db_file_name + ".db");
         if (!dataFolder.exists()){
             try {
                 dataFolder.getParentFile().mkdir();
@@ -75,29 +74,22 @@ public class SQLite extends Database {
         database = sql.getString(pre + "database");
         username = sql.getString(pre + "username");
         password = sql.getString(pre + "password");
-        table_ticket = sql.getString(pre + "tablePrefix") + "data";
-        table_nextid = sql.getString(pre + "tablePrefix") + "nextid";
+        table = sql.getString(pre + "tablePrefix") + "data";
         connection = getSQLConnection();
         if (!sqlEnabled) { //Update table names back to default if online database fails
-            table_ticket = "AMR_Data";
-            table_nextid = "AMR_NextID";
+            table = "Pueblos_Data";
         }
         try {
             Statement s = connection.createStatement();
-            s.executeUpdate(getCreateTable_ticket());
-            s.executeUpdate(getCreateTable_nextid());
+            s.executeUpdate(getCreateTable());
             //s.executeUpdate(createTable_bank);
             for (COLUMNS c : COLUMNS.values()) { //Add missing columns dynamically
                 try {
-                    s.executeUpdate(addMissingColumns.replace("%table%", table_ticket).replace("%column%", c.name).replace("%type%", c.type));
+                    s.executeUpdate(addMissingColumns.replace("%table%", table).replace("%column%", c.name).replace("%type%", c.type));
                 } catch (SQLException e) {
                     //e.printStackTrace();
                 }
             }
-            //Setup Counter
-            ResultSet result = s.executeQuery("SELECT " + col_nextTicketId + " FROM " + table_nextid);
-            if (!result.next())
-                s.executeUpdate("INSERT INTO " + table_nextid + " (" + col_nextTicketId + ") VALUES (0)");
             s.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -113,13 +105,8 @@ public class SQLite extends Database {
         initialize();
     }
 
-    public String getCreateTable_nextid() {
-        return "CREATE TABLE IF NOT EXISTS " + table_nextid + "(" + col_nextTicketId + " INT " +
-                "DEFAULT 0, PRIMARY KEY (" + col_nextTicketId + "))";
-    }
-
-    private String getCreateTable_ticket() {
-        String str = "CREATE TABLE IF NOT EXISTS " + table_ticket + " (";
+    private String getCreateTable() {
+        String str = "CREATE TABLE IF NOT EXISTS " + table + " (";
         for (COLUMNS col : COLUMNS.values()) {
             str = str.concat("`" + col.name + "` " + col.type);
             if (col.equals(COLUMNS.values()[COLUMNS.values().length - 1]))
