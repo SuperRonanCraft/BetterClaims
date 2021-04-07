@@ -9,6 +9,8 @@ import me.RonanCraft.Pueblos.resources.claims.ClaimEvents;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
 import me.RonanCraft.Pueblos.resources.tools.packet.SendPacketBlock;
+import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
+import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -37,36 +39,12 @@ public class CmdCreate implements PueblosCommand, PueblosCommandHelpable {
             ClaimEvents.create(claim);
             Pueblos.getInstance().getSystems().getDatabase().createClaim(claim);
             Messages.core.sms(sendi, "&aClaim was created!");
-            showCorners(p, claim);
+            Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.Claim, p.getLocation()).apply(p);
         } else {
             Messages.core.sms(sendi, "&cClaim was NOT created!");
         }
 
 
-    }
-
-    public static void showCorners(Player p, Block block) {
-        HashMap<Block, Material> blocks = new HashMap<>();
-        blocks.put(block, Material.GOLD_BLOCK);
-        new SendPacketBlock(blocks, p);
-    }
-
-    public static void showCorners(Player p, Claim claim) {
-        ClaimPosition pos = claim.getPosition();
-        List<Block> corners = new ArrayList<>();
-        //Top Right
-        corners.add(pos.getWorld().getHighestBlockAt(pos.getRight(), pos.getTop()));
-        //Bottom Right
-        corners.add(pos.getWorld().getHighestBlockAt(pos.getRight(), pos.getBottom()));
-        //Top Left
-        corners.add(pos.getWorld().getHighestBlockAt(pos.getLeft(), pos.getTop()));
-        //Bottom Left
-        corners.add(pos.getWorld().getHighestBlockAt(pos.getLeft(), pos.getBottom()));
-        HashMap<Block, Material> blocks = new HashMap<>();
-        for (Block block : corners) {
-            blocks.put(block, Material.GOLD_BLOCK);
-        }
-        new SendPacketBlock(blocks, p);
     }
 
     public boolean permission(CommandSender sendi) {

@@ -23,8 +23,8 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
         info.add("Claims: " + handler.getClaims().size());
         if (sendi instanceof Player) {
             Player p = (Player) sendi;
-            Claim claim = handler.getClaim(p.getUniqueId());
-            CmdCreate.showCorners(p, claim);
+            //List<Claim> claim = handler.getClaims(p.getUniqueId());
+            //CmdCreate.showCorners(p, claim);
         }
         Messages.core.sms(sendi, info);
     }

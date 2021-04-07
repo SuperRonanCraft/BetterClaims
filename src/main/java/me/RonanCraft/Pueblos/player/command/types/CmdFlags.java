@@ -6,14 +6,10 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
-import me.RonanCraft.Pueblos.resources.tools.packet.SendPacketBlock;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, PueblosCommandTabComplete {
@@ -33,9 +29,12 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
                 for (CLAIM_FLAG flag : CLAIM_FLAG.values())
                     if (flag.name().equalsIgnoreCase(args[1])) {
                         try {
-                            Object value = flag.type.cast(args[2]);
+                            Object value = flag.cast(args[2]);
+                            if (value == null)
+                                throw new Exception();
                             claim.getFlags().setFlag(flag, value);
-                        } catch (ClassCastException e) {
+                            Messages.core.sms(p, "Set " + flag.name().toLowerCase() + " to " + value);
+                        } catch (Exception e) {
                             Messages.core.sms(p, "Invalid value!");
                         }
                     }

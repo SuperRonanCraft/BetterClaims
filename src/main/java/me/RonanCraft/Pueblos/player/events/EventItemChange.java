@@ -8,6 +8,7 @@ import me.RonanCraft.Pueblos.resources.claims.ClaimPosition;
 import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,25 +18,52 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class EventItemChange {
 
     private final EventListener listener;
+    private final HashMap<Player, Integer> claimShowing = new HashMap<>();
 
     EventItemChange(EventListener listener) {
         this.listener = listener;
     }
 
     void onItemChange(PlayerItemHeldEvent e) {
+        if (claimShowing.containsKey(e.getPlayer()))
+            return;
         ItemStack item = e.getPlayer().getInventory().getItem(e.getNewSlot());
         if (item != null && item.getType().equals(getClaimItem()) && !listener.claimCreation.containsKey(e.getPlayer())) {
-            Messages.core.sms(e.getPlayer(), "Shovel!");
+            //Messages.core.sms(e.getPlayer(), "Shovel!");
             Claim claim = listener.getClaim(e.getPlayer().getLocation());
-            if (claim != null && listener.isOwner(e.getPlayer(), claim))
-                Visualization.fromClaim(claim, e.getPlayer().getLocation().getBlockY(), VisualizationType.Claim, e.getPlayer().getLocation()).apply(e.getPlayer());
+            showClaimLater(claim, e.getPlayer());
         } else
             listener.claimCreation.remove(e.getPlayer());
+    }
+
+    void showClaimLater(Claim claim, Player p) {
+        claimShowing.put(p,
+            Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
+                ItemStack item = p.getInventory().getItemInMainHand();
+                if (item.getType().equals(getClaimItem())) {
+                    if (claim != null) {
+                        if (claim.isOwner(p))
+                            Messages.core.sendClaimItemInClaim(p);
+                        else
+                            Messages.core.sendClaimItemNotOwner(p);
+                        Visualization.fromClaim(claim, p.getLocation().getBlockY(), claim.isOwner(p) ? VisualizationType.Claim : VisualizationType.ErrorClaim, p.getLocation()).apply(p);
+                    } else {
+                        Messages.core.sendClaimItemNoClaim(p);
+                    }
+                    claimShowing.put(p,
+                        Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
+                            claimShowing.remove(p);
+                        }, 20L * 10));
+                } else
+                    claimShowing.remove(p);
+            }, 5L));
     }
 
     private Material getClaimItem() {

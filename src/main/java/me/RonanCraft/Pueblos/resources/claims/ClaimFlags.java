@@ -10,15 +10,7 @@ public class ClaimFlags {
     }
 
     public Object getFlag(CLAIM_FLAG flag) {
-        return flags.getOrDefault(flag, getDefault(flag));
-    }
-
-    private Object getDefault(CLAIM_FLAG flag) {
-        switch (flag) {
-            case ALLOW_DOOR:
-            case ALLOW_BUTTON: return true;
-            default: return false;
-        }
+        return flags.getOrDefault(flag, flag.getDefault());
     }
 
 }

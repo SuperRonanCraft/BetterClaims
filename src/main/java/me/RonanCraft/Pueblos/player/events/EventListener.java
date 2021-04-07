@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -8,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
@@ -17,9 +19,11 @@ import java.util.*;
 public class EventListener implements Listener {
 
     HashMap<Player, PlayerClaimCreation> claimCreation = new HashMap<>();
+    EventBlocks blocks = new EventBlocks(this);
     EventInteract interact = new EventInteract(this);
     EventItemChange itemChange = new EventItemChange(this);
     EventPistons pistons = new EventPistons(this);
+    EventDamage damage = new EventDamage(this);
 
     public void load() {
         Pueblos.getInstance().getServer().getPluginManager().registerEvents(this, Pueblos.getInstance());
@@ -40,8 +44,6 @@ public class EventListener implements Listener {
     void onItemChange(PlayerItemHeldEvent e) {
         itemChange.onItemChange(e);
     }
-
-
 
     //Explosion
     @EventHandler (priority = EventPriority.HIGHEST)
@@ -67,6 +69,23 @@ public class EventListener implements Listener {
         pistons.onPiston(e);
     }
 
+    //PvP
+    @EventHandler (priority = EventPriority.HIGHEST)
+    void onDamage(EntityDamageByEntityEvent e) {
+        damage.onDamage(e);
+    }
+
+    //Blocks
+    @EventHandler (priority = EventPriority.HIGHEST)
+    void onBreak(BlockBreakEvent e) {
+        blocks.onBreak(e);
+    }
+
+    @EventHandler (priority = EventPriority.HIGHEST)
+    void onPlace(BlockPlaceEvent e) {
+        blocks.onPlace(e);
+    }
+
     boolean isProtected(Location loc) {
         return getClaim(loc) != null;
     }
@@ -79,8 +98,7 @@ public class EventListener implements Listener {
     }
 
     Claim getClaim(Location loc) {
-        for (Map.Entry<UUID, Claim> entry : Pueblos.getInstance().getSystems().getClaimHandler().getClaims()) {
-            Claim claim = entry.getValue();
+        for (Claim claim : Pueblos.getInstance().getSystems().getClaimHandler().getClaims()) {
             if (claim.contains(loc))
                 return claim;
         }

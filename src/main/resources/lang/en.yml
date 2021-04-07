@@ -4,6 +4,16 @@ Messages:
   InvalidCommand: '&cInvalid argument! Try &7/%command% help'
   NoPermission: '&cSorry! &7You don''t have permission to do this!'
   Reload: '&eReloaded config and language file.'
+  Claim:
+    Item:
+      InClaim: '&7Right-Click a corner of this claim to change size!'
+      NoClaim: '&7Right-Click two corners to make a claim!'
+      NotOwner: '&7This claim is not yours! You can''t resize it!'
+    Create:
+      Success: '&aSuccess! &7This claim is now yours!'
+      Failed:
+        Size: '&cError! &7This claim is not big enough! Please make it larger than 10x10!'
+        OtherClaim: '&cError! &7This area is overlapping another claim!'
 
 Help:
   Prefix: '&e&m-----&6&l Pueblos &8| Help &e&m-----'

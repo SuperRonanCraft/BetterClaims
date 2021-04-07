@@ -10,6 +10,7 @@ import java.util.List;
 
 public class PlayerInfo {
     private final HashMap<Player, Visualization> visualization = new HashMap<>();
+    private final HashMap<Player, Boolean> overriding = new HashMap<>();
 
     public void addVisualization(Player p, Visualization vis) {
         visualization.put(p, vis);

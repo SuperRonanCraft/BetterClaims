@@ -16,4 +16,28 @@ public class MessagesCore implements Message {
     public void sendInvalidCommand(CommandSender sendi) {
         sms(sendi, getLang().getString(pre + "InvalidCommand"));
     }
+
+    public void sendClaimItemInClaim(CommandSender sendi) {
+        sms(sendi, getLang().getString(pre + "Claim.Item.InClaim"));
+    }
+
+    public void sendClaimItemNoClaim(CommandSender sendi) {
+        sms(sendi, getLang().getString(pre + "Claim.Item.NoClaim"));
+    }
+
+    public void sendClaimItemNotOwner(CommandSender sendi) {
+        sms(sendi, getLang().getString(pre + "Claim.Item.NotOwner"));
+    }
+
+    public void sendClaimCreateSuccess(CommandSender sendi) {
+        sms(sendi, getLang().getString(pre + "Claim.Create.Success"));
+    }
+
+    public void sendClaimCreateFailedSize(CommandSender sendi) {
+        sms(sendi, getLang().getString(pre + "Claim.Create.Failed.Size"));
+    }
+
+    public void sendClaimCreateFailedOtherClaim(CommandSender sendi) {
+        sms(sendi, getLang().getString(pre + "Claim.Create.Failed.OtherClaim"));
+    }
 }
