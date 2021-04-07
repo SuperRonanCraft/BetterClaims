@@ -19,7 +19,8 @@ public abstract class Database {
     public String table;
 
     public enum COLUMNS {
-        OWNER_UUID("uuid", "varchar(32) PRIMARY KEY"),
+        CLAIM_ID("id", "int AUTO_INCREMENT PRIMARY KEY"),
+        OWNER_UUID("uuid", "varchar(32)"),
         OWNER_NAME("name", "varchar(32)"),
         //Integers
         //X("x", "int"),
@@ -81,7 +82,7 @@ public abstract class Database {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Claim claim = Pueblos.getInstance().getSystems().getClaimHandler().loadClaim(rs);
-                if (claim != null)
+                if (claim != null && claim.getPosition() != null)
                     list.add(claim);
             }
             return list;
@@ -99,6 +100,7 @@ public abstract class Database {
         if (sqlEnabled) pre = "INSERT IGNORE INTO ";
         else pre = "INSERT OR IGNORE INTO ";
         String sql = pre + table + " ("
+                //+ COLUMNS.CLAIM_ID.name + ", "
                 + COLUMNS.OWNER_UUID.name + ", "
                 + COLUMNS.OWNER_NAME.name + ", "
                 /*+ COLUMNS.AUTHOR.name + ", "
@@ -122,7 +124,7 @@ public abstract class Database {
                 //Booleans
                 + COLUMNS.FLAGGED.name + ", "
                 + COLUMNS.BROADCAST.name*/
-                + ") VALUES(?, ?, ?)";/*, ?, " +
+                + ") VALUES(?, ?, ?, ?)";/*, ?, " +
                 //Ints
                 "?, ?, ?, ?, ?, " +
                 //Strings
@@ -130,6 +132,7 @@ public abstract class Database {
                 //Booleans
                 "?, ?)";*/
         List<Object> params = new ArrayList<>() {{
+                //add(claim.ownerId != null ? claim.ownerId : "null");
                 add(claim.ownerId != null ? claim.ownerId : "null");
                 add(claim.ownerName);
                 /*add(ticket.getAuthorName());
@@ -282,6 +285,35 @@ public abstract class Database {
                 }
             }
             ps.executeUpdate();
+        } catch (SQLException ex) {
+            Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            success = false;
+        } finally {
+            close(ps, null, conn);
+        }
+        return success;
+    }
+
+    private boolean sqlCreateClaim(String statement, List<Object> params, Claim claim) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        boolean success = true;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement(statement);
+            if (params != null) {
+                Iterator<Object> it = params.iterator();
+                int paramIndex = 1;
+                while (it.hasNext()) {
+                    ps.setObject(paramIndex, it.next());
+                    paramIndex++;
+                }
+            }
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                claim.claimId = rs.getLong(COLUMNS.CLAIM_ID.name);
+            }
         } catch (SQLException ex) {
             Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
             success = false;

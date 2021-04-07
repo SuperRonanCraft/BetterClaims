@@ -20,9 +20,12 @@ public class ClaimHandler {
         }
     }
 
-    public void addClaim(Claim claim) {
-        if (!claims.containsKey(claim.ownerId))
+    public void addClaim(Claim claim, boolean save) {
+        if (!claims.containsKey(claim.ownerId)) {
             claims.put(claim.ownerId, claim);
+            if (save)
+                Pueblos.getInstance().getSystems().getDatabase().createClaim(claim);
+        }
     }
 
     public Claim getClaim(UUID uuid) {
@@ -49,7 +52,6 @@ public class ClaimHandler {
     }
 
     public Claim claimCreate(UUID owner, String name, ClaimPosition position) {
-        Claim claim = new Claim(owner, name, position);
-        return claim;
+        return new Claim(owner, name, position);
     }
 }

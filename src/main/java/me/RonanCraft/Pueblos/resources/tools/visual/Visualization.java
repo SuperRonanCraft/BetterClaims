@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.resources.tools.visual;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.bukkit.Tag;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -8,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.block.data.Lightable;
 import org.bukkit.entity.Player;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
@@ -48,13 +50,11 @@ public class Visualization {
             visualization.removeElementsOutOfRange(visualization.elements, minx, minz, maxx, maxz);
 
             //send real block information for any remaining elements
-            for (int i = 0; i < visualization.elements.size(); i++)
-            {
+            for (int i = 0; i < visualization.elements.size(); i++) {
                 VisualizationElement element = visualization.elements.get(i);
 
                 //check player still in world where visualization exists
-                if (i == 0)
-                {
+                if (i == 0) {
                     if (!player.getWorld().equals(element.location.getWorld())) return;
                 }
 
@@ -65,8 +65,66 @@ public class Visualization {
         }
     }
 
+    //convenience method to build a visualization from a claim
+    //visualizationType determines the style (gold blocks, silver, red, diamond, etc)
+    public static Visualization fromClaim(Claim claim, int height, VisualizationType visualizationType, Location locality) {
+        //visualize only top level claims
+        /*if (claim.parent != null) {
+            return FromClaim(claim.parent, height, visualizationType, locality);
+        }*/
+
+        Visualization visualization = new Visualization();
+
+        //add subdivisions first
+        /*for (int i = 0; i < claim.children.size(); i++) {
+            Claim child = claim.children.get(i);
+            if (!child.inDataStore) continue;
+            addClaimElements(child, height, VisualizationType.Subdivision, locality);
+        }*/
+
+        //special visualization for administrative land claims
+        if (visualizationType == VisualizationType.Claim) {
+            visualizationType = VisualizationType.AdminClaim;
+        }
+
+        //add top level last so that it takes precedence (it shows on top when the child claim boundaries overlap with its boundaries)
+        visualization.addClaimElements(claim, height, visualizationType, locality);
+
+        return visualization;
+    }
+
+    //adds a claim's visualization to the current visualization
+    //handy for combining several visualizations together, as when visualization a top level claim with several subdivisions inside
+    //locality is a performance consideration.  only create visualization blocks for around 100 blocks of the locality
+
+    private void addClaimElements(Claim claim, int height, VisualizationType visualizationType, Location locality) {
+        BlockData cornerBlockData;
+        BlockData accentBlockData;
+
+        if (visualizationType == VisualizationType.Claim) {
+            cornerBlockData = Material.GLOWSTONE.createBlockData();
+            accentBlockData = Material.GOLD_BLOCK.createBlockData();
+        } else if (visualizationType == VisualizationType.AdminClaim) {
+            cornerBlockData = Material.GLOWSTONE.createBlockData();
+            accentBlockData = Material.PUMPKIN.createBlockData();
+        } else if (visualizationType == VisualizationType.Subdivision) {
+            cornerBlockData = Material.IRON_BLOCK.createBlockData();
+            accentBlockData = Material.WHITE_WOOL.createBlockData();
+        } else if (visualizationType == VisualizationType.RestoreNature) {
+            cornerBlockData = Material.DIAMOND_BLOCK.createBlockData();
+            accentBlockData = Material.DIAMOND_BLOCK.createBlockData();
+        } else {
+            cornerBlockData = Material.REDSTONE_ORE.createBlockData();
+            ((Lightable) cornerBlockData).setLit(true);
+            accentBlockData = Material.NETHERRACK.createBlockData();
+        }
+
+        addClaimElements(claim.getLesserBoundaryCorner(), claim.getGreaterBoundaryCorner(), locality, height, cornerBlockData, accentBlockData, 10);
+        //return visualization;
+    }
+
     //adds a general claim cuboid (represented by min and max) visualization to the current visualization
-    public void addClaimElements(Location min, Location max, Location locality, int height, BlockData cornerBlockData, BlockData accentBlockData, int STEP) {
+    void addClaimElements(Location min, Location max, Location locality, int height, BlockData cornerBlockData, BlockData accentBlockData, int STEP) {
         World world = min.getWorld();
         boolean waterIsTransparent = locality.getBlock().getType() == Material.WATER;
 

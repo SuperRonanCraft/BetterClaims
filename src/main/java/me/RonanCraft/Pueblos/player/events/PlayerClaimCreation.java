@@ -1,4 +1,4 @@
-package me.RonanCraft.Pueblos.player;
+package me.RonanCraft.Pueblos.player.events;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

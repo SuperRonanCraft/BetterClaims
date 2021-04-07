@@ -10,13 +10,19 @@ import java.util.UUID;
 public class Claim {
     public final UUID ownerId;
     public final String ownerName;
-    private ClaimPosition position;
+    public long claimId; //ID given by the database
+    private final ClaimPosition position;
+    private final ClaimFlags claimFlags = new ClaimFlags();
     private List<ClaimMember> members;
 
     Claim(UUID ownerId, String ownerName, ClaimPosition position) {
         this.ownerId = ownerId;
         this.ownerName = ownerName;
         this.position = position;
+    }
+
+    public ClaimFlags getFlags() {
+        return claimFlags;
     }
 
     public ClaimPosition getPosition() {
@@ -28,15 +34,15 @@ public class Claim {
     }
 
     public boolean contains(Location loc) {
-        /*if (position.getLeft() <= loc.getBlockX())
-            System.out.println("Left");
-        if (position.getTop() >= loc.getBlockZ())
-            System.out.println("Top");
-        if (position.getRight() >= loc.getBlockX())
-            System.out.println("Right");
-        if (position.getBottom() <= loc.getBlockZ())
-            System.out.println("Bottom");*/
         return (position.getLeft() <= loc.getBlockX() && position.getTop() >= loc.getBlockZ()) && //Top Left
                 (position.getRight() >= loc.getBlockX() && position.getBottom() <= loc.getBlockZ()); //Bottom Right
+    }
+
+    public Location getLesserBoundaryCorner() {
+        return new Location(position.getWorld(), position.getLeft(), 0, position.getBottom());
+    }
+
+    public Location getGreaterBoundaryCorner() {
+        return new Location(position.getWorld(), position.getRight(), 0, position.getTop());
     }
 }

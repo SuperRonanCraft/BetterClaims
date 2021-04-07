@@ -49,7 +49,7 @@ public class JSONEncoding {
             int z_2 = Integer.valueOf(chunk_info.get("z_2").toString());
             return new ClaimPosition(Bukkit.getWorld(world), x_1, z_1, x_2, z_2);
         } catch (NullPointerException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }
     }
