@@ -1,12 +1,13 @@
-package me.RonanCraft.Pueblos.events.command.types;
+package me.RonanCraft.Pueblos.player.command.types;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.events.command.PueblosCommand;
-import me.RonanCraft.Pueblos.events.command.PueblosCommandHelpable;
+import me.RonanCraft.Pueblos.player.command.PueblosCommand;
+import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -20,12 +21,11 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
         List<String> info = new ArrayList<>();
         ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
         info.add("Claims: " + handler.getClaims().size());
-        int chunks = 0;
-        for (Map.Entry<UUID, Claim> entry : handler.getClaims()) {
-            Claim claim = entry.getValue();
-            chunks += claim.getChunks().size();
+        if (sendi instanceof Player) {
+            Player p = (Player) sendi;
+            Claim claim = handler.getClaim(p.getUniqueId());
+            CmdCreate.showCorners(p, claim);
         }
-        info.add("Chunks Protected: " + chunks);
         Messages.core.sms(sendi, info);
     }
 

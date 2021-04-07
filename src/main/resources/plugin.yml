@@ -2,7 +2,8 @@ main: me.RonanCraft.Pueblos.Pueblos
 version: '1.1'
 name: Pueblos
 author: RonanCraft
-softdepend: []
+softdepend:
+    - ProtocolLib
 api-version: '1.13'
 
 commands:

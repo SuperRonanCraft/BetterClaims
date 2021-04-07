@@ -1,6 +1,6 @@
-package me.RonanCraft.Pueblos.events.command;
+package me.RonanCraft.Pueblos.player.command;
 
-import me.RonanCraft.Pueblos.events.command.types.*;
+import me.RonanCraft.Pueblos.player.command.types.*;
 
 public enum PueblosCommandType {
     CREATE(new  CmdCreate()),

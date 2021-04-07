@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
 import me.RonanCraft.Pueblos.resources.claims.ClaimPosition;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.json.simple.JSONArray;
@@ -28,6 +29,7 @@ public class JSONEncoding {
         if (position == null)
             return null;
         Map obj = new LinkedHashMap();
+        obj.put("world", position.getWorld().getName());
         obj.put("x_1", position.getX_1());
         obj.put("z_1", position.getZ_1());
         obj.put("x_2", position.getX_2());
@@ -40,11 +42,12 @@ public class JSONEncoding {
         try {
             JSONObject obj = (JSONObject) JSONValue.parse(json);
             Map chunk_info = (Map) obj;
+            String world = chunk_info.get("world").toString();
             int x_1 = Integer.valueOf(chunk_info.get("x_1").toString());
             int z_1 = Integer.valueOf(chunk_info.get("z_1").toString());
             int x_2 = Integer.valueOf(chunk_info.get("x_2").toString());
             int z_2 = Integer.valueOf(chunk_info.get("z_2").toString());
-            return new ClaimPosition(x_1, z_1, x_2, z_2);
+            return new ClaimPosition(Bukkit.getWorld(world), x_1, z_1, x_2, z_2);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return null;

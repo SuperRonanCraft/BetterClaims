@@ -3,9 +3,7 @@ package me.RonanCraft.Pueblos.resources.claims;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.database.Database;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.World;
+import org.bukkit.Location;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,10 +41,15 @@ public class ClaimHandler {
             id = UUID.randomUUID();
         }
         String name = result.getString(Database.COLUMNS.OWNER_NAME.name);
-        World world = Bukkit.getWorld(Database.COLUMNS.WORLD.name);
-        Claim claim = new Claim(id, name, world);
-        ClaimPosition position = JSONEncoding.getPosition(result.getString(Database.COLUMNS.CHUNKS.name));
-        claim.setPosition(position);
+        try {
+            return new Claim(id, name, JSONEncoding.getPosition(result.getString(Database.COLUMNS.POSITION.name)));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public Claim claimCreate(UUID owner, String name, ClaimPosition position) {
+        Claim claim = new Claim(owner, name, position);
         return claim;
     }
 }

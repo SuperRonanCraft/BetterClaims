@@ -1,8 +1,6 @@
-package me.RonanCraft.Pueblos.events.command;
+package me.RonanCraft.Pueblos.player.command;
 
 import org.bukkit.command.CommandSender;
-
-import java.util.List;
 
 public interface PueblosCommand {
 

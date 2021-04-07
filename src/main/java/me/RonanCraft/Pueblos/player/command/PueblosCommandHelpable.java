@@ -1,4 +1,4 @@
-package me.RonanCraft.Pueblos.events.command;
+package me.RonanCraft.Pueblos.player.command;
 
 public interface PueblosCommandHelpable {
 

@@ -1,10 +1,14 @@
-package me.RonanCraft.Pueblos.events;
+package me.RonanCraft.Pueblos.player;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.player.command.types.CmdCreate;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.claims.ClaimPosition;
-import org.bukkit.Chunk;
+import me.RonanCraft.Pueblos.resources.files.msgs.Message;
+import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -13,11 +17,16 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 
 import java.util.*;
 
 public class EventListener implements Listener {
+
+    HashMap<Player, PlayerClaimCreation> claimCreation = new HashMap<>();
 
     public void load() {
         Pueblos.getInstance().getServer().getPluginManager().registerEvents(this, Pueblos.getInstance());
@@ -38,6 +47,40 @@ public class EventListener implements Listener {
                 e.getPlayer().sendMessage("Button!");
             }
         }
+    }
+
+    @EventHandler (priority = EventPriority.NORMAL)
+    void onInteractCreateClaim(PlayerInteractEvent e) {
+        if (e.getClickedBlock() == null || e.getItem() == null || e.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
+        else if (!e.getItem().getType().equals(Material.GOLDEN_SHOVEL))
+            return;
+        Player p = e.getPlayer();
+        if (!claimCreation.containsKey(p))
+            claimCreation.put(p, new PlayerClaimCreation(p));
+        PlayerClaimCreation claimCreation = this.claimCreation.get(p);
+        Location loc = e.getClickedBlock().getLocation();
+        if (!claimCreation.locked && claimCreation.addLocation(loc)) {
+            List<Location> corners = claimCreation.locations;
+            if (corners.size() >= 2) {
+                ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
+                Claim claim = handler.claimCreate(p.getUniqueId(), p.getName(), new ClaimPosition(p.getWorld(), corners.get(0), corners.get(1)));
+                if (claim != null) {
+                    Messages.core.sms(p, "Claim Created!");
+                    CmdCreate.showCorners(p, claim);
+                } else
+                    Messages.core.sms(p, "Claim Error!");
+                claimCreation.lock(); //Lock us from making another claim using this item
+            } else {
+                CmdCreate.showCorners(p, e.getClickedBlock());
+            }
+        }
+        e.setCancelled(true);
+    }
+
+    @EventHandler (priority = EventPriority.NORMAL)
+    void onItemChange(PlayerItemHeldEvent e) {
+        claimCreation.remove(e.getPlayer());
     }
 
     //Player Block Break
@@ -79,30 +122,32 @@ public class EventListener implements Listener {
     }
 
     private void pistonEvent(BlockPistonEvent e, List<Block> blocks, BlockFace dir) {
-        /*List<Chunk> chunks = new ArrayList<>();
-        chunks.add(e.getBlock().getChunk());
-        for (Block block : blocks) {
+        List<Location> locations = new ArrayList<>();
+        locations.add(e.getBlock().getLocation());
+        blocks: for (Block block : blocks) {
             Location loc = block.getLocation();
             loc.add(dir.getModX(), dir.getModY(), dir.getModZ());
             //Objects.requireNonNull(loc.getWorld()).spawnParticle(Particle.BARRIER, loc.clone().add(0.5, 1.5, 0.5), 1);
-            if (!chunks.contains(loc.getChunk()))
-                chunks.add(loc.getChunk());
+            for (Location _loc : locations)
+                if (_loc.getBlockX() == loc.getBlockX() && _loc.getBlockZ() == loc.getBlockZ()) {
+                    break blocks;
+                }
+            locations.add(loc);
         }
-        if (chunks.size() <= 1) //Ignore blocks all in one chunk
+        if (locations.size() <= 1) //Ignore blocks all in one chunk
             return;
 
         //Blocks going between chunks
-        HashMap<Chunk, Boolean> chunks_protected = new HashMap<>();
-        for (Chunk chunk : chunks)
-            chunks_protected.put(chunk, isProtected(chunk));
+        HashMap<Location, Boolean> locations_protected = new HashMap<>();
+        for (Location loc : locations)
+            locations_protected.put(loc, isProtected(loc));
 
         //Blocks going between unprotected and protected land
-        boolean all_match = (chunks_protected.containsValue(true) && !chunks_protected.containsValue(false))
-                || (chunks_protected.containsValue(false) && !chunks_protected.containsValue(true));
+        boolean all_match = (locations_protected.containsValue(true) && !locations_protected.containsValue(false))
+                || (locations_protected.containsValue(false) && !locations_protected.containsValue(true));
         if (!all_match) { //Not all match true or false
-            System.out.println("Cancelled! " + chunks.toString());
             e.setCancelled(true);
-        }*/
+        }
     }
 
     private boolean isProtected(Location loc) {

@@ -28,10 +28,10 @@ public abstract class Database {
         //IMPORTANCE("importance", "int"),
         //RATING("rating", "int"),
         //Strings
-        WORLD("world", "text"),
+        //WORLD("world", "text"),
         //TIME("time", "text"),
         //CATEGORY("category", "text"),
-        CHUNKS("chunks", "text");
+        POSITION("position", "text");
         //REPLIER("replier", "text"),
         //RESOLVED("resolved", "text DEFAULT null"),
         //CLAIMED_BY("claimedBy", "text DEFAULT null"),
@@ -81,7 +81,8 @@ public abstract class Database {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Claim claim = Pueblos.getInstance().getSystems().getClaimHandler().loadClaim(rs);
-                list.add(claim);
+                if (claim != null)
+                    list.add(claim);
             }
             return list;
         } catch (SQLException ex) {
@@ -110,8 +111,7 @@ public abstract class Database {
                 + COLUMNS.IMPORTANCE.name + ", "
                 + COLUMNS.RATING.name + ", "*/
                 //Strings
-                + COLUMNS.WORLD.name + ", "
-                + COLUMNS.CHUNKS.name + ""
+                + COLUMNS.POSITION.name + ""
                 //+ COLUMNS.TIME.name + ", "
                 /*+ COLUMNS.CATEGORY.name + ", "
                 + COLUMNS.REPLY.name + ", "
@@ -122,7 +122,7 @@ public abstract class Database {
                 //Booleans
                 + COLUMNS.FLAGGED.name + ", "
                 + COLUMNS.BROADCAST.name*/
-                + ") VALUES(?, ?, ?, ?)";/*, ?, " +
+                + ") VALUES(?, ?, ?)";/*, ?, " +
                 //Ints
                 "?, ?, ?, ?, ?, " +
                 //Strings
@@ -142,8 +142,8 @@ public abstract class Database {
                 add(ticket.getImportance());
                 add(ticket.getRating());
                 //Strings*/
-                add(claim.world.getName());
-                add(claim.getChunksJSON());
+                //add(claim.p.getName());
+                add(claim.getPositionJSON());
                 /*add(ticket.getTime());
                 add(ticket.getCategory());
                 add(JSONEncoding.getJsonFromList(COLUMNS.REPLY.name, ticket.getReply()));

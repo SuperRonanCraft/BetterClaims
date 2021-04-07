@@ -1,7 +1,6 @@
-package me.RonanCraft.Pueblos.events.command;
+package me.RonanCraft.Pueblos.player.command;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.files.FileOther;
 import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

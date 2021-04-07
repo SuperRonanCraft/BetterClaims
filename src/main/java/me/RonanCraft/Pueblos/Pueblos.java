@@ -1,6 +1,6 @@
 package me.RonanCraft.Pueblos;
 
-import me.RonanCraft.Pueblos.events.command.Commands;
+import me.RonanCraft.Pueblos.player.command.Commands;
 import me.RonanCraft.Pueblos.resources.Permissions;
 import me.RonanCraft.Pueblos.resources.Systems;
 import me.RonanCraft.Pueblos.resources.files.Files;
