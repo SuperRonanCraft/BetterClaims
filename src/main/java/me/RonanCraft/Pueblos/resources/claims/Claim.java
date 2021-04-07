@@ -3,6 +3,7 @@ package me.RonanCraft.Pueblos.resources.claims;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,5 +45,9 @@ public class Claim {
 
     public Location getGreaterBoundaryCorner() {
         return new Location(position.getWorld(), position.getRight(), 0, position.getTop());
+    }
+
+    public boolean isOwner(Player p) {
+        return p.getUniqueId().equals(ownerId);
     }
 }

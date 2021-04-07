@@ -124,7 +124,7 @@ public abstract class Database {
                 //Booleans
                 + COLUMNS.FLAGGED.name + ", "
                 + COLUMNS.BROADCAST.name*/
-                + ") VALUES(?, ?, ?, ?)";/*, ?, " +
+                + ") VALUES(?, ?, ?)";/*, ?, " +
                 //Ints
                 "?, ?, ?, ?, ?, " +
                 //Strings

@@ -32,6 +32,14 @@ public class ClaimHandler {
         return claims.getOrDefault(uuid, null);
     }
 
+    public Claim getClaim(Location loc) {
+        for (Claim claim : claims.values()) {
+            if (claim.contains(loc))
+                return claim;
+        }
+        return null;
+    }
+
     public Set<Map.Entry<UUID, Claim>> getClaims() {
         return claims.entrySet();
     }
