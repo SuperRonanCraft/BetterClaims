@@ -25,6 +25,7 @@ public class EventListener implements Listener {
     EventInteract interact = new EventInteract(this);
     EventItemChange itemChange = new EventItemChange(this);
     EventPistons pistons = new EventPistons(this);
+    EventExplosion explosion = new EventExplosion(this);
     EventDamage damage = new EventDamage(this);
     EventClick click = new EventClick();
     EventClose close = new EventClose();
@@ -52,14 +53,7 @@ public class EventListener implements Listener {
     //Explosion
     @EventHandler (priority = EventPriority.HIGHEST)
     void onExplosion(EntityExplodeEvent e) {
-        /*List<Chunk> chunks = new ArrayList<>();
-        for (Block block : e.blockList())
-            if (!chunks.contains(block.getChunk()))
-                chunks.add(block.getChunk());
-        for (Chunk chunk : chunks)
-            if (isProtected(chunk))
-                e.blockList().removeIf(block -> block.getChunk() == chunk);*/
-        e.blockList().removeIf(block -> isProtected(block.getLocation()));
+        explosion.onExplosion(e);
     }
 
     //Pistons
@@ -113,9 +107,5 @@ public class EventListener implements Listener {
                 return claim;
         }
         return null;
-    }
-
-    boolean isOwner(Player p, Claim claim) {
-        return claim.ownerId.equals(p.getUniqueId());
     }
 }

@@ -43,12 +43,18 @@ public class EventInteract {
     }
 
     void onInteractCreateClaim(PlayerInteractEvent e) {
-        if (e.getClickedBlock() == null
-                || e.getItem() == null
-                || e.isCancelled()
-                || e.getAction() != Action.RIGHT_CLICK_BLOCK
+        if (    e.getItem() == null
+                || (e.isCancelled() && e.getAction() != Action.RIGHT_CLICK_AIR)
+                || (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR)
                 || !e.getItem().getType().equals(Material.GOLDEN_SHOVEL))
             return;
+
+        Block block = e.getClickedBlock();
+        if (block == null || block.getType() == Material.AIR) //Block aiming at distance
+            block = e.getPlayer().getTargetBlock(null, 32);
+        if (block.getType() == Material.AIR)
+            return;
+        Location loc = block.getLocation();
 
         e.setCancelled(true);
         Player p = e.getPlayer();
@@ -56,7 +62,6 @@ public class EventInteract {
             listener.claimCreation.put(p, new PlayerClaimCreation(p));
         PlayerClaimCreation claimCreation = listener.claimCreation.get(p);
         //Can we create a claim?
-        Location loc = e.getClickedBlock().getLocation();
         if (!claimCreation.locked) {
             cancelCreation(p, 60L);
             CLAIM_ERRORS error = claimCreation.addLocation(loc);

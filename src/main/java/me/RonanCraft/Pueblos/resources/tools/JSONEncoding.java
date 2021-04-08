@@ -1,7 +1,6 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
-import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
-import me.RonanCraft.Pueblos.resources.claims.ClaimPosition;
+import me.RonanCraft.Pueblos.resources.claims.*;
 import org.bukkit.Bukkit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -60,17 +59,22 @@ public class JSONEncoding {
         for (ClaimMember member : members) {
             if (member.owner)
                 continue;
-            Map obj = new LinkedHashMap();
-            obj.put("uuid", member.uuid);
+            HashMap<String, Object> obj = new HashMap();
+            obj.put("uuid", member.uuid.toString());
             obj.put("name", member.name);
             obj.put("date", new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(member.date));
+            HashMap<String, Object> obj2 = new HashMap<>();
+            for (Map.Entry<CLAIM_FLAG_MEMBER, Object> flag : member.flags.entrySet()) {
+                obj2.put(flag.getKey().name(), flag.getValue());
+            }
+            obj.put("flags", obj2);
             array.add(obj);
         }
         //System.out.println(JSONArray.toJSONString(array));
         return JSONArray.toJSONString(array);
     }
 
-    public static List<ClaimMember> getMember(String json) {
+    public static List<ClaimMember> getMember(String json, Claim claim) {
         if (json == null)
             return null;
         try {
@@ -81,7 +85,13 @@ public class JSONEncoding {
                 String uuid = member_info.get("uuid").toString();
                 String name = member_info.get("name").toString();
                 String date = member_info.get("date").toString();
-                members.add(new ClaimMember(UUID.fromString(uuid), name, new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(date), false));
+                HashMap<CLAIM_FLAG, Object> flags = new HashMap<>();
+                for (Map.Entry<String, Object> flag : ((HashMap<String, Object>) member_info.get("flags")).entrySet()) {
+                    CLAIM_FLAG _flag = CLAIM_FLAG.valueOf(flag.getKey());
+                    Object _value = flag.getValue();
+                    flags.put(_flag, _value);
+                }
+                members.add(new ClaimMember(UUID.fromString(uuid), name, new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(date), false, claim));
             }
             return members;
         } catch (NullPointerException | ParseException e) {

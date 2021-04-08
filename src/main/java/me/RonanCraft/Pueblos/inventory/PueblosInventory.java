@@ -1,13 +1,14 @@
 package me.RonanCraft.Pueblos.inventory;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.Systems;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
 public enum PueblosInventory {
-    MEMBERS(new InventoryClaimMembers());
+    MEMBERS(new InventoryClaimMembers()),
+    MEMBER(new InventoryClaimMember());
 
     private final PueblosInv inv;
 
@@ -16,8 +17,15 @@ public enum PueblosInventory {
     }
 
     public void open(Player p, Claim claim) {
-        if (inv instanceof PueblosInv_ClaimInfo)
-            Pueblos.getInstance().getSystems().getPlayerInfo().addInventory(p, ((PueblosInv_ClaimInfo) inv).open(p, claim), this);
+        if (inv instanceof PueblosInv_Claim)
+            Pueblos.getInstance().getSystems().getPlayerInfo().addInventory(p, ((PueblosInv_Claim) inv).open(p, claim), this);
+        else
+            Pueblos.getInstance().getLogger().severe(this.name() + " is not a claim type!");
+    }
+
+    public void open(Player p, ClaimMember member) {
+        if (inv instanceof PueblosInv_Member)
+            Pueblos.getInstance().getSystems().getPlayerInfo().addInventory(p, ((PueblosInv_Member) inv).open(p, member), this);
         else
             Pueblos.getInstance().getLogger().severe(this.name() + " is not a claim type!");
     }

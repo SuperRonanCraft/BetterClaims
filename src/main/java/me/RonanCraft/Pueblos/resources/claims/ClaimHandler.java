@@ -92,7 +92,7 @@ public class ClaimHandler {
         String name = result.getString(Database.COLUMNS.OWNER_NAME.name);
         try {
             Claim claim = new Claim(id, name, JSONEncoding.getPosition(result.getString(Database.COLUMNS.POSITION.name)));
-            List<ClaimMember> members = JSONEncoding.getMember(result.getString(Database.COLUMNS.MEMBERS.name));
+            List<ClaimMember> members = JSONEncoding.getMember(result.getString(Database.COLUMNS.MEMBERS.name), claim);
             if (members != null)
                 for (ClaimMember member : members) {
                     claim.addMember(member);

@@ -9,32 +9,50 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-public class InventoryClaimMembers implements PueblosInv_ClaimInfo {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-    Player p;
+public class InventoryClaimMembers implements PueblosInv_Claim {
+
+    private final HashMap<Player, HashMap<Integer, ClaimMember>> map = new HashMap<>();
 
     @Override
     public Inventory open(Player p, Claim claim) {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, "Members");
 
-        //Decoration
-        for (int i = 0; i < inv.getSize(); i++) {
-            if (i < 9 || i > inv.getSize() - 9 || i % 9 == 0 || i % 9 - 8 == 0)
-                inv.setItem(i, new ItemStack(Material.CYAN_STAINED_GLASS_PANE));
-        }
+        addBorder(inv);
 
+        HashMap<Integer, ClaimMember> itemSlots = new HashMap<>();
         for (ClaimMember member : claim.getMembers()) {
             ItemStack item = new ItemStack(Material.PLAYER_HEAD);
             setTitle(item, member.getPlayer(), "&7" + member.name);
-            inv.setItem(inv.firstEmpty(), item);
+            List<String> lore = new ArrayList<>();
+            lore.add("Owner: " + member.owner);
+            if (!member.flags.isEmpty()) {
+                lore.add("Flags");
+                member.flags.forEach((flag, value) -> {
+                    lore.add(" - " + flag.name() + ": " + value.toString());
+                });
+            }
+            setLore(item, p, lore);
+            int slot = inv.firstEmpty();
+            inv.setItem(slot, item);
+            itemSlots.put(slot, member);
         }
+        map.put(p, itemSlots);
         p.openInventory(inv);
         return inv;
     }
 
     @Override
     public void clickEvent(InventoryClickEvent e) {
-
+        Player p = (Player) e.getWhoClicked();
+        if (map.containsKey(p)) {
+            ClaimMember member = map.get(p).get(e.getSlot());
+            PueblosInventory.MEMBER.open(p, member);
+            map.remove(p);
+        }
     }
 
 }
