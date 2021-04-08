@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.player;
 
 import me.RonanCraft.Pueblos.inventory.PueblosInventory;
+import me.RonanCraft.Pueblos.inventory.PueblosItem;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -30,13 +31,17 @@ public class PlayerInfo {
 
     public void addInventory(Player p, Inventory inv, PueblosInventory pinv) {
         inventory.put(p, inv);
+    }
+
+    public void addPrevious(Player p, PueblosInventory pinv) {
         inventoryPlugin.put(p, pinv);
         List<PueblosInventory> invs;
         if (previousPlugin.containsKey(p)) {
             invs = previousPlugin.get(p);
         } else
             invs = new ArrayList<>();
-        invs.add(0, pinv);
+        if (!invs.contains(pinv))
+            invs.add(0, pinv);
         previousPlugin.put(p, invs);
     }
 

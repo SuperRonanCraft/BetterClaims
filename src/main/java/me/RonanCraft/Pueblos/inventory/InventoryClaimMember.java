@@ -35,7 +35,7 @@ public class InventoryClaimMember implements PueblosInv_Member {
             lore.add("Click to go back to " + pinv.name());
             setLore(item, p, lore);
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.BACK, pinv, member));
+            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.BACK, pinv, member.claim));
         }
 
         int slot = 13;

@@ -43,6 +43,6 @@ public enum PueblosInventory {
     }
 
     public void closeEvent(Player p) {
-        //TODO: Close event code
+        Pueblos.getInstance().getSystems().getPlayerInfo().addPrevious(p, this);
     }
 }
