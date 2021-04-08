@@ -2,9 +2,9 @@ package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,9 +12,11 @@ public class Claim {
     public final UUID ownerId;
     public final String ownerName;
     public long claimId; //ID given by the database
+    //Claim Information
     private final ClaimPosition position;
-    private final ClaimFlags claimFlags = new ClaimFlags();
-    private List<ClaimMember> members;
+    private final ClaimFlags flags = new ClaimFlags();
+    private final List<ClaimMember> members = new ArrayList<>();
+    private String name;
 
     Claim(UUID ownerId, String ownerName, ClaimPosition position) {
         this.ownerId = ownerId;
@@ -23,7 +25,7 @@ public class Claim {
     }
 
     public ClaimFlags getFlags() {
-        return claimFlags;
+        return flags;
     }
 
     public ClaimPosition getPosition() {
@@ -47,7 +49,20 @@ public class Claim {
         return new Location(position.getWorld(), position.getRight(), 0, position.getTop());
     }
 
+    public String getName() {
+        return name != null ? name : ownerName;
+    }
+
     public boolean isOwner(Player p) {
         return p.getUniqueId().equals(ownerId);
+    }
+
+    public void addMember(ClaimMember member) {
+        if (member != null)
+            members.add(member);
+    }
+
+    public List<ClaimMember> getMembers() {
+        return members;
     }
 }

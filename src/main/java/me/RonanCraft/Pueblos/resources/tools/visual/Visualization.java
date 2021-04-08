@@ -2,7 +2,6 @@ package me.RonanCraft.Pueblos.resources.tools.visual;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import org.bukkit.Tag;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -30,7 +29,7 @@ public class Visualization {
 
         //if they are online, create a task to send them the visualization
         if (player.isOnline() && elements.size() > 0 && Objects.equals(elements.get(0).location.getWorld(), player.getWorld())) {
-            Pueblos.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), new VisualizationTaskApply(player, this), 1L);
+            Pueblos.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), new VisualizationTaskApply(player, this), 5L);
         }
     }
 
@@ -83,12 +82,24 @@ public class Visualization {
         }*/
 
         //special visualization for administrative land claims
-        if (visualizationType == VisualizationType.Claim) {
-            visualizationType = VisualizationType.AdminClaim;
-        }
+        //if (visualizationType == VisualizationType.CLAIM) {
+        //    visualizationType = VisualizationType.ADMIN_CLAIM;
+        //}
 
         //add top level last so that it takes precedence (it shows on top when the child claim boundaries overlap with its boundaries)
-        visualization.addClaimElements(claim, height, visualizationType, locality);
+        visualization.addElements(claim, height, visualizationType, locality);
+
+        return visualization;
+    }
+
+    //convenience method to build a visualization from a location
+    //visualizationType determines the style (gold blocks, silver, red, diamond, etc)
+    public static Visualization fromLocation(Location location, int height, Location locality) {
+
+        Visualization visualization = new Visualization();
+
+        //add top level last so that it takes precedence (it shows on top when the child claim boundaries overlap with its boundaries)
+        visualization.addSides(location, location, locality, height, Material.DIAMOND_BLOCK.createBlockData(), Material.DIAMOND_BLOCK.createBlockData(), 1);
 
         return visualization;
     }
@@ -97,34 +108,31 @@ public class Visualization {
     //handy for combining several visualizations together, as when visualization a top level claim with several subdivisions inside
     //locality is a performance consideration.  only create visualization blocks for around 100 blocks of the locality
 
-    private void addClaimElements(Claim claim, int height, VisualizationType visualizationType, Location locality) {
+    private void addElements(Claim claim, int height, VisualizationType visualizationType, Location locality) {
         BlockData cornerBlockData;
         BlockData accentBlockData;
 
-        if (visualizationType == VisualizationType.Claim) {
+        if (visualizationType == VisualizationType.CLAIM) {
             cornerBlockData = Material.GLOWSTONE.createBlockData();
-            accentBlockData = Material.GOLD_BLOCK.createBlockData();
-        } else if (visualizationType == VisualizationType.AdminClaim) {
-            cornerBlockData = Material.GLOWSTONE.createBlockData();
-            accentBlockData = Material.PUMPKIN.createBlockData();
-        } else if (visualizationType == VisualizationType.Subdivision) {
-            cornerBlockData = Material.IRON_BLOCK.createBlockData();
-            accentBlockData = Material.WHITE_WOOL.createBlockData();
-        } else if (visualizationType == VisualizationType.RestoreNature) {
-            cornerBlockData = Material.DIAMOND_BLOCK.createBlockData();
             accentBlockData = Material.DIAMOND_BLOCK.createBlockData();
+        } else if (visualizationType == VisualizationType.ADMIN_CLAIM) {
+            cornerBlockData = Material.GLOWSTONE.createBlockData();
+            accentBlockData = Material.COAL_BLOCK.createBlockData();
+        } else if (visualizationType == VisualizationType.SUB) {
+            cornerBlockData = Material.GLOWSTONE.createBlockData();
+            accentBlockData = Material.WHITE_WOOL.createBlockData();
         } else {
             cornerBlockData = Material.REDSTONE_ORE.createBlockData();
             ((Lightable) cornerBlockData).setLit(true);
             accentBlockData = Material.NETHERRACK.createBlockData();
         }
-
-        addClaimElements(claim.getLesserBoundaryCorner(), claim.getGreaterBoundaryCorner(), locality, height, cornerBlockData, accentBlockData, 10);
+        int step = visualizationType != VisualizationType.ERROR_SMALL ? 10 : 1;
+        addSides(claim.getLesserBoundaryCorner(), claim.getGreaterBoundaryCorner(), locality, height, cornerBlockData, accentBlockData, step);
         //return visualization;
     }
 
     //adds a general claim cuboid (represented by min and max) visualization to the current visualization
-    void addClaimElements(Location min, Location max, Location locality, int height, BlockData cornerBlockData, BlockData accentBlockData, int STEP) {
+    void addSides(Location min, Location max, Location locality, int height, BlockData cornerBlockData, BlockData accentBlockData, int STEP) {
         World world = min.getWorld();
         boolean waterIsTransparent = locality.getBlock().getType() == Material.WATER;
 
@@ -147,8 +155,7 @@ public class Visualization {
         //top line
         newElements.add(new VisualizationElement(new Location(world, smallx, 0, bigz), cornerBlockData, Material.AIR.createBlockData()));
         newElements.add(new VisualizationElement(new Location(world, smallx + 1, 0, bigz), accentBlockData, Material.AIR.createBlockData()));
-        for (int x = smallx + STEP; x < bigx - STEP / 2; x += STEP)
-        {
+        for (int x = smallx + STEP; x < bigx - STEP / 2; x += STEP) {
             if (x > minx && x < maxx)
                 newElements.add(new VisualizationElement(new Location(world, x, 0, bigz), accentBlockData, Material.AIR.createBlockData()));
         }
@@ -156,8 +163,7 @@ public class Visualization {
 
         //bottom line
         newElements.add(new VisualizationElement(new Location(world, smallx + 1, 0, smallz), accentBlockData, Material.AIR.createBlockData()));
-        for (int x = smallx + STEP; x < bigx - STEP / 2; x += STEP)
-        {
+        for (int x = smallx + STEP; x < bigx - STEP / 2; x += STEP) {
             if (x > minx && x < maxx)
                 newElements.add(new VisualizationElement(new Location(world, x, 0, smallz), accentBlockData, Material.AIR.createBlockData()));
         }
@@ -166,8 +172,7 @@ public class Visualization {
         //left line
         newElements.add(new VisualizationElement(new Location(world, smallx, 0, smallz), cornerBlockData, Material.AIR.createBlockData()));
         newElements.add(new VisualizationElement(new Location(world, smallx, 0, smallz + 1), accentBlockData, Material.AIR.createBlockData()));
-        for (int z = smallz + STEP; z < bigz - STEP / 2; z += STEP)
-        {
+        for (int z = smallz + STEP; z < bigz - STEP / 2; z += STEP) {
             if (z > minz && z < maxz)
                 newElements.add(new VisualizationElement(new Location(world, smallx, 0, z), accentBlockData, Material.AIR.createBlockData()));
         }
@@ -176,8 +181,7 @@ public class Visualization {
         //right line
         newElements.add(new VisualizationElement(new Location(world, bigx, 0, smallz), cornerBlockData, Material.AIR.createBlockData()));
         newElements.add(new VisualizationElement(new Location(world, bigx, 0, smallz + 1), accentBlockData, Material.AIR.createBlockData()));
-        for (int z = smallz + STEP; z < bigz - STEP / 2; z += STEP)
-        {
+        for (int z = smallz + STEP; z < bigz - STEP / 2; z += STEP) {
             if (z > minz && z < maxz)
                 newElements.add(new VisualizationElement(new Location(world, bigx, 0, z), accentBlockData, Material.AIR.createBlockData()));
         }
@@ -189,18 +193,15 @@ public class Visualization {
 
         //remove any elements outside the claim
         BoundingBox box = BoundingBox.of(min, max);
-        for (int i = 0; i < newElements.size(); i++)
-        {
+        for (int i = 0; i < newElements.size(); i++) {
             VisualizationElement element = newElements.get(i);
-            if (!containsIncludingIgnoringHeight(box, element.location.toVector()))
-            {
+            if (!containsIncludingIgnoringHeight(box, element.location.toVector())) {
                 newElements.remove(i--);
             }
         }
 
         //set Y values and real block information for any remaining visualization blocks
-        for (VisualizationElement element : newElements)
-        {
+        for (VisualizationElement element : newElements) {
             Location tempLocation = element.location;
             element.location = getVisibleLocation(tempLocation.getWorld(), tempLocation.getBlockX(), height, tempLocation.getBlockZ(), waterIsTransparent);
             height = element.location.getBlockY();
@@ -211,8 +212,7 @@ public class Visualization {
     }
 
     //finds a block the player can probably see.  this is how visualizations "cling" to the ground or ceiling
-    private static Location getVisibleLocation(World world, int x, int y, int z, boolean waterIsTransparent)
-    {
+    private static Location getVisibleLocation(World world, int x, int y, int z, boolean waterIsTransparent) {
         Block block = world.getBlockAt(x, y, z);
         BlockFace direction = (isTransparent(block, waterIsTransparent)) ? BlockFace.DOWN : BlockFace.UP;
 
@@ -227,19 +227,16 @@ public class Visualization {
     }
 
     //helper method for above.  allows visualization blocks to sit underneath partly transparent blocks like grass and fence
-    private static boolean isTransparent(Block block, boolean waterIsTransparent)
-    {
+    private static boolean isTransparent(Block block, boolean waterIsTransparent) {
         Material blockMaterial = block.getType();
         //Blacklist
-        switch (blockMaterial)
-        {
+        switch (blockMaterial) {
             case SNOW:
                 return false;
         }
 
         //Whitelist TODO: some of this might already be included in isTransparent()
-        switch (blockMaterial)
-        {
+        switch (blockMaterial) {
             case AIR:
             case OAK_FENCE:
             case ACACIA_FENCE:

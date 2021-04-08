@@ -1,9 +1,5 @@
 package me.RonanCraft.Pueblos.resources.tools.visual;
 
 public enum VisualizationType {
-    Claim,
-    Subdivision,
-    ErrorClaim,
-    RestoreNature,
-    AdminClaim
+    CLAIM, SUB, ERROR, ERROR_SMALL, ADMIN_CLAIM
 }

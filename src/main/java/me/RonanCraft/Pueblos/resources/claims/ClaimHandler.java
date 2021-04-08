@@ -21,15 +21,14 @@ public class ClaimHandler {
         this.claims.addAll(claims);
     }
 
-    public CLAIM_ERRORS addClaim(Claim claim, Player p, boolean save) {
+    public CLAIM_ERRORS addClaim(Claim claim, Player p) {
         CLAIM_ERRORS error = isClaimValid(claim, p);
         if (error == CLAIM_ERRORS.NONE) {
-            claims.add(claim);
-            if (save)
-                if (Pueblos.getInstance().getSystems().getDatabase().createClaim(claim))
-                    return CLAIM_ERRORS.NONE;
-                else
-                    return CLAIM_ERRORS.DATABASE_ERROR;
+            if (Pueblos.getInstance().getSystems().getDatabase().createClaim(claim)) {
+                claims.add(claim);
+                return CLAIM_ERRORS.NONE;
+            } else
+                return CLAIM_ERRORS.DATABASE_ERROR;
         }
         return error;
     }
@@ -38,10 +37,10 @@ public class ClaimHandler {
         Location greater = claim.getGreaterBoundaryCorner();
         Location lower = claim.getLesserBoundaryCorner();
         //Size
-        if (Math.abs(greater.getBlockX() - lower.getBlockX()) < 10)
+        if (Math.abs(greater.getBlockX() - lower.getBlockX()) < 10 || Math.abs(greater.getBlockZ() - lower.getBlockZ()) < 10) {
+            Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.ERROR_SMALL, p.getLocation()).apply(p);
             return CLAIM_ERRORS.SIZE;
-        else if (Math.abs(greater.getBlockZ() - lower.getBlockZ()) < 10)
-            return CLAIM_ERRORS.SIZE;
+        }
         //Overlapping
         int x1 = lower.getBlockX();
         int x2 = greater.getBlockX();
@@ -55,7 +54,7 @@ public class ClaimHandler {
             int y3 = lower_2.getBlockZ();
             int y4 = greater_2.getBlockZ();
             if (!(x3 > x2 || y3 > y2 || x1 > x4 || y1 > y4)) {
-                Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.ErrorClaim, p.getLocation()).apply(p);
+                Visualization.fromClaim(_claim, p.getLocation().getBlockY(), VisualizationType.ERROR, p.getLocation()).apply(p);
                 return CLAIM_ERRORS.OVERLAPPING;
             }
         }
@@ -92,8 +91,16 @@ public class ClaimHandler {
         }
         String name = result.getString(Database.COLUMNS.OWNER_NAME.name);
         try {
-            return new Claim(id, name, JSONEncoding.getPosition(result.getString(Database.COLUMNS.POSITION.name)));
+            Claim claim = new Claim(id, name, JSONEncoding.getPosition(result.getString(Database.COLUMNS.POSITION.name)));
+            List<ClaimMember> members = JSONEncoding.getMember(result.getString(Database.COLUMNS.MEMBERS.name));
+            if (members != null)
+                for (ClaimMember member : members) {
+                    claim.addMember(member);
+                }
+            claim.claimId = result.getInt(Database.COLUMNS.CLAIM_ID.name);
+            return claim;
         } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }

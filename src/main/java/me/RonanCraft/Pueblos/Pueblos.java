@@ -5,8 +5,11 @@ import me.RonanCraft.Pueblos.resources.Permissions;
 import me.RonanCraft.Pueblos.resources.Systems;
 import me.RonanCraft.Pueblos.resources.files.Files;
 import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -17,12 +20,18 @@ public class Pueblos extends JavaPlugin {
     private final Permissions permissions = new Permissions();
     private final Commands commands = new Commands();
     private final Systems systems = new Systems();
+    public boolean PlaceholderAPI;
 
     @Override
     public void onEnable() {
         instance = this;
         loadAll();
         systems.getEvents().load();
+    }
+
+    @Override
+    public void onDisable() {
+        closeMenus();
     }
 
     @Override
@@ -37,16 +46,28 @@ public class Pueblos extends JavaPlugin {
     }
 
     public void reload(CommandSender sendi) {
+        closeMenus();
         loadAll();
         Messages.core.sendReload(sendi);
     }
 
     //(Re)Load all plugin systems/files/cache
     private void loadAll() {
+        registerDependencies();
         files.loadAll();
         commands.load();
         systems.load();
         permissions.register();
+    }
+
+    private void closeMenus() {
+        for (Player plr : Bukkit.getOnlinePlayers())
+            if (systems.getPlayerInfo().getInventory(plr) != null)
+                plr.closeInventory();
+    }
+
+    private void registerDependencies() {
+        PlaceholderAPI = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
     }
 
     public static Pueblos getInstance() {
@@ -67,5 +88,9 @@ public class Pueblos extends JavaPlugin {
 
     public Systems getSystems() {
         return systems;
+    }
+
+    public boolean papiEnabled() {
+        return PlaceholderAPI;
     }
 }

@@ -1,26 +1,17 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.player.command.types.CmdCreate;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
-import me.RonanCraft.Pueblos.resources.claims.ClaimPosition;
 import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class EventItemChange {
 
@@ -32,6 +23,7 @@ public class EventItemChange {
     }
 
     void onItemChange(PlayerItemHeldEvent e) {
+        listener.claimCreation.remove(e.getPlayer());
         if (claimShowing.containsKey(e.getPlayer()))
             return;
         ItemStack item = e.getPlayer().getInventory().getItem(e.getNewSlot());
@@ -53,7 +45,7 @@ public class EventItemChange {
                             Messages.core.sendClaimItemInClaim(p);
                         else
                             Messages.core.sendClaimItemNotOwner(p);
-                        Visualization.fromClaim(claim, p.getLocation().getBlockY(), claim.isOwner(p) ? VisualizationType.Claim : VisualizationType.ErrorClaim, p.getLocation()).apply(p);
+                        Visualization.fromClaim(claim, p.getLocation().getBlockY(), claim.isOwner(p) ? VisualizationType.CLAIM : VisualizationType.ERROR, p.getLocation()).apply(p);
                     } else {
                         Messages.core.sendClaimItemNoClaim(p);
                     }

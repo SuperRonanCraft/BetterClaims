@@ -11,6 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 
@@ -24,6 +26,8 @@ public class EventListener implements Listener {
     EventItemChange itemChange = new EventItemChange(this);
     EventPistons pistons = new EventPistons(this);
     EventDamage damage = new EventDamage(this);
+    EventClick click = new EventClick();
+    EventClose close = new EventClose();
 
     public void load() {
         Pueblos.getInstance().getServer().getPluginManager().registerEvents(this, Pueblos.getInstance());
@@ -86,15 +90,21 @@ public class EventListener implements Listener {
         blocks.onPlace(e);
     }
 
-    boolean isProtected(Location loc) {
-        return getClaim(loc) != null;
+    //Click Inventory
+    @EventHandler (priority = EventPriority.HIGH)
+    void onClick(InventoryClickEvent e) {
+        click.click(e);
     }
 
-    boolean isProtected(Player p, Location loc) {
-        Claim claim = getClaim(loc);
-        //if (claim != null && isOwner(p, claim))
-        //    Visualization.addClaimElements(claim, p.getLocation().getBlockY(), VisualizationType.Claim, p.getLocation()).apply(p);
-        return claim != null && !isOwner(p, claim);
+    //Close Inventory
+    @EventHandler (priority = EventPriority.HIGH)
+    void onClose(InventoryCloseEvent e) {
+        close.exit(e);
+    }
+
+    //Tools
+    boolean isProtected(Location loc) {
+        return getClaim(loc) != null;
     }
 
     Claim getClaim(Location loc) {

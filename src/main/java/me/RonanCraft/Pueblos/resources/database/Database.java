@@ -2,11 +2,9 @@ package me.RonanCraft.Pueblos.resources.database;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,20 +17,11 @@ public abstract class Database {
     public String table;
 
     public enum COLUMNS {
-        CLAIM_ID("id", "int AUTO_INCREMENT PRIMARY KEY"),
-        OWNER_UUID("uuid", "varchar(32)"),
-        OWNER_NAME("name", "varchar(32)"),
-        //Integers
-        //X("x", "int"),
-        //Y("y", "int"),
-        //Z("z", "int"),
-        //IMPORTANCE("importance", "int"),
-        //RATING("rating", "int"),
-        //Strings
-        //WORLD("world", "text"),
-        //TIME("time", "text"),
-        //CATEGORY("category", "text"),
-        POSITION("position", "text");
+        CLAIM_ID("id", "integer PRIMARY KEY AUTOINCREMENT"),
+        OWNER_UUID("uuid", "varchar(32) NOT NULL"),
+        OWNER_NAME("name", "varchar(32) NOT NULL"),
+        POSITION("position", "text NOT NULL"),
+        MEMBERS("members", "text");
         //REPLIER("replier", "text"),
         //RESOLVED("resolved", "text DEFAULT null"),
         //CLAIMED_BY("claimedBy", "text DEFAULT null"),
@@ -100,77 +89,29 @@ public abstract class Database {
         if (sqlEnabled) pre = "INSERT IGNORE INTO ";
         else pre = "INSERT OR IGNORE INTO ";
         String sql = pre + table + " ("
-                //+ COLUMNS.CLAIM_ID.name + ", "
                 + COLUMNS.OWNER_UUID.name + ", "
                 + COLUMNS.OWNER_NAME.name + ", "
-                /*+ COLUMNS.AUTHOR.name + ", "
-                + COLUMNS.MESSAGE.name + ", "
-                + COLUMNS.OPEN.name + ", "
-                //Ints
-                + COLUMNS.X.name + ", "
-                + COLUMNS.Y.name + ", "
-                + COLUMNS.Z.name + ", "
-                + COLUMNS.IMPORTANCE.name + ", "
-                + COLUMNS.RATING.name + ", "*/
-                //Strings
                 + COLUMNS.POSITION.name + ""
-                //+ COLUMNS.TIME.name + ", "
-                /*+ COLUMNS.CATEGORY.name + ", "
-                + COLUMNS.REPLY.name + ", "
-                + COLUMNS.REPLIER.name + ", "
-                + COLUMNS.RESOLVED.name + ", "
-                + COLUMNS.CLAIMED_BY.name + ", "
-                + COLUMNS.SERVER.name + ", "
-                //Booleans
-                + COLUMNS.FLAGGED.name + ", "
-                + COLUMNS.BROADCAST.name*/
-                + ") VALUES(?, ?, ?)";/*, ?, " +
-                //Ints
-                "?, ?, ?, ?, ?, " +
-                //Strings
-                "?, ?, ?, ?, ?, ?, ?, ?, " +
-                //Booleans
-                "?, ?)";*/
+                + ") VALUES(?, ?, ?)";
         List<Object> params = new ArrayList<>() {{
                 //add(claim.ownerId != null ? claim.ownerId : "null");
                 add(claim.ownerId != null ? claim.ownerId : "null");
                 add(claim.ownerName);
-                /*add(ticket.getAuthorName());
-                add(ticket.getMsg());
-                add(ticket.getOpen());
-                //Ints
-                add(ticket.getX());
-                add(ticket.getY());
-                add(ticket.getZ());
-                add(ticket.getImportance());
-                add(ticket.getRating());
-                //Strings*/
-                //add(claim.p.getName());
                 add(claim.getPositionJSON());
-                /*add(ticket.getTime());
-                add(ticket.getCategory());
-                add(JSONEncoding.getJsonFromList(COLUMNS.REPLY.name, ticket.getReply()));
-                add(JSONEncoding.getJsonFromList(COLUMNS.REPLIER.name, ticket.getReplier()));
-                add(ticket.getResolved());
-                add(ticket.getClaimedBy());
-                add(ticket.getServer());
-                //Booleans
-                add(ticket.getFlagged());
-                add(ticket.getBroadcast());*/
         }};
+        return sqlCreateClaim(sql, params, claim);
+    }
+
+    //Set Open/Closed Status
+    public boolean updateMembers(Claim claim) {
+        String sql = "UPDATE " + table + " SET " + COLUMNS.MEMBERS.name + " = ?  WHERE" + " " + COLUMNS.CLAIM_ID.name + " = ?";
+        List<Object> params = new ArrayList<>() {{
+            add(JSONEncoding.getJsonFromMembers(claim.getMembers()));
+            add(claim.claimId); }};
         return sqlUpdate(sql, params);
     }
 
-    /*//Set Open/Closed Status
-    public boolean setStatus(Ticket ticket, boolean open) {
-        String sql = "UPDATE " + table_ticket + " SET " + COLUMNS.OPEN.name + " = ?  WHERE" + " " + COLUMNS.TICKET_ID.name + " = ?";
-        List<Object> params = new ArrayList<Object>() {{
-            add(open);
-            add(ticket.getId()); }};
-        return sqlUpdate(sql, params);
-    }
-
-    //Set the Imporance
+    /*Set the Imporance
     public boolean setImportance(Ticket ticket, int importance) {
         String sql = "UPDATE " + table_ticket + " SET "
                 + COLUMNS.IMPORTANCE.name + " = ? WHERE " + COLUMNS.TICKET_ID.name + " = ?";
@@ -300,7 +241,7 @@ public abstract class Database {
         boolean success = true;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement(statement);
+            ps = conn.prepareStatement(statement, Statement.RETURN_GENERATED_KEYS);
             if (params != null) {
                 Iterator<Object> it = params.iterator();
                 int paramIndex = 1;
@@ -312,8 +253,9 @@ public abstract class Database {
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
-                claim.claimId = rs.getLong(COLUMNS.CLAIM_ID.name);
-            }
+                claim.claimId = rs.getLong(1);
+            } else
+                return false;
         } catch (SQLException ex) {
             Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
             success = false;
