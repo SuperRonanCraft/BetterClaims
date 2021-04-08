@@ -1,8 +1,6 @@
 package me.RonanCraft.Pueblos.inventory;
 
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG_MEMBER;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -18,7 +16,7 @@ import java.util.List;
 
 public class InventoryClaimMember implements PueblosInv_Member {
 
-    private final HashMap<Player, HashMap<Integer, CLAIM_FLAG_MEMBER>> flag_map = new HashMap<>();
+    private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, ClaimMember> member = new HashMap<>();
 
     @Override
@@ -37,7 +35,7 @@ public class InventoryClaimMember implements PueblosInv_Member {
 
         //Flags
         slot = slot + 5;
-        HashMap<Integer, CLAIM_FLAG_MEMBER> itemSlots = new HashMap<>();
+        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
         for (CLAIM_FLAG_MEMBER flag : CLAIM_FLAG_MEMBER.values()) {
             item = new ItemStack(Material.GOLD_INGOT);
             setTitle(item, p, StringUtils.capitalize(flag.name().replaceAll("_", " ").toLowerCase()));
@@ -51,9 +49,9 @@ public class InventoryClaimMember implements PueblosInv_Member {
             while (inv.getItem(slot) != null && slot < inv.getSize())
                 slot++;
             inv.setItem(slot, item);
-            itemSlots.put(slot, flag);
+            itemInfo.put(slot, new PueblosItem(item, flag));
         }
-        this.flag_map.put(p, itemSlots);
+        this.itemInfo.put(p, itemInfo);
         this.member.put(p, member);
         p.openInventory(inv);
         return inv;
@@ -62,11 +60,13 @@ public class InventoryClaimMember implements PueblosInv_Member {
     @Override
     public void clickEvent(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (flag_map.containsKey(p)) {
-            CLAIM_FLAG_MEMBER flag = flag_map.get(p).get(e.getSlot());
-            this.member.get(p).flags.put(flag, flag.cast(flag))
+        if (itemInfo.containsKey(p)) {
+            CLAIM_FLAG_MEMBER flag = (CLAIM_FLAG_MEMBER) itemInfo.get(p).get(e.getSlot()).type_info;
+            ClaimMember member = this.member.get(p);
+            Object current_value = member.flags.getOrDefault(flag, flag.getDefault());
+            this.member.get(p).flags.put(flag, flag.alter(current_value));
             this.open(p, this.member.get(p));
-            this.flag_map.remove(p);
+            this.itemInfo.remove(p);
             this.member.remove(p);
         }
     }

@@ -8,7 +8,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 public enum PueblosInventory {
     MEMBERS(new InventoryClaimMembers()),
-    MEMBER(new InventoryClaimMember());
+    MEMBER(new InventoryClaimMember()),
+    CLAIM(new InventoryClaim());
 
     private final PueblosInv inv;
 

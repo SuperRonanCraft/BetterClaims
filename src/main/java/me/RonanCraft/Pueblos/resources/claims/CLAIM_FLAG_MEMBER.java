@@ -26,4 +26,12 @@ public enum CLAIM_FLAG_MEMBER {
     public Object getDefault() {
         return defaultValue;
     }
+
+    public Object alter(Object value) {
+        if (type == Boolean.class)
+            return !((Boolean) value);
+        else if (type == Integer.class)
+            return ((Integer) value) + 1;
+        return null;
+    }
 }
