@@ -9,6 +9,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface PueblosInv {
@@ -43,4 +44,23 @@ public interface PueblosInv {
                 inv.setItem(i, border.clone());
         }
     }
+
+    default boolean checkItems(InventoryClickEvent e, HashMap<Integer, PueblosItem> items) {
+        if (items.containsKey(e.getSlot())) {
+            PueblosItem item = items.get(e.getSlot());
+            if (item.type != ITEM_TYPE.NORMAL) {
+                switch (item.type) {
+                    case BACK:
+                    case NEXT:
+                        PueblosInventory inv = (PueblosInventory) item.info;
+                        inv.open((Player) e.getWhoClicked(), item.info2);
+                }
+                clear((Player) e.getWhoClicked());
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void clear(Player p); //Called when a special item causes this inventory to close
 }

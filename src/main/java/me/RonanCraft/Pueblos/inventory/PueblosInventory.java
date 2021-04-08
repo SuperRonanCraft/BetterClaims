@@ -28,7 +28,14 @@ public enum PueblosInventory {
         if (inv instanceof PueblosInv_Member)
             Pueblos.getInstance().getSystems().getPlayerInfo().addInventory(p, ((PueblosInv_Member) inv).open(p, member), this);
         else
-            Pueblos.getInstance().getLogger().severe(this.name() + " is not a claim type!");
+            Pueblos.getInstance().getLogger().severe(this.name() + " is not a member type!");
+    }
+
+    public void open(Player p, Object obj) {
+        if (obj instanceof ClaimMember)
+            open(p, (ClaimMember) obj);
+        else if (obj instanceof Claim)
+            open(p, (Claim) obj);
     }
 
     public void click(InventoryClickEvent e) {

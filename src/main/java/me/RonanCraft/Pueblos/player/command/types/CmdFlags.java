@@ -24,7 +24,7 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
 
         //Event
         Claim claim = handler.getClaim(p.getLocation());
-        if (claim != null && claim.isOwner(p)) {
+        if (claim != null && claim.isMember(p)) {
             if (args.length == 3) {
                 for (CLAIM_FLAG flag : CLAIM_FLAG.values())
                     if (flag.name().equalsIgnoreCase(args[1])) {

@@ -17,6 +17,8 @@ public class Claim {
     private final ClaimFlags flags = new ClaimFlags();
     private final List<ClaimMember> members = new ArrayList<>();
     private String name;
+    //Database stuff
+    private boolean updated = false;
 
     Claim(UUID ownerId, String ownerName, ClaimPosition position) {
         this.ownerId = ownerId;
@@ -53,6 +55,15 @@ public class Claim {
         return name != null ? name : ownerName;
     }
 
+    public boolean isMember(Player p) {
+        if (p.getUniqueId().equals(ownerId))
+            return true;
+        for (ClaimMember member : members)
+            if (member.getId().equals(p.getUniqueId()))
+                return true;
+        return false;
+    }
+
     public boolean isOwner(Player p) {
         return p.getUniqueId().equals(ownerId);
     }
@@ -64,5 +75,16 @@ public class Claim {
 
     public List<ClaimMember> getMembers() {
         return members;
+    }
+
+    public void updated() {
+        updated = true;
+    }
+
+    public ClaimMember getMember(Player player) {
+        for (ClaimMember member : members)
+            if (member.uuid == player.getUniqueId())
+                return member;
+        return null;
     }
 }

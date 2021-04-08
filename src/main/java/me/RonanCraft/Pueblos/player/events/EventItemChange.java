@@ -41,11 +41,11 @@ public class EventItemChange {
                 ItemStack item = p.getInventory().getItemInMainHand();
                 if (item.getType().equals(getClaimItem())) {
                     if (claim != null) {
-                        if (claim.isOwner(p))
+                        if (claim.isMember(p))
                             Messages.core.sendClaimItemInClaim(p);
                         else
                             Messages.core.sendClaimItemNotOwner(p);
-                        Visualization.fromClaim(claim, p.getLocation().getBlockY(), claim.isOwner(p) ? VisualizationType.CLAIM : VisualizationType.ERROR, p.getLocation()).apply(p);
+                        Visualization.fromClaim(claim, p.getLocation().getBlockY(), claim.isMember(p) ? VisualizationType.CLAIM : VisualizationType.ERROR, p.getLocation()).apply(p);
                     } else {
                         Messages.core.sendClaimItemNoClaim(p);
                     }

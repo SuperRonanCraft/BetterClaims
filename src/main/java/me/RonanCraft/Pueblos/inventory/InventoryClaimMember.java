@@ -24,8 +24,21 @@ public class InventoryClaimMember implements PueblosInv_Member {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, "Member " + member.name);
 
         addBorder(inv);
+        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
 
-        int slot = inv.firstEmpty() + 3;
+        PueblosInventory pinv = getPl().getSystems().getPlayerInfo().getPreviousPlugin(p, false);
+        if (pinv != null) {
+            int slot = inv.firstEmpty();
+            ItemStack item = new ItemStack(Material.ARROW);
+            setTitle(item, p, "<- &eBack");
+            List<String> lore = new ArrayList<>();
+            lore.add("Click to go back to " + pinv.name());
+            setLore(item, p, lore);
+            inv.setItem(slot, item);
+            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.BACK, pinv, member));
+        }
+
+        int slot = 13;
         ItemStack item = new ItemStack(Material.PLAYER_HEAD);
         setTitle(item, p, "&7" + member.name);
         List<String> lore = new ArrayList<>();
@@ -35,21 +48,20 @@ public class InventoryClaimMember implements PueblosInv_Member {
 
         //Flags
         slot = slot + 5;
-        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
         for (CLAIM_FLAG_MEMBER flag : CLAIM_FLAG_MEMBER.values()) {
             item = new ItemStack(Material.GOLD_INGOT);
             setTitle(item, p, StringUtils.capitalize(flag.name().replaceAll("_", " ").toLowerCase()));
             Object value = flag.getDefault();
-            if (member.flags.containsKey(flag))
-                value = member.flags.get(flag);
+            if (member.getFlags().containsKey(flag))
+                value = member.getFlags().get(flag);
             lore = new ArrayList<>();
             lore.add(StringUtils.capitalize(value.toString().toLowerCase()));
             setLore(item, p, lore);
             slot++;
-            while (inv.getItem(slot) != null && slot < inv.getSize())
+            while (slot < inv.getSize() && inv.getItem(slot) != null)
                 slot++;
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, flag));
+            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, flag));
         }
         this.itemInfo.put(p, itemInfo);
         this.member.put(p, member);
@@ -60,15 +72,21 @@ public class InventoryClaimMember implements PueblosInv_Member {
     @Override
     public void clickEvent(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (itemInfo.containsKey(p)) {
-            CLAIM_FLAG_MEMBER flag = (CLAIM_FLAG_MEMBER) itemInfo.get(p).get(e.getSlot()).type_info;
-            ClaimMember member = this.member.get(p);
-            Object current_value = member.flags.getOrDefault(flag, flag.getDefault());
-            this.member.get(p).flags.put(flag, flag.alter(current_value));
-            this.open(p, this.member.get(p));
-            this.itemInfo.remove(p);
-            this.member.remove(p);
-        }
+        if (!itemInfo.containsKey(p) || checkItems(e, itemInfo.get(p)))
+            return;
+
+        CLAIM_FLAG_MEMBER flag = (CLAIM_FLAG_MEMBER) itemInfo.get(p).get(e.getSlot()).info;
+        ClaimMember member = this.member.get(p);
+        Object current_value = member.getFlags().getOrDefault(flag, flag.getDefault());
+        this.member.get(p).setFlag(flag, flag.alter(current_value), true);
+        PueblosInventory.MEMBER.open(p, this.member.get(p));
+        //this.itemInfo.remove(p);
+        //this.member.remove(p);
     }
 
+    @Override
+    public void clear(Player p) {
+        itemInfo.remove(p);
+        member.remove(p);
+    }
 }

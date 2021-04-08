@@ -32,12 +32,22 @@ public class EventInteract {
         Block block = e.getClickedBlock();
         Claim claim = listener.getClaim(block.getLocation());
         if (claim != null) {
+            CLAIM_FLAG flag = null;
             if (block.getType().name().contains("LEVER")) {
-                e.setCancelled(!(Boolean) claim.getFlags().getFlag(CLAIM_FLAG.ALLOW_LEVER));
+                flag = CLAIM_FLAG.ALLOW_LEVER;
             } else if (block.getType().name().contains("DOOR")) {
-                e.setCancelled(!(Boolean) claim.getFlags().getFlag(CLAIM_FLAG.ALLOW_DOOR));
+                flag = CLAIM_FLAG.ALLOW_DOOR;
             } else if (block.getType().name().contains("BUTTON")) {
-                e.setCancelled(!(Boolean) claim.getFlags().getFlag(CLAIM_FLAG.ALLOW_BUTTON));
+                flag = CLAIM_FLAG.ALLOW_BUTTON;
+            }
+            if (flag != null) {
+                //Check member flag value (if it exists)
+                CLAIM_FLAG_MEMBER memberFlag = flag.getMemberEquivalent();
+                ClaimMember member = claim.getMember(e.getPlayer());
+                Object flagValue = claim.getFlags().getFlag(flag);
+                if (memberFlag != null && member != null && member.getFlags().containsKey(memberFlag))
+                    flagValue = member.getFlags().get(memberFlag);
+                e.setCancelled(!(Boolean) flagValue);
             }
         }
     }

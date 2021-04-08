@@ -64,7 +64,7 @@ public class JSONEncoding {
             obj.put("name", member.name);
             obj.put("date", new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(member.date));
             HashMap<String, Object> obj2 = new HashMap<>();
-            for (Map.Entry<CLAIM_FLAG_MEMBER, Object> flag : member.flags.entrySet()) {
+            for (Map.Entry<CLAIM_FLAG_MEMBER, Object> flag : member.getFlags().entrySet()) {
                 obj2.put(flag.getKey().name(), flag.getValue());
             }
             obj.put("flags", obj2);
@@ -85,13 +85,15 @@ public class JSONEncoding {
                 String uuid = member_info.get("uuid").toString();
                 String name = member_info.get("name").toString();
                 String date = member_info.get("date").toString();
-                HashMap<CLAIM_FLAG, Object> flags = new HashMap<>();
+                HashMap<CLAIM_FLAG_MEMBER, Object> flags = new HashMap<>();
                 for (Map.Entry<String, Object> flag : ((HashMap<String, Object>) member_info.get("flags")).entrySet()) {
-                    CLAIM_FLAG _flag = CLAIM_FLAG.valueOf(flag.getKey());
+                    CLAIM_FLAG_MEMBER _flag = CLAIM_FLAG_MEMBER.valueOf(flag.getKey());
                     Object _value = flag.getValue();
                     flags.put(_flag, _value);
                 }
-                members.add(new ClaimMember(UUID.fromString(uuid), name, new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(date), false, claim));
+                ClaimMember member = new ClaimMember(UUID.fromString(uuid), name, new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(date), false, claim);
+                member.setFlag(flags, false);
+                members.add(member);
             }
             return members;
         } catch (NullPointerException | ParseException e) {

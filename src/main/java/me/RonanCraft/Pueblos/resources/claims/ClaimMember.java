@@ -11,7 +11,7 @@ public class ClaimMember {
     public final String name;
     public final boolean owner;
     public final Date date;
-    public HashMap<CLAIM_FLAG_MEMBER, Object> flags = new HashMap<>();
+    private HashMap<CLAIM_FLAG_MEMBER, Object> flags = new HashMap<>();
     public final Claim claim;
 
     public ClaimMember(UUID uuid, String name, Date date, boolean owner, Claim claim) {
@@ -20,6 +20,25 @@ public class ClaimMember {
         this.date = date;
         this.owner = owner;
         this.claim = claim;
+    }
+
+    public HashMap<CLAIM_FLAG_MEMBER, Object> getFlags() {
+        return flags;
+    }
+
+    public void setFlag(CLAIM_FLAG_MEMBER flag, Object value, boolean updated) {
+        if (updated && flags.containsKey(flag) && !flags.get(flag).equals(value))
+            claim.updated();
+        flags.put(flag, value);
+    }
+
+    public void setFlag(HashMap<CLAIM_FLAG_MEMBER, Object> values, boolean updated) {
+        for (Map.Entry<CLAIM_FLAG_MEMBER, Object> flag : values.entrySet())
+            setFlag(flag.getKey(), flag.getValue(), updated);
+    }
+
+    public UUID getId() {
+        return uuid;
     }
 
     public Player getPlayer() {
