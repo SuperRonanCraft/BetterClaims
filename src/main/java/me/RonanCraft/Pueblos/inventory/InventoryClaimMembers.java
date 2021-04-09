@@ -14,27 +14,35 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryClaimMembers implements PueblosInv_Claim {
+public class InventoryClaimMembers extends PueblosInvLoader implements PueblosInv_Claim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, Claim> claim = new HashMap<>();
 
     @Override
     public Inventory open(Player p, Claim claim) {
-        Inventory inv = Bukkit.createInventory(null, 9 * 5, "Members " + claim.getName());
+        Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claim));
 
         addBorder(inv);
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
 
-        PueblosInventory pinv = getPl().getSystems().getPlayerInfo().getPreviousPlugin(p, false);
+        for (ITEMS i : ITEMS.values()) {
+            if (i.slot == 0)
+                continue;
+            ItemStack _item = getItem(i.section, p, claim);
+            inv.setItem(i.slot, _item);
+            itemInfo.put(i.slot, new PueblosItem(_item, ITEM_TYPE.NORMAL, claim));
+        }
+
+        PueblosInventory pinv = getPl().getSystems().getPlayerInfo().getPrevious(p, PueblosInventory.MEMBERS);
         if (pinv != null) {
             int slot = inv.firstEmpty();
             ItemStack item = new ItemStack(Material.ARROW);
-            setTitle(item, p, "<- &eBack");
+            PueblosInv.setTitle(item, p, "<- &eBack");
             List<String> lore = new ArrayList<>();
             lore.add("Click to go back to " + pinv.name());
-            setLore(item, p, lore);
+            PueblosInv.setLore(item, p, lore);
             inv.setItem(slot, item);
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.BACK, pinv, claim));
         }
@@ -46,17 +54,7 @@ public class InventoryClaimMembers implements PueblosInv_Claim {
                 slot++;
             if (slot >= inv.getSize())
                 break;
-            ItemStack item = new ItemStack(Material.PLAYER_HEAD);
-            setTitle(item, member.getPlayer(), "&7" + member.name);
-            List<String> lore = new ArrayList<>();
-            lore.add("Owner: " + member.owner);
-            if (!member.getFlags().isEmpty()) {
-                lore.add("Flags");
-                member.getFlags().forEach((flag, value) -> {
-                    lore.add(" - " + flag.name() + ": " + value.toString());
-                });
-            }
-            setLore(item, p, lore);
+            ItemStack item = getItem(ITEMS.MEMBER.section, p, member);
             inv.setItem(slot, item);
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, member));
         }
@@ -69,7 +67,7 @@ public class InventoryClaimMembers implements PueblosInv_Claim {
     @Override
     public void clickEvent(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (!itemInfo.containsKey(p) || !claim.containsKey(p) || checkItems(e, itemInfo.get(p)))
+        if (!itemInfo.containsKey(p) || !claim.containsKey(p) || checkItems(e, itemInfo.get(p)) || !itemInfo.get(p).containsKey(e.getSlot()))
             return;
 
         if (!claim.get(p).isOwner(p)) {
@@ -77,13 +75,41 @@ public class InventoryClaimMembers implements PueblosInv_Claim {
             return;
         }
 
+        if (!(itemInfo.get(p).get(e.getSlot()).info instanceof ClaimMember))
+            return;
         ClaimMember member = (ClaimMember) itemInfo.get(p).get(e.getSlot()).info;
         //this.itemInfo.remove(p);
-        PueblosInventory.MEMBER.open(p, member);
+        PueblosInventory.MEMBER.open(p, member, false);
     }
 
     @Override
     public void clear(Player p) {
         itemInfo.remove(p);
+    }
+
+    public String getSection() {
+        return "Members";
+    }
+
+    @Override
+    public List<String> getSections() {
+        List<String> list = new ArrayList<>();
+        for (ITEMS set : ITEMS.values())
+            list.add(set.section);
+        return list;
+    }
+
+    private enum ITEMS {
+        MEMBER("Member", 0),
+        OWNER("Owner", 13),
+        REQUEST("Requests", 16);
+
+        String section;
+        int slot;
+
+        ITEMS(String section, int slot) {
+            this.section = section;
+            this.slot = slot;
+        }
     }
 }

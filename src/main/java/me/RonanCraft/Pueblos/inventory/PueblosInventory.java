@@ -17,25 +17,25 @@ public enum PueblosInventory {
         this.inv = inv;
     }
 
-    public void open(Player p, Claim claim) {
+    public void open(Player p, Claim claim, boolean from_command) {
         if (inv instanceof PueblosInv_Claim)
-            Pueblos.getInstance().getSystems().getPlayerInfo().addInventory(p, ((PueblosInv_Claim) inv).open(p, claim), this);
+            Pueblos.getInstance().getSystems().getPlayerInfo().setInventory(p, ((PueblosInv_Claim) inv).open(p, claim), this, from_command);
         else
             Pueblos.getInstance().getLogger().severe(this.name() + " is not a claim type!");
     }
 
-    public void open(Player p, ClaimMember member) {
+    public void open(Player p, ClaimMember member, boolean from_command) {
         if (inv instanceof PueblosInv_Member)
-            Pueblos.getInstance().getSystems().getPlayerInfo().addInventory(p, ((PueblosInv_Member) inv).open(p, member), this);
+            Pueblos.getInstance().getSystems().getPlayerInfo().setInventory(p, ((PueblosInv_Member) inv).open(p, member), this, from_command);
         else
             Pueblos.getInstance().getLogger().severe(this.name() + " is not a member type!");
     }
 
-    public void open(Player p, Object obj) {
+    public void openCasted(Player p, Object obj) {
         if (obj instanceof ClaimMember)
-            open(p, (ClaimMember) obj);
+            open(p, (ClaimMember) obj, false);
         else if (obj instanceof Claim)
-            open(p, (Claim) obj);
+            open(p, (Claim) obj, false);
     }
 
     public void click(InventoryClickEvent e) {
@@ -43,6 +43,10 @@ public enum PueblosInventory {
     }
 
     public void closeEvent(Player p) {
-        Pueblos.getInstance().getSystems().getPlayerInfo().addPrevious(p, this);
+        //Pueblos.getInstance().getSystems().getPlayerInfo().addPrevious(p, this);
+    }
+
+    public PueblosInv get() {
+        return inv;
     }
 }

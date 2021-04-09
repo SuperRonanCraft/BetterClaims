@@ -209,6 +209,28 @@ public abstract class Database {
         return sqlUpdate(sql, params);
     }
 */
+
+    //Claim Saving
+    void saveClaim(Claim claim) {
+        String sql = "UPDATE " + table + " SET "
+                + COLUMNS.POSITION.name + " = ?, "
+                + COLUMNS.MEMBERS.name + " = ? "
+                + " WHERE " + COLUMNS.CLAIM_ID.name + " = ?";
+        List<Object> params = new ArrayList<>() {{
+            add(claim.getPositionJSON());
+            add(JSONEncoding.getJsonFromMembers(claim.getMembers()));
+            add(claim.claimId);
+        }};
+        claim.uploaded();
+        sqlUpdate(sql, params);
+    }
+
+    public void saveChanges() {
+        for (Claim claim : Pueblos.getInstance().getSystems().getClaimHandler().getClaims())
+            if (claim.wasUpdated())
+                saveClaim(claim);
+    }
+
     //Tools
     private boolean sqlUpdate(String statement, List<Object> params) {
         Connection conn = null;

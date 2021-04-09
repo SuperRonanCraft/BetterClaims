@@ -1,7 +1,9 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -81,10 +83,22 @@ public class Claim {
         updated = true;
     }
 
+    public boolean wasUpdated() {
+        return updated;
+    }
+
+    public void uploaded() {
+        updated = false;
+    }
+
     public ClaimMember getMember(Player player) {
         for (ClaimMember member : members)
             if (member.uuid == player.getUniqueId())
                 return member;
         return null;
+    }
+
+    public OfflinePlayer getOwner() {
+        return Bukkit.getOfflinePlayer(ownerId);
     }
 }

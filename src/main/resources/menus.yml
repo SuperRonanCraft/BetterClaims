@@ -1,0 +1,66 @@
+Global:
+  Back:
+    Name: '&f<- &e&bBack'
+    Item: 'arrow'
+    Lore:
+      - ''
+      - '&8Click to go back a page'
+Claim:
+  Title: '&7Claim | %claim_name%'
+  Items:
+    Members:
+      Name: '&eMembers'
+      Item: 'player_head'
+      Lore:
+      - ''
+      - '&8Members: &f%claim_members%'
+      - '&7View all members in this claim'
+    Flags:
+      Name: '&eFlags'
+      Item: 'BLUE_BANNER'
+      Lore:
+      - ''
+      - '&7Edit claim flags'
+Members:
+  Title: '&7Members | %claim_name%'
+  Items:
+    Member:
+      Name: '&e%member_name%'
+      Item: 'player_head'
+      Lore:
+        - ''
+        - '&fClick to edit &8%member_name%'
+    Owner:
+      Name: '&e%claim_owner%'
+      Item: 'player_head'
+      Lore:
+        - ''
+        - '&fThis is the claim owner!'
+    Requests:
+      Name: '&aJoin Requests'
+      Item: 'name_tag'
+      Lore:
+        - ''
+        - '&fView all join requests'
+Member:
+  Title: '&7Member | %member_name%'
+  Items:
+    Member:
+      Name: '&eEditting Member'
+      Item: 'player_head'
+      Lore:
+        - ''
+        - '&f%member_name%'
+    Flag:
+      Enabled:
+        Name: '&e%member_flag%'
+        Item: 'GOLD_INGOT'
+        Lore:
+          - ''
+          - '&7Value: &f%member_flag_value%'
+      Disabled:
+        Name: '&e%member_flag%'
+        Item: 'IRON_INGOT'
+        Lore:
+          - ''
+          - '&7Value: &f%member_flag_value%'

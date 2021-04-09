@@ -13,7 +13,7 @@ public class EventClick {
         if (!validClick(e))
             return;
         e.setCancelled(true);
-        PueblosInventory inventory = Pueblos.getInstance().getSystems().getPlayerInfo().getInventoryPlugin((Player) e.getWhoClicked());
+        PueblosInventory inventory = Pueblos.getInstance().getSystems().getPlayerInfo().getCurrent((Player) e.getWhoClicked());
         if (inventory != null)
             inventory.click(e);
     }

@@ -1,5 +1,7 @@
 package me.RonanCraft.Pueblos;
 
+import me.RonanCraft.Pueblos.inventory.PueblosInvLoader;
+import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.command.Commands;
 import me.RonanCraft.Pueblos.resources.Permissions;
 import me.RonanCraft.Pueblos.resources.Systems;
@@ -46,6 +48,7 @@ public class Pueblos extends JavaPlugin {
     }
 
     public void reload(CommandSender sendi) {
+        systems.getDatabase().saveChanges();
         closeMenus();
         loadAll();
         Messages.core.sendReload(sendi);
@@ -58,6 +61,9 @@ public class Pueblos extends JavaPlugin {
         commands.load();
         systems.load();
         permissions.register();
+        for (PueblosInventory inv : PueblosInventory.values())
+            if (inv.get() instanceof PueblosInvLoader)
+                ((PueblosInvLoader) inv.get()).load();
     }
 
     private void closeMenus() {

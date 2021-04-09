@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -41,7 +42,11 @@ public class ClaimMember {
         return uuid;
     }
 
-    public Player getPlayer() {
-        return Bukkit.getPlayer(uuid);
+    public String getName() {
+        return name;
+    }
+
+    public OfflinePlayer getPlayer() {
+        return Bukkit.getOfflinePlayer(uuid);
     }
 }

@@ -24,7 +24,7 @@ public class FileOther {
     }
 
     public enum FILETYPE {
-        CONFIG("config"), MYSQL("mysql");
+        CONFIG("config"), MENU("menus"), MYSQL("mysql");
 
         private final String fileName;
         private final YamlConfiguration config = new YamlConfiguration();

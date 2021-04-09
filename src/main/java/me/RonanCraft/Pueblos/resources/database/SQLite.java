@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.resources.database;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.files.FileOther;
 
 import java.io.File;
