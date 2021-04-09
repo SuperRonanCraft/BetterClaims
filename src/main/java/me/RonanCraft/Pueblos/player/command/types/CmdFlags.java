@@ -32,7 +32,7 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
                             Object value = flag.cast(args[2]);
                             if (value == null)
                                 throw new Exception();
-                            claim.getFlags().setFlag(flag, value);
+                            claim.getFlags().setFlag(flag, value, true);
                             Messages.core.sms(p, "Set " + flag.name().toLowerCase() + " to " + value);
                         } catch (Exception e) {
                             Messages.core.sms(p, "Invalid value!");

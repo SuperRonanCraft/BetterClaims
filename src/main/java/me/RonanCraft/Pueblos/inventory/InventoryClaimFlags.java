@@ -24,18 +24,24 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
     public Inventory open(Player p, Claim claim) {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claim));
 
+        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
+
         addBorder(inv);
 
-        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
+        addButtonBack(inv, p, itemInfo, PueblosInventory.FLAGS, claim);
+
+        int slot = 18;
         for (CLAIM_FLAG flag : CLAIM_FLAG.values()) {
+            slot = getNextSlot(slot, inv);
+            if (slot == -1)
+                break;
             ItemStack item;
-            if (!claim.hasRequestFrom(p))
-                item = getItem(ITEMS.NEW.section, p, claim);
+            if ((Boolean) claim.getFlags().getFlag(flag))
+                item = getItem(ITEMS.FLAG_ENABLED.section, p, new Object[]{claim, flag});
             else
-                item = getItem(ITEMS.REQUESTED.section, p, claim);
-            int slot = inv.firstEmpty();
+                item = getItem(ITEMS.FLAG_DISABLED.section, p, new Object[]{claim, flag});
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, claim));
+            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, flag));
         }
         this.itemInfo.put(p, itemInfo);
         this.claim.put(p, claim);
@@ -50,7 +56,9 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
             return;
 
         CLAIM_FLAG flag = (CLAIM_FLAG) itemInfo.get(p).get(e.getSlot()).info;
-
+        Claim claim = this.claim.get(p);
+        claim.getFlags().setFlag(flag, !(Boolean) claim.getFlags().getFlag(flag), true);
+        PueblosInventory.FLAGS.open(p, claim, false);
         //this.itemInfo.remove(p);
     }
 
@@ -61,7 +69,7 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
 
     @Override
     public String getSection() {
-        return "Requests";
+        return "Flags";
     }
 
     @Override
@@ -73,7 +81,8 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
     }
 
     enum ITEMS {
-        FLAG("New");
+        FLAG_ENABLED("Enabled"),
+        FLAG_DISABLED("Disabled");
 
         String section;
 

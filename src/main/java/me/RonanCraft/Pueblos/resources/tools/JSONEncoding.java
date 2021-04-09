@@ -90,7 +90,41 @@ public class JSONEncoding {
         return JSONArray.toJSONString(array);
     }
 
+    public static String getJsonFromFlags(HashMap<CLAIM_FLAG, Object> flags) {
+        if (flags == null)
+            return null;
+        List<Map> array = new ArrayList<>();
+        for (Map.Entry<CLAIM_FLAG, Object> flag : flags.entrySet()) {
+            HashMap<String, Object> obj = new HashMap();
+            obj.put("flag", flag.getKey().name());
+            obj.put("value", flag.getValue());
+            array.add(obj);
+        }
+        return JSONArray.toJSONString(array);
+    }
+
     //Object gets
+    public static HashMap<CLAIM_FLAG, Object> getFlags(String json) {
+        if (json == null)
+            return null;
+        try {
+            JSONArray obj = (JSONArray) JSONValue.parse(json);
+            if (obj == null)
+                return null;
+            HashMap<CLAIM_FLAG, Object> flags = new HashMap<>();
+            for (Object o : obj) {
+                Map flag_info = (Map) o;
+                CLAIM_FLAG flag = CLAIM_FLAG.valueOf(flag_info.get("flag").toString());
+                Object value = flag_info.get("value");
+                flags.put(flag, value);
+            }
+            return flags;
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static List<ClaimRequest> getRequests(String json, Claim claim) {
         if (json == null)
             return null;

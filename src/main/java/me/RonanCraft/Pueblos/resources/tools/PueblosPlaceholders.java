@@ -1,5 +1,6 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
+import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG_MEMBER;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
@@ -13,7 +14,7 @@ public class PueblosPlaceholders {
         if (info == null)
             return str;
         if (info instanceof Claim)
-            str = getPlaceholder(str, (Claim) info);
+            str = getPlaceholder(str, (Claim) info, null);
         else if (info instanceof ClaimMember)
             str = getPlaceholder(str, (ClaimMember) info, null);
         else if (info instanceof Object[] && ((Object[]) info).length == 2)
@@ -24,16 +25,24 @@ public class PueblosPlaceholders {
     private static String getPlaceholder(String str, Object[] info) {
         if (info[0] instanceof ClaimMember && info[1] instanceof CLAIM_FLAG_MEMBER)
             str = getPlaceholder(str, (ClaimMember) info[0], (CLAIM_FLAG_MEMBER) info[1]);
+        else if (info[0] instanceof Claim && info[1] instanceof CLAIM_FLAG)
+            str = getPlaceholder(str, (Claim) info[0], (CLAIM_FLAG) info[1]);
         return str;
     }
 
-    private static String getPlaceholder(String str, Claim info) {
+    private static String getPlaceholder(String str, Claim info, CLAIM_FLAG flag) {
         if (str.contains("%claim_name%"))
             str = str.replace("%claim_name%", info.getName());
         if (str.contains("%claim_members%"))
             str = str.replace("%claim_members%", String.valueOf(info.getMembers().size()));
         if (str.contains("%claim_owner%"))
             str = str.replace("%claim_owner%", String.valueOf(info.ownerName));
+        if (flag != null) {
+            if (str.contains("%claim_flag%"))
+                str = str.replace("%claim_flag%", StringUtils.capitalize(flag.name().toLowerCase().replace("_", " ")));
+            if (str.contains("%claim_flag_value%"))
+                str = str.replace("%claim_flag_value%", info.getFlags().getFlag(flag).toString());
+        }
         return str;
     }
 

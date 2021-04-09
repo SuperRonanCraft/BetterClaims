@@ -92,17 +92,24 @@ public class ClaimHandler {
         String name = result.getString(Database.COLUMNS.OWNER_NAME.name);
         try {
             Claim claim = new Claim(id, name, JSONEncoding.getPosition(result.getString(Database.COLUMNS.POSITION.name)));
+            //Members Load
             List<ClaimMember> members = JSONEncoding.getMember(result.getString(Database.COLUMNS.MEMBERS.name), claim);
             if (members != null)
-                for (ClaimMember member : members) {
+                for (ClaimMember member : members)
                     claim.addMember(member, false);
-                }
 
+            //Flags Load
+            HashMap<CLAIM_FLAG, Object> flags = JSONEncoding.getFlags(result.getString(Database.COLUMNS.FLAGS.name));
+            if (flags != null)
+                for (Map.Entry<CLAIM_FLAG, Object> flag : flags.entrySet())
+                    claim.getFlags().setFlag(flag.getKey(), flag.getValue(), false);
+            
+            //Join Requests Load
             List<ClaimRequest> requests = JSONEncoding.getRequests(result.getString(Database.COLUMNS.MEMBERS.name), claim);
             if (requests != null)
-                for (ClaimRequest request : requests) {
+                for (ClaimRequest request : requests)
                     claim.addRequest(request, false);
-                }
+
             claim.claimId = result.getInt(Database.COLUMNS.CLAIM_ID.name);
             return claim;
         } catch (Exception e) {

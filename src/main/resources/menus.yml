@@ -75,8 +75,27 @@ Requests:
         - '&fClick to send a join request!'
     Requested:
       Name: '&e%claim_name%'
-      Item: 'coal_block'
+      Item: 'iron_block'
       Lore:
         - ''
         - '&7We see you really want to join this claim'
         - '&7Unfortunately, &a%claim_owner% &7hasn''t responded'
+Flags:
+  Title: '&7Claim | Flags'
+  Items:
+    Enabled:
+      Name: '&e%claim_flag%'
+      Item: 'gold_ingot'
+      Lore:
+        - ''
+        - '&fStatus: &b%claim_flag_value%'
+        - ''
+        - '&fClick to toggle flag'
+    Disabled:
+      Name: '&e%claim_flag%'
+      Item: 'iron_ingot'
+      Lore:
+        - ''
+        - '&fStatus: &b%claim_flag_value%'
+        - ''
+        - '&fClick to toggle flag'

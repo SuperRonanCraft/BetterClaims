@@ -32,16 +32,16 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
         inv.setItem(slot, getItem(ITEMS.MEMBER.section, p, member));
 
         //Flags
-        slot = slot + 5;
+        slot = 18;
         for (CLAIM_FLAG_MEMBER flag : CLAIM_FLAG_MEMBER.values()) {
+            slot = getNextSlot(slot, inv);
+            if (slot == -1)
+                break;
             ItemStack item;
             if ((Boolean) member.getFlags().getOrDefault(flag, flag.getDefault()))
                 item = getItem(ITEMS.ENABLED.section, p, new Object[]{member, flag});
             else
                 item = getItem(ITEMS.DISABLED.section, p, new Object[]{member, flag});
-            slot = getNextSlot(slot, inv);
-            if (slot == -1)
-                break;
             inv.setItem(slot, item);
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, flag));
         }

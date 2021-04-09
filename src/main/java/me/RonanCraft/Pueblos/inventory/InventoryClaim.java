@@ -46,9 +46,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         Claim claim = this.claim.get(p);
         switch (setting) {
             case MEMBERS: PueblosInventory.MEMBERS.open(p, claim, false); this.itemInfo.remove(p); break;
-            case FLAGS:
-
-                break;
+            case FLAGS: PueblosInventory.FLAGS.open(p, claim, false); this.itemInfo.remove(p); break;
             default: p.sendMessage("Not Yet Supported!");
         }
         //this.itemInfo.remove(p);

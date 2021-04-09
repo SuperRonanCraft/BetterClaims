@@ -16,7 +16,7 @@ public class Claim {
     public long claimId; //ID given by the database
     //Claim Information
     private final ClaimPosition position;
-    private final ClaimFlags flags = new ClaimFlags();
+    private final ClaimFlags flags = new ClaimFlags(this);
     private final List<ClaimMember> members = new ArrayList<>();
     private final List<ClaimRequest> requests = new ArrayList<>();
     private String name;
