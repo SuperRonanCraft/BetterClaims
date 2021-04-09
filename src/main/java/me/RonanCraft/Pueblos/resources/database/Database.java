@@ -21,7 +21,8 @@ public abstract class Database {
         OWNER_UUID("uuid", "varchar(32) NOT NULL"),
         OWNER_NAME("name", "varchar(32) NOT NULL"),
         POSITION("position", "text NOT NULL"),
-        MEMBERS("members", "text");
+        MEMBERS("members", "text"),
+        REQUESTS("requests", "text");
         //REPLIER("replier", "text"),
         //RESOLVED("resolved", "text DEFAULT null"),
         //CLAIMED_BY("claimedBy", "text DEFAULT null"),
@@ -214,11 +215,13 @@ public abstract class Database {
     void saveClaim(Claim claim) {
         String sql = "UPDATE " + table + " SET "
                 + COLUMNS.POSITION.name + " = ?, "
-                + COLUMNS.MEMBERS.name + " = ? "
+                + COLUMNS.MEMBERS.name + " = ?, "
+                + COLUMNS.REQUESTS.name + " = ? "
                 + " WHERE " + COLUMNS.CLAIM_ID.name + " = ?";
         List<Object> params = new ArrayList<>() {{
             add(claim.getPositionJSON());
             add(JSONEncoding.getJsonFromMembers(claim.getMembers()));
+            add(JSONEncoding.getJsonFromRequests(claim.getRequests()));
             add(claim.claimId);
         }};
         claim.uploaded();

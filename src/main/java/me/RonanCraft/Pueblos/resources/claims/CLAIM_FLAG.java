@@ -6,7 +6,8 @@ public enum CLAIM_FLAG {
     ALLOW_DOOR(Boolean.class, false, CLAIM_FLAG_MEMBER.ALLOW_DOOR),
     ALLOW_LEVER(Boolean.class, false, CLAIM_FLAG_MEMBER.ALLOW_LEVER),
     ALLOW_BUTTON(Boolean.class, false, CLAIM_FLAG_MEMBER.ALLOW_BUTTON),
-    ALLOW_BED(Boolean.class, false, CLAIM_FLAG_MEMBER.ALLOW_BED);
+    ALLOW_BED(Boolean.class, false, CLAIM_FLAG_MEMBER.ALLOW_BED),
+    ALLOW_REQUESTS(Boolean.class, true);
 
     private final Class<?> type;
     private final Object defaultValue;

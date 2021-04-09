@@ -12,7 +12,7 @@ public class ClaimMember {
     public final String name;
     public final boolean owner;
     public final Date date;
-    private HashMap<CLAIM_FLAG_MEMBER, Object> flags = new HashMap<>();
+    private final HashMap<CLAIM_FLAG_MEMBER, Object> flags = new HashMap<>();
     public final Claim claim;
 
     public ClaimMember(UUID uuid, String name, Date date, boolean owner, Claim claim) {

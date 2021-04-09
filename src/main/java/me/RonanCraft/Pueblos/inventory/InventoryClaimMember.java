@@ -18,18 +18,6 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, ClaimMember> member = new HashMap<>();
-    //Item
-    private final HashMap<ITEMS_CUSTOM, ItemStack> customItems = new HashMap<>();
-
-    @Override
-    public void load() {
-        super.load();
-        customItems.clear();
-        FileOther.FILETYPE file = FileOther.FILETYPE.MENU;
-        String pre = getSection();
-        for (ITEMS_CUSTOM set : ITEMS_CUSTOM.values())
-            customItems.put(set, getItemFromFile(pre + ".Items." + set.section + ".", file));
-    }
 
     @Override
     public Inventory open(Player p, ClaimMember member) {
@@ -38,17 +26,7 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
         addBorder(inv);
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
 
-        PueblosInventory pinv = getPl().getSystems().getPlayerInfo().getPrevious(p, PueblosInventory.MEMBER);
-        if (pinv != null) {
-            int slot = inv.firstEmpty();
-            ItemStack item = new ItemStack(Material.ARROW);
-            PueblosInv.setTitle(item, p, "<- &eBack");
-            List<String> lore = new ArrayList<>();
-            lore.add("Click to go back to " + pinv.name());
-            PueblosInv.setLore(item, p, lore);
-            inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.BACK, pinv, member.claim));
-        }
+        addButtonBack(inv, p, itemInfo, PueblosInventory.MEMBER, member.claim);
 
         int slot = 13;
         inv.setItem(slot, getItem(ITEMS.MEMBER.section, p, member));
@@ -58,19 +36,12 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
         for (CLAIM_FLAG_MEMBER flag : CLAIM_FLAG_MEMBER.values()) {
             ItemStack item;
             if ((Boolean) member.getFlags().getOrDefault(flag, flag.getDefault()))
-                item = getItem(ITEMS_CUSTOM.ENABLED, p, new Object[]{member, flag});
+                item = getItem(ITEMS.ENABLED.section, p, new Object[]{member, flag});
             else
-                item = getItem(ITEMS_CUSTOM.DISABLED, p, new Object[]{member, flag});
-            /*PueblosInv.setTitle(item, p, StringUtils.capitalize(flag.name().replaceAll("_", " ").toLowerCase()));
-            Object value = flag.getDefault();
-            if (member.getFlags().containsKey(flag))
-                value = member.getFlags().get(flag);
-            lore = new ArrayList<>();
-            lore.add(StringUtils.capitalize(value.toString().toLowerCase()));
-            PueblosInv.setLore(item, p, lore);*/
-            slot++;
-            while (slot < inv.getSize() && inv.getItem(slot) != null)
-                slot++;
+                item = getItem(ITEMS.DISABLED.section, p, new Object[]{member, flag});
+            slot = getNextSlot(slot, inv);
+            if (slot == -1)
+                break;
             inv.setItem(slot, item);
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, flag));
         }
@@ -78,10 +49,6 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
         this.member.put(p, member);
         p.openInventory(inv);
         return inv;
-    }
-
-    private ItemStack getItem(ITEMS_CUSTOM setting, Player p, Object info) {
-        return getItem(customItems.get(setting), p, info);
     }
 
     @Override
@@ -119,22 +86,13 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
     }
 
     enum ITEMS {
-        MEMBER("Member");
-
-        String section;
-
-        ITEMS(String section) {
-            this.section = section;
-        }
-    }
-
-    enum ITEMS_CUSTOM {
+        MEMBER("Member"),
         DISABLED("Flag.Disabled"),
         ENABLED("Flag.Enabled");
 
         String section;
 
-        ITEMS_CUSTOM(String section) {
+        ITEMS(String section) {
             this.section = section;
         }
     }

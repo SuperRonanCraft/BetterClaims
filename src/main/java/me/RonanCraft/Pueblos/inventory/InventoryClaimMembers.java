@@ -35,24 +35,12 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
             itemInfo.put(i.slot, new PueblosItem(_item, ITEM_TYPE.NORMAL, claim));
         }
 
-        PueblosInventory pinv = getPl().getSystems().getPlayerInfo().getPrevious(p, PueblosInventory.MEMBERS);
-        if (pinv != null) {
-            int slot = inv.firstEmpty();
-            ItemStack item = new ItemStack(Material.ARROW);
-            PueblosInv.setTitle(item, p, "<- &eBack");
-            List<String> lore = new ArrayList<>();
-            lore.add("Click to go back to " + pinv.name());
-            PueblosInv.setLore(item, p, lore);
-            inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.BACK, pinv, claim));
-        }
+        addButtonBack(inv, p, itemInfo, PueblosInventory.MEMBERS, claim);
 
         int slot = 18;
         for (ClaimMember member : claim.getMembers()) {
-            slot++;
-            while (slot < inv.getSize() && inv.getItem(slot) != null)
-                slot++;
-            if (slot >= inv.getSize())
+            slot = getNextSlot(slot, inv);
+            if (slot == -1)
                 break;
             ItemStack item = getItem(ITEMS.MEMBER.section, p, member);
             inv.setItem(slot, item);

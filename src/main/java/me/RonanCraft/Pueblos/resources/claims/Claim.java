@@ -18,6 +18,7 @@ public class Claim {
     private final ClaimPosition position;
     private final ClaimFlags flags = new ClaimFlags();
     private final List<ClaimMember> members = new ArrayList<>();
+    private final List<ClaimRequest> requests = new ArrayList<>();
     private String name;
     //Database stuff
     private boolean updated = false;
@@ -26,6 +27,36 @@ public class Claim {
         this.ownerId = ownerId;
         this.ownerName = ownerName;
         this.position = position;
+    }
+
+    //Is
+    public boolean isOwner(Player p) {
+        return p.getUniqueId().equals(ownerId);
+    }
+
+    public boolean isMember(Player p) {
+        if (p.getUniqueId().equals(ownerId))
+            return true;
+        for (ClaimMember member : members)
+            if (member.getId().equals(p.getUniqueId()))
+                return true;
+        return false;
+    }
+
+    //Add
+    public void addMember(ClaimMember member, boolean update) {
+        if (update) updated();
+        if (member != null) members.add(member);
+    }
+
+    public void addRequest(ClaimRequest request, boolean update) {
+        if (update) updated();
+        this.requests.add(request);
+    }
+
+    //Get
+    public OfflinePlayer getOwner() {
+        return Bukkit.getOfflinePlayer(ownerId);
     }
 
     public ClaimFlags getFlags() {
@@ -40,11 +71,6 @@ public class Claim {
         return JSONEncoding.getJsonFromClaim(position);
     }
 
-    public boolean contains(Location loc) {
-        return (position.getLeft() <= loc.getBlockX() && position.getTop() >= loc.getBlockZ()) && //Top Left
-                (position.getRight() >= loc.getBlockX() && position.getBottom() <= loc.getBlockZ()); //Bottom Right
-    }
-
     public Location getLesserBoundaryCorner() {
         return new Location(position.getWorld(), position.getLeft(), 0, position.getBottom());
     }
@@ -57,28 +83,35 @@ public class Claim {
         return name != null ? name : ownerName;
     }
 
-    public boolean isMember(Player p) {
-        if (p.getUniqueId().equals(ownerId))
-            return true;
-        for (ClaimMember member : members)
-            if (member.getId().equals(p.getUniqueId()))
-                return true;
-        return false;
-    }
-
-    public boolean isOwner(Player p) {
-        return p.getUniqueId().equals(ownerId);
-    }
-
-    public void addMember(ClaimMember member) {
-        if (member != null)
-            members.add(member);
-    }
-
     public List<ClaimMember> getMembers() {
         return members;
     }
 
+    public ClaimMember getMember(Player player) {
+        for (ClaimMember member : members)
+            if (member.uuid == player.getUniqueId())
+                return member;
+        return null;
+    }
+
+    public List<ClaimRequest> getRequests() {
+        return requests;
+    }
+
+    //Checks
+    public boolean contains(Location loc) {
+        return (position.getLeft() <= loc.getBlockX() && position.getTop() >= loc.getBlockZ()) && //Top Left
+                (position.getRight() >= loc.getBlockX() && position.getBottom() <= loc.getBlockZ()); //Bottom Right
+    }
+
+    public boolean hasRequestFrom(Player p) {
+        for (ClaimRequest request : requests)
+            if (request.id == p.getUniqueId())
+                return true;
+        return false;
+    }
+
+    //Database
     public void updated() {
         updated = true;
     }
@@ -89,16 +122,5 @@ public class Claim {
 
     public void uploaded() {
         updated = false;
-    }
-
-    public ClaimMember getMember(Player player) {
-        for (ClaimMember member : members)
-            if (member.uuid == player.getUniqueId())
-                return member;
-        return null;
-    }
-
-    public OfflinePlayer getOwner() {
-        return Bukkit.getOfflinePlayer(ownerId);
     }
 }

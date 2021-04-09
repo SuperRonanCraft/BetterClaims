@@ -47,6 +47,16 @@ public interface PueblosInv {
         }
     }
 
+    default void addButtonBack(Inventory inv, Player p, HashMap<Integer, PueblosItem> itemInfo, PueblosInventory currentinv, Object info) {
+        PueblosInventory pinv = getPl().getSystems().getPlayerInfo().getPrevious(p, currentinv);
+        if (pinv != null) {
+            int slot = inv.firstEmpty();
+            ItemStack item = Pueblos.getInstance().getSystems().getGlobalItems().getItem(GlobalItems.GLOBAL_ITEM.BACK, p, info);
+            inv.setItem(slot, item);
+            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.BACK, pinv, info));
+        }
+    }
+
     default boolean checkItems(InventoryClickEvent e, HashMap<Integer, PueblosItem> items) {
         if (items.containsKey(e.getSlot())) {
             Player p = (Player) e.getWhoClicked();
@@ -64,6 +74,15 @@ public interface PueblosInv {
             }
         }
         return false;
+    }
+
+    default int getNextSlot(int slot, Inventory inv) {
+        slot++;
+        while (slot < inv.getSize() && inv.getItem(slot) != null)
+            slot++;
+        if (slot >= inv.getSize())
+            slot = -1;
+        return slot;
     }
 
     void clear(Player p); //Called when a special item causes this inventory to close

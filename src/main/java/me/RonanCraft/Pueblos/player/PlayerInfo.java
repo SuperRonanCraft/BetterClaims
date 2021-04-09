@@ -70,7 +70,7 @@ public class PlayerInfo {
         PueblosInventory previous = null;
         if (this.previous.containsKey(p) && !this.previous.get(p).isEmpty())
             previous = this.previous.get(p).get(this.previous.get(p).size() - 1);
-        if (previous == pinv)
+        if (previous == pinv && this.previous.get(p).size() > 1)
             previous = this.previous.get(p).get(this.previous.get(p).size() - 2);
         return previous;
     }

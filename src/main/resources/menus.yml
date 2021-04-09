@@ -64,3 +64,19 @@ Member:
         Lore:
           - ''
           - '&7Value: &f%member_flag_value%'
+Requests:
+  Title: '&7Claim Join Requests'
+  Items:
+    New:
+      Name: '&e%claim_name%'
+      Item: 'gold_block'
+      Lore:
+        - ''
+        - '&fClick to send a join request!'
+    Requested:
+      Name: '&e%claim_name%'
+      Item: 'coal_block'
+      Lore:
+        - ''
+        - '&7We see you really want to join this claim'
+        - '&7Unfortunately, &a%claim_owner% &7hasn''t responded'

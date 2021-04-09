@@ -14,6 +14,7 @@ import java.util.*;
 @SuppressWarnings("ALL")
 public class JSONEncoding {
 
+    //String gets
     public static String getJsonFromList(String id, List<String> list) {
         if (list == null)
             return null;
@@ -74,6 +75,43 @@ public class JSONEncoding {
         return JSONArray.toJSONString(array);
     }
 
+    public static String getJsonFromRequests(List<ClaimRequest> requests) {
+        if (requests == null)
+            return null;
+        List<Map> array = new ArrayList<>();
+        for (ClaimRequest request : requests) {
+            HashMap<String, Object> obj = new HashMap();
+            obj.put("uuid", request.id.toString());
+            obj.put("name", request.name);
+            obj.put("date", new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(request.date));
+            array.add(obj);
+        }
+        //System.out.println(JSONArray.toJSONString(array));
+        return JSONArray.toJSONString(array);
+    }
+
+    //Object gets
+    public static List<ClaimRequest> getRequests(String json, Claim claim) {
+        if (json == null)
+            return null;
+        try {
+            JSONArray obj = (JSONArray) JSONValue.parse(json);
+            List<ClaimRequest> requests = new ArrayList<>();
+            for (Object o : obj) {
+                Map member_info = (Map) o;
+                String uuid = member_info.get("uuid").toString();
+                String name = member_info.get("name").toString();
+                String date = member_info.get("date").toString();
+                ClaimRequest request = new ClaimRequest(UUID.fromString(uuid), name, new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(date));
+                requests.add(request);
+            }
+            return requests;
+        } catch (NullPointerException | ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static List<ClaimMember> getMember(String json, Claim claim) {
         if (json == null)
             return null;
@@ -110,5 +148,4 @@ public class JSONEncoding {
             return null;
         }
     }
-
 }

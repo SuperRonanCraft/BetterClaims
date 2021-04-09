@@ -1,5 +1,6 @@
 package me.RonanCraft.Pueblos.resources;
 
+import me.RonanCraft.Pueblos.inventory.GlobalItems;
 import me.RonanCraft.Pueblos.player.PlayerInfo;
 import me.RonanCraft.Pueblos.player.events.EventListener;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
@@ -11,11 +12,13 @@ public class Systems {
     private final ClaimHandler claim = new ClaimHandler();
     private final EventListener events = new EventListener();
     private final PlayerInfo playerInfo = new PlayerInfo();
+    private final GlobalItems globalItems = new GlobalItems();
 
     public void load() {
         database.load();
         claim.load();
         playerInfo.clear();
+        globalItems.load();
     }
 
     public Database getDatabase() {
@@ -32,6 +35,10 @@ public class Systems {
 
     public PlayerInfo getPlayerInfo() {
         return playerInfo;
+    }
+
+    public GlobalItems getGlobalItems() {
+        return globalItems;
     }
 
 }
