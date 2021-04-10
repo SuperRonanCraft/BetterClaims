@@ -3,7 +3,8 @@ package me.RonanCraft.Pueblos.player.command.types;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
-import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
+import me.RonanCraft.Pueblos.resources.files.msgs.Message;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
 import org.bukkit.command.CommandSender;
 
@@ -17,9 +18,8 @@ public class CmdHelp implements PueblosCommand, PueblosCommandHelpable {
     }
 
     public void execute(CommandSender sendi, String label, String[] args) {
-        MessagesHelp txt = Messages.help;
         List<String> list = new ArrayList<>();
-        list.add(txt.getHelpPrefix());
+        list.add(MessagesHelp.PREFIX.get());
         for (PueblosCommand cmd : Pueblos.getInstance().getCmd().commands)
             if (cmd.permission(sendi))
                 if (cmd instanceof PueblosCommandHelpable) {
@@ -28,7 +28,7 @@ public class CmdHelp implements PueblosCommand, PueblosCommandHelpable {
                 }
         for (int i = 0; i < list.size(); i++)
             list.set(i, list.get(i).replace("%command%", label));
-        Messages.core.sms(sendi, list);
+        Message.sms(sendi, list, null);
     }
 
     public boolean permission(CommandSender sendi) {
@@ -37,6 +37,6 @@ public class CmdHelp implements PueblosCommand, PueblosCommandHelpable {
 
     @Override
     public String getHelp() {
-        return Messages.help.getHelpHelp();
+        return MessagesHelp.HELP.get();
     }
 }

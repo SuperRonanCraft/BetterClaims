@@ -105,7 +105,7 @@ public class ClaimHandler {
                     claim.getFlags().setFlag(flag.getKey(), flag.getValue(), false);
             
             //Join Requests Load
-            List<ClaimRequest> requests = JSONEncoding.getRequests(result.getString(Database.COLUMNS.MEMBERS.name), claim);
+            List<ClaimRequest> requests = JSONEncoding.getRequests(result.getString(Database.COLUMNS.REQUESTS.name), claim);
             if (requests != null)
                 for (ClaimRequest request : requests)
                     claim.addRequest(request, false);

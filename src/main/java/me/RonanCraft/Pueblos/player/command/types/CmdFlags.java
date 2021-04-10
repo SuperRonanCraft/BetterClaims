@@ -5,7 +5,8 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.claims.*;
-import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
+import me.RonanCraft.Pueblos.resources.files.msgs.Message;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -33,16 +34,16 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
                             if (value == null)
                                 throw new Exception();
                             claim.getFlags().setFlag(flag, value, true);
-                            Messages.core.sms(p, "Set " + flag.name().toLowerCase() + " to " + value);
+                            Message.sms(p, "Set " + flag.name().toLowerCase() + " to " + value, null);
                         } catch (Exception e) {
-                            Messages.core.sms(p, "Invalid value!");
+                            Message.sms(p, "Invalid value!", null);
                         }
                     }
             } else {
-                Messages.core.sms(p, "Usage: /claim flag FLAG_TYPE VALUE");
+                Message.sms(p, "Usage: /claim flag FLAG_TYPE VALUE", null);
             }
         } else {
-            Messages.core.sms(p, "&cThis is not your claim!");
+            Message.sms(p, "&cThis is not your claim!", null);
         }
 
 
@@ -54,7 +55,7 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
 
     @Override
     public String getHelp() {
-        return Messages.help.getHelpCreate();
+        return MessagesHelp.FLAGS.get();
     }
 
     @Override

@@ -1,10 +1,10 @@
 package me.RonanCraft.Pueblos.inventory;
 
+import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG_MEMBER;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
-import me.RonanCraft.Pueblos.resources.files.FileOther;
+import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -28,20 +28,26 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
 
         addButtonBack(inv, p, itemInfo, PueblosInventory.MEMBER, member.claim);
 
-        int slot = 13;
-        inv.setItem(slot, getItem(ITEMS.MEMBER.section, p, member));
+        for (ITEMS i : ITEMS.values()) {
+            int slot = i.slot;
+            if (slot == 0)
+                continue;
+            ItemStack item = getItem(i.section, p, member);
+            inv.setItem(slot, item);
+            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, i));
+        }
 
         //Flags
-        slot = 18;
+        int slot = 18;
         for (CLAIM_FLAG_MEMBER flag : CLAIM_FLAG_MEMBER.values()) {
             slot = getNextSlot(slot, inv);
             if (slot == -1)
                 break;
             ItemStack item;
             if ((Boolean) member.getFlags().getOrDefault(flag, flag.getDefault()))
-                item = getItem(ITEMS.ENABLED.section, p, new Object[]{member, flag});
+                item = getItem(ITEMS.FLAG_ENABLED.section, p, new Object[]{member, flag});
             else
-                item = getItem(ITEMS.DISABLED.section, p, new Object[]{member, flag});
+                item = getItem(ITEMS.FLAG_DISABLED.section, p, new Object[]{member, flag});
             inv.setItem(slot, item);
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, flag));
         }
@@ -51,19 +57,31 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
         return inv;
     }
 
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     @Override
     public void clickEvent(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (!itemInfo.containsKey(p) || checkItems(e, itemInfo.get(p)) || !itemInfo.get(p).containsKey(e.getSlot()))
+        if (    !itemInfo.containsKey(p)
+                || !member.containsKey(p)
+                || checkItems(e, itemInfo.get(p))
+                || !itemInfo.get(p).containsKey(e.getSlot()))
             return;
 
-        CLAIM_FLAG_MEMBER flag = (CLAIM_FLAG_MEMBER) itemInfo.get(p).get(e.getSlot()).info;
         ClaimMember member = this.member.get(p);
-        Object current_value = member.getFlags().getOrDefault(flag, flag.getDefault());
-        this.member.get(p).setFlag(flag, flag.alter(current_value), true);
-        PueblosInventory.MEMBER.open(p, this.member.get(p), false);
-        //this.itemInfo.remove(p);
-        //this.member.remove(p);
+        if (itemInfo.get(p).get(e.getSlot()).info instanceof ITEMS) {
+            ITEMS item = (ITEMS) itemInfo.get(p).get(e.getSlot()).info;
+            switch (item) {
+                case REMOVE:
+                    HelperClaim.removeMember(p, member);
+                    Pueblos.getInstance().getSystems().getPlayerInfo().removePrevious(p);
+                    PueblosInventory.MEMBERS.open(p, member.claim, false);
+            }
+        } else if (itemInfo.get(p).get(e.getSlot()).info instanceof CLAIM_FLAG_MEMBER) {
+            CLAIM_FLAG_MEMBER flag = (CLAIM_FLAG_MEMBER) itemInfo.get(p).get(e.getSlot()).info;
+            Object current_value = member.getFlags().getOrDefault(flag, flag.getDefault());
+            this.member.get(p).setFlag(flag, flag.alter(current_value), true);
+            PueblosInventory.MEMBER.open(p, this.member.get(p), false);
+        }
     }
 
     @Override
@@ -85,15 +103,18 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
         return list;
     }
 
-    enum ITEMS {
-        MEMBER("Member"),
-        DISABLED("Flag.Disabled"),
-        ENABLED("Flag.Enabled");
+    private enum ITEMS {
+        MEMBER("Member", 13),
+        FLAG_DISABLED("Flag.Disabled", 0),
+        FLAG_ENABLED("Flag.Enabled", 0),
+        REMOVE("Remove", 16);
 
         String section;
+        int slot;
 
-        ITEMS(String section) {
+        ITEMS(String section, int slot) {
             this.section = section;
+            this.slot = slot;
         }
     }
 }

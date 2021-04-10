@@ -1,8 +1,7 @@
 package me.RonanCraft.Pueblos.inventory;
 
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
-import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
+import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -10,11 +9,10 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_Requests {
+public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_Requesting {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, List<Claim>> claims = new HashMap<>();
@@ -49,15 +47,8 @@ public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_
             return;
 
         Claim claim = (Claim) itemInfo.get(p).get(e.getSlot()).info;
-        if (claim.hasRequestFrom(p)) {
-            Messages.core.sms(p, "Your request is pending...");
-        } else {
-            ClaimRequest request = new ClaimRequest(p.getUniqueId(), p.getName(), Calendar.getInstance().getTime());
-            claim.addRequest(request, true);
-            Messages.core.sms(p, "Requested to join " + claim.ownerName + "'s claim " + claim.getName());
+        if (HelperClaim.requestJoin(p, claim))
             p.closeInventory();
-        }
-        //this.itemInfo.remove(p);
     }
 
     @Override
@@ -67,7 +58,7 @@ public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_
 
     @Override
     public String getSection() {
-        return "Requests";
+        return "Requesting";
     }
 
     @Override
@@ -78,7 +69,7 @@ public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_
         return list;
     }
 
-    enum ITEMS {
+    private enum ITEMS {
         NEW("New"),
         REQUESTED("Requested");
 

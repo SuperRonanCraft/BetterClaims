@@ -7,9 +7,8 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
-import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
-import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
+import me.RonanCraft.Pueblos.resources.files.msgs.Message;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -26,10 +25,9 @@ public class CmdRequest implements PueblosCommand, PueblosCommandHelpable, Puebl
         Player p = (Player) sendi;
         List<Claim> requestable = getRequestable(p);
         if (!requestable.isEmpty()) {
-            Messages.core.sms(p, "You can join " + requestable.size() + " claims!");
             PueblosInventory.REQUESTING.open(p, requestable, true);
         } else
-            Messages.core.sms(p, "No claims to join!");
+            Message.sms(p, "No claims to join!", null);
     }
 
     public static List<Claim> getRequestable(Player p) { //Get all claims a player can request to be in
@@ -48,7 +46,7 @@ public class CmdRequest implements PueblosCommand, PueblosCommandHelpable, Puebl
 
     @Override
     public String getHelp() {
-        return Messages.help.getHelpCreate();
+        return MessagesHelp.REQUEST.get();
     }
 
     @Override

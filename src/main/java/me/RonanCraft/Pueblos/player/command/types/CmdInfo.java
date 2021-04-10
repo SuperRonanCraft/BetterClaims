@@ -5,7 +5,8 @@ import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.resources.claims.*;
-import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
+import me.RonanCraft.Pueblos.resources.files.msgs.Message;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -39,7 +40,7 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
                 PueblosInventory.CLAIM.open(p, claim, true);
             }
         }
-        Messages.core.sms(sendi, info);
+        //Message.sms(sendi, info, null);
     }
 
     public boolean permission(CommandSender sendi) {
@@ -48,7 +49,7 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
 
     @Override
     public String getHelp() {
-        return Messages.help.getHelpCreate();
+        return MessagesHelp.INFO.get();
     }
 
     @Override

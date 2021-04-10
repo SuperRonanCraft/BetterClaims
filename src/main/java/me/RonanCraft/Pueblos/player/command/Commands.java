@@ -1,7 +1,8 @@
 package me.RonanCraft.Pueblos.player.command;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
+import me.RonanCraft.Pueblos.resources.files.msgs.Message;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -29,7 +30,7 @@ public class Commands {
                 for (PueblosCommand cmd : commands) {
                     if (cmd.getName().equalsIgnoreCase(args[0])) {
                         if (cmd.isPlayerOnly() && !(sendi instanceof Player))
-                            Messages.core.sms(sendi, "Console is not allowed to run this command!");
+                            Message.sms(sendi, "Console is not allowed to run this command!", null);
                         else if (cmd.permission(sendi)) {
                             cmd.execute(sendi, label, args);
                         } else
@@ -45,11 +46,11 @@ public class Commands {
     }
 
     private void invalid(CommandSender sendi, String cmd) {
-        Messages.core.sendInvalidCommand(sendi);
+        MessagesCore.INVALIDCOMMAND.send(sendi);
     }
 
     private void noPerm(CommandSender sendi) {
-        Messages.core.sendNoPermission(sendi);
+        MessagesCore.NOPERMISSION.send(sendi);
     }
 
     public List<String> onTabComplete(CommandSender sendi, String[] args) {

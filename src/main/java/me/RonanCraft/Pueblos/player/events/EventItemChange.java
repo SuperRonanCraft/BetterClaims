@@ -2,7 +2,7 @@ package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Bukkit;
@@ -42,12 +42,12 @@ public class EventItemChange {
                 if (item.getType().equals(getClaimItem())) {
                     if (claim != null) {
                         if (claim.isMember(p))
-                            Messages.core.sendClaimItemInClaim(p);
+                            MessagesCore.CLAIM_ITEM_INCLAIM.send(p);
                         else
-                            Messages.core.sendClaimItemNotOwner(p);
+                            MessagesCore.CLAIM_ITEM_NOTOWNER.send(p);
                         Visualization.fromClaim(claim, p.getLocation().getBlockY(), claim.isMember(p) ? VisualizationType.CLAIM : VisualizationType.ERROR, p.getLocation()).apply(p);
                     } else {
-                        Messages.core.sendClaimItemNoClaim(p);
+                        MessagesCore.CLAIM_ITEM_NOCLAIM.send(p);
                     }
                     claimShowing.put(p,
                         Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {

@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +26,8 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
         for (CLAIM_SETTINGS set : CLAIM_SETTINGS.values()) {
-            ItemStack item = getItem(set.section, p, claim);
-            //setTitle(item, p, StringUtils.capitalize(setting.name().toLowerCase()));
+            ItemStack item = getItem(set.getItem(p, claim).section, p, claim);
+
             inv.setItem(set.slot, item);
             itemInfo.put(set.slot, new PueblosItem(item, ITEM_TYPE.NORMAL, set));
         }
@@ -39,17 +40,15 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     @Override
     public void clickEvent(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (!this.itemInfo.containsKey(p) || !this.claim.containsKey(p) || checkItems(e, itemInfo.get(p)))
+        if (    !this.itemInfo.containsKey(p)
+                || !this.claim.containsKey(p)
+                || checkItems(e, itemInfo.get(p))
+                || !itemInfo.get(p).containsKey(e.getSlot()))
             return;
 
         CLAIM_SETTINGS setting = (CLAIM_SETTINGS) itemInfo.get(p).get(e.getSlot()).info;
         Claim claim = this.claim.get(p);
-        switch (setting) {
-            case MEMBERS: PueblosInventory.MEMBERS.open(p, claim, false); this.itemInfo.remove(p); break;
-            case FLAGS: PueblosInventory.FLAGS.open(p, claim, false); this.itemInfo.remove(p); break;
-            default: p.sendMessage("Not Yet Supported!");
-        }
-        //this.itemInfo.remove(p);
+        setting.inv.open(p, claim, false);
     }
 
     @Override
@@ -65,21 +64,51 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     @Override
     List<String> getSections() {
         List<String> list = new ArrayList<>();
-        for (CLAIM_SETTINGS set : CLAIM_SETTINGS.values())
+        for (ITEMS set : ITEMS.values())
             list.add(set.section);
         return list;
     }
 
-    enum CLAIM_SETTINGS {
-        MEMBERS("Members", 21),
-        FLAGS("Flags", 23);
+    private enum CLAIM_SETTINGS {
+        MEMBERS("Members", 20, PueblosInventory.MEMBERS, ITEMS.MEMBERS, null),
+        FLAGS("Flags", 22, PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
+        REQUESTS("Requests", 24, PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED);
 
         String section;
         int slot;
+        PueblosInventory inv;
+        ITEMS allowed;
+        ITEMS disallowed;
 
-        CLAIM_SETTINGS(String section, int slot) {
+        CLAIM_SETTINGS(String section, int slot, PueblosInventory inv, @Nonnull ITEMS allowed, ITEMS disallowed) {
             this.section = section;
             this.slot = slot;
+            this.inv = inv;
+            this.allowed = allowed;
+            this.disallowed = disallowed;
+        }
+
+        ITEMS getItem(Player p, Claim claim) {
+            if (disallowed != null) {
+                if (inv.isAllowed(p, claim))
+                    return allowed;
+                return disallowed;
+            }
+            return allowed;
+        }
+    }
+
+    private enum ITEMS {
+        MEMBERS("Members"),
+        FLAGS_ALLOWED("Flags.Allowed"),
+        FLAGS_DISALLOWED("Flags.Disallowed"),
+        REQUESTS_ALLOWED("Requests.Allowed"),
+        REQUESTS_DISALLOWED("Requests.Disallowed");
+
+        String section;
+
+        ITEMS(String section) {
+            this.section = section;
         }
     }
 }

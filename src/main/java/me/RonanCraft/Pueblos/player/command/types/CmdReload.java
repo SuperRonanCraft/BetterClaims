@@ -3,7 +3,7 @@ package me.RonanCraft.Pueblos.player.command.types;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
-import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
 import org.bukkit.command.CommandSender;
 
 public class CmdReload implements PueblosCommand, PueblosCommandHelpable {
@@ -23,6 +23,6 @@ public class CmdReload implements PueblosCommand, PueblosCommandHelpable {
 
     @Override
     public String getHelp() {
-        return Messages.help.getHelpReload();
+        return MessagesHelp.RELOAD.get();
     }
 }

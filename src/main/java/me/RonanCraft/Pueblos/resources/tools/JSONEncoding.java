@@ -5,10 +5,8 @@ import org.bukkit.Bukkit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import org.json.simple.parser.JSONParser;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @SuppressWarnings("ALL")
@@ -63,7 +61,7 @@ public class JSONEncoding {
             HashMap<String, Object> obj = new HashMap();
             obj.put("uuid", member.uuid.toString());
             obj.put("name", member.name);
-            obj.put("date", new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(member.date));
+            obj.put("date", HelperDate.getDate(member.date));
             HashMap<String, Object> obj2 = new HashMap<>();
             for (Map.Entry<CLAIM_FLAG_MEMBER, Object> flag : member.getFlags().entrySet()) {
                 obj2.put(flag.getKey().name(), flag.getValue());
@@ -83,7 +81,7 @@ public class JSONEncoding {
             HashMap<String, Object> obj = new HashMap();
             obj.put("uuid", request.id.toString());
             obj.put("name", request.name);
-            obj.put("date", new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").format(request.date));
+            obj.put("date", HelperDate.getDate(request.date));
             array.add(obj);
         }
         //System.out.println(JSONArray.toJSONString(array));
@@ -136,7 +134,7 @@ public class JSONEncoding {
                 String uuid = member_info.get("uuid").toString();
                 String name = member_info.get("name").toString();
                 String date = member_info.get("date").toString();
-                ClaimRequest request = new ClaimRequest(UUID.fromString(uuid), name, new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(date));
+                ClaimRequest request = new ClaimRequest(UUID.fromString(uuid), name, HelperDate.getDate(date), claim);
                 requests.add(request);
             }
             return requests;
@@ -163,7 +161,7 @@ public class JSONEncoding {
                     Object _value = flag.getValue();
                     flags.put(_flag, _value);
                 }
-                ClaimMember member = new ClaimMember(UUID.fromString(uuid), name, new SimpleDateFormat("yyyy-mm-dd hh:mm:ss").parse(date), false, claim);
+                ClaimMember member = new ClaimMember(UUID.fromString(uuid), name, HelperDate.getDate(date), false, claim);
                 member.setFlag(flags, false);
                 members.add(member);
             }

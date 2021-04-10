@@ -2,9 +2,7 @@ package me.RonanCraft.Pueblos.inventory;
 
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
-import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -28,11 +26,11 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
 
         for (ITEMS i : ITEMS.values()) {
-            if (i.slot == 0)
+            if (i.slot == 0) //Slot 0 = Disabled
                 continue;
             ItemStack _item = getItem(i.section, p, claim);
             inv.setItem(i.slot, _item);
-            itemInfo.put(i.slot, new PueblosItem(_item, ITEM_TYPE.NORMAL, claim));
+            itemInfo.put(i.slot, new PueblosItem(_item, ITEM_TYPE.NORMAL, i));
         }
 
         addButtonBack(inv, p, itemInfo, PueblosInventory.MEMBERS, claim);
@@ -52,22 +50,27 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
         return inv;
     }
 
+    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     @Override
     public void clickEvent(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (!itemInfo.containsKey(p) || !claim.containsKey(p) || checkItems(e, itemInfo.get(p)) || !itemInfo.get(p).containsKey(e.getSlot()))
+        if (    !itemInfo.containsKey(p)
+                || !claim.containsKey(p)
+                || checkItems(e, itemInfo.get(p))
+                || !itemInfo.get(p).containsKey(e.getSlot()))
             return;
 
-        if (!claim.get(p).isOwner(p)) {
-            Messages.core.sms(p, "Not enough permissions!");
-            return;
+        if (itemInfo.get(p).get(e.getSlot()).info instanceof ITEMS) {
+            ITEMS item = (ITEMS) itemInfo.get(p).get(e.getSlot()).info;
+            switch (item) {
+                case REQUEST:
+                    PueblosInventory.REQUESTS.open(p, claim.get(p), false);
+            }
+        } else if (itemInfo.get(p).get(e.getSlot()).info instanceof ClaimMember) {
+            ClaimMember member = (ClaimMember) itemInfo.get(p).get(e.getSlot()).info;
+            //this.itemInfo.remove(p);
+            PueblosInventory.MEMBER.open(p, member, false);
         }
-
-        if (!(itemInfo.get(p).get(e.getSlot()).info instanceof ClaimMember))
-            return;
-        ClaimMember member = (ClaimMember) itemInfo.get(p).get(e.getSlot()).info;
-        //this.itemInfo.remove(p);
-        PueblosInventory.MEMBER.open(p, member, false);
     }
 
     @Override

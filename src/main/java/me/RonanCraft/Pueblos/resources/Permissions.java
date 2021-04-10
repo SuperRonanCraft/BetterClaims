@@ -18,10 +18,10 @@ public class Permissions {
 
     //Permissions
     public boolean getUse(CommandSender sendi) {
-        return checkPerm(pre + "use", sendi);
+        return checkPerm(PermissionNodes.USE.node, sendi);
     }
 
     public boolean getReload(CommandSender sendi) {
-        return checkPerm(pre + "reload", sendi);
+        return checkPerm(PermissionNodes.RELOAD.node, sendi);
     }
 }

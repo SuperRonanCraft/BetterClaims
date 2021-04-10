@@ -2,7 +2,8 @@ package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.*;
-import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
+import me.RonanCraft.Pueblos.resources.files.msgs.Message;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Bukkit;
@@ -31,7 +32,12 @@ public class EventInteract {
             return;
         Block block = e.getClickedBlock();
         Claim claim = listener.getClaim(block.getLocation());
-        if (claim != null) {
+        if (claim != null && !claim.isOwner(e.getPlayer())) {
+            ClaimMember member = claim.getMember(e.getPlayer());
+            if (member == null) {
+                e.setCancelled(true);
+                return;
+            }
             CLAIM_FLAG flag = null;
             if (block.getType().name().contains("LEVER")) {
                 flag = CLAIM_FLAG.ALLOW_LEVER;
@@ -39,15 +45,25 @@ public class EventInteract {
                 flag = CLAIM_FLAG.ALLOW_DOOR;
             } else if (block.getType().name().contains("BUTTON")) {
                 flag = CLAIM_FLAG.ALLOW_BUTTON;
+            } else if (block.getType().name().contains("BED")) {
+                flag = CLAIM_FLAG.ALLOW_BED;
             }
             if (flag != null) {
                 //Check member flag value (if it exists)
                 CLAIM_FLAG_MEMBER memberFlag = flag.getMemberEquivalent();
-                ClaimMember member = claim.getMember(e.getPlayer());
-                Object flagValue = claim.getFlags().getFlag(flag);
-                if (memberFlag != null && member != null && member.getFlags().containsKey(memberFlag))
-                    flagValue = member.getFlags().get(memberFlag);
-                e.setCancelled(!(Boolean) flagValue);
+                Object flagValue = claim.getFlags().getFlag(flag); //Get the claims flag value
+                if (memberFlag != null)
+                    flagValue = member.getFlags().getOrDefault(memberFlag, memberFlag.getDefault()); //Get the members flag value
+                e.setCancelled(!(Boolean) flagValue); //Are they allowed to do this here?
+            } else {
+                CLAIM_FLAG_MEMBER memberFlag = null;
+                if (block.getType().name().contains("CHEST"))
+                    memberFlag = CLAIM_FLAG_MEMBER.ALLOW_CHEST;
+                Object flagValue = null;
+                if (memberFlag != null)
+                    flagValue = member.getFlags().getOrDefault(memberFlag, memberFlag.getDefault());
+                if (flagValue != null)
+                    e.setCancelled(!(Boolean) flagValue); //Are they allowed to do this here?
             }
         }
     }
@@ -84,23 +100,23 @@ public class EventInteract {
                         error = handler.addClaim(claim, p);
                         switch (error) {
                             case NONE:
-                                Messages.core.sendClaimCreateSuccess(p);
+                                MessagesCore.CLAIM_CREATE_SUCCESS.send(p);
                                 Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
                                 claimCreation.lock(); //Lock us from making another claim using this item
                                 break;
                             case SIZE:
-                                Messages.core.sendClaimCreateFailedSize(p);
+                                MessagesCore.CLAIM_CREATE_FAILED_SIZE.send(p);
                                 break;
                             case OVERLAPPING:
-                                Messages.core.sendClaimCreateFailedOtherClaim(p);
+                                MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(p);
                                 claimCreation.lock(); //Lock us from making another claim using this item
                                 break;
                             default:
-                                Messages.core.sms(p, "An Error Happened!");
+                                Message.sms(p, "An Error Happened!", null);
                                 claimCreation.lock(); //Lock us from making another claim using this item
                         }
                     } else { //Overlapping
-                        Messages.core.sendClaimCreateFailedOtherClaim(p);
+                        MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(p);
                         claimCreation.lock(); //Lock us from making another claim using this item
                     }
                 } else {
@@ -111,7 +127,7 @@ public class EventInteract {
             } else if (error == CLAIM_ERRORS.LOCATION_ALREADY_EXISTS) {
                 Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
             } else if (error == CLAIM_ERRORS.OVERLAPPING) {
-                Messages.core.sendClaimCreateFailedOtherClaim(p);
+                MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(p);
                 claimCreation.lock();
                 cancelCreation(p, 2L);
             }
@@ -123,7 +139,6 @@ public class EventInteract {
             Bukkit.getScheduler().cancelTask(cancelTimers.get(p));
         cancelTimers.put(p, Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
             listener.claimCreation.remove(p);
-            p.sendMessage("Cancelled!");
         }, time * 20L));
     }
 }

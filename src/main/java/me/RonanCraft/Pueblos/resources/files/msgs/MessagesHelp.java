@@ -1,21 +1,24 @@
 package me.RonanCraft.Pueblos.resources.files.msgs;
 
-public class MessagesHelp implements Message {
+public enum MessagesHelp {
+
+    HELP("Help"),
+    RELOAD("Reload"),
+    CREATE("Create"),
+    INFO("Info"),
+    REQUEST("Request"),
+    FLAGS("Flags"),
+    PREFIX("Prefix");
+
+    String section;
+
+    MessagesHelp(String section) {
+        this.section = section;
+    }
+
     private static final String pre = "Help.";
 
-    public String getHelpPrefix() {
-        return getLang().getString(pre + "Prefix");
-    }
-
-    public String getHelpHelp() {
-        return getLang().getString(pre + "Help");
-    }
-
-    public String getHelpReload() {
-        return getLang().getString(pre + "Reload");
-    }
-
-    public String getHelpCreate() {
-        return getLang().getString(pre + "Create");
+    public String get() {
+        return Message.getLang().getString(pre + section);
     }
 }

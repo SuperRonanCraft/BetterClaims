@@ -1,4 +1,9 @@
 Global:
+  Border:
+    Enabled: true
+    Name: '&8-&6&lPueblos&8-'
+    Item: 'ORANGE_STAINED_GLASS_PANE'
+    Lore: []
   Back:
     Name: '&f<- &e&bBack'
     Item: 'arrow'
@@ -16,11 +21,35 @@ Claim:
       - '&8Members: &f%claim_members%'
       - '&7View all members in this claim'
     Flags:
-      Name: '&eFlags'
-      Item: 'BLUE_BANNER'
-      Lore:
-      - ''
-      - '&7Edit claim flags'
+      Allowed:
+        Name: '&eFlags'
+        Item: 'gold_ingot'
+        Lore:
+        - ''
+        - '&7Click to edit claim flags'
+      Disallowed:
+        Name: '&eFlags'
+        Item: 'gold_ingot'
+        Lore:
+          - ''
+          - '&8Unable to edit'
+    Requests:
+      Allowed:
+        Name: '&aJoin Requests'
+        Item: 'name_tag'
+        Lore:
+          - ''
+          - '&fRequest(s): &b%claim_requests%'
+          - ''
+          - '&7Click to view all join requests'
+      Disallowed:
+        Name: '&aJoin Requests'
+        Item: 'name_tag'
+        Lore:
+          - ''
+          - '&fRequest(s): &b%claim_requests%'
+          - ''
+          - '&8Unable to edit'
 Members:
   Title: '&7Members | %claim_name%'
   Items:
@@ -31,19 +60,23 @@ Members:
         - ''
         - '&fClick to edit &8%member_name%'
     Owner:
-      Name: '&e%claim_owner%'
+      Name: '&eClaim Members'
       Item: 'player_head'
       Lore:
         - ''
-        - '&fThis is the claim owner!'
+        - '&7Viewing %claim_members% claim members'
+        - ''
+        - '&fClick each member to edit their flags.'
     Requests:
       Name: '&aJoin Requests'
       Item: 'name_tag'
       Lore:
         - ''
-        - '&fView all join requests'
+        - '&fRequest(s): &b%claim_requests%'
+        - ''
+        - '&7Click to view all join requests'
 Member:
-  Title: '&7Member | %member_name%'
+  Title: '&7Member | %member_name% | %claim_name%'
   Items:
     Member:
       Name: '&eEditting Member'
@@ -64,8 +97,15 @@ Member:
         Lore:
           - ''
           - '&7Value: &f%member_flag_value%'
-Requests:
-  Title: '&7Claim Join Requests'
+    Remove:
+      Name: '&cRemove Member'
+      Item: 'barrier'
+      Lore:
+        - ''
+        - '&fClick to remove &7%member_name%'
+
+Requesting:
+  Title: '&7Request to Join'
   Items:
     New:
       Name: '&e%claim_name%'
@@ -80,6 +120,16 @@ Requests:
         - ''
         - '&7We see you really want to join this claim'
         - '&7Unfortunately, &a%claim_owner% &7hasn''t responded'
+Requests:
+  Title: '&7Join Requests | %claim_name%'
+  Items:
+    Request:
+      Name: '&e%request_name%'
+      Item: 'player_head'
+      Lore:
+        - ''
+        - '&fLeft-Click: &aAccept'
+        - '&fRight-Click: &cDecline'
 Flags:
   Title: '&7Claim | Flags'
   Items:

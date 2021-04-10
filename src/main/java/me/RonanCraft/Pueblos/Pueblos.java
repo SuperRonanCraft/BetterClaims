@@ -6,12 +6,11 @@ import me.RonanCraft.Pueblos.player.command.Commands;
 import me.RonanCraft.Pueblos.resources.Permissions;
 import me.RonanCraft.Pueblos.resources.Systems;
 import me.RonanCraft.Pueblos.resources.files.Files;
-import me.RonanCraft.Pueblos.resources.files.msgs.Messages;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -34,6 +33,7 @@ public class Pueblos extends JavaPlugin {
     @Override
     public void onDisable() {
         closeMenus();
+        systems.getDatabase().saveChanges();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class Pueblos extends JavaPlugin {
         systems.getDatabase().saveChanges();
         closeMenus();
         loadAll();
-        Messages.core.sendReload(sendi);
+        MessagesCore.RELOAD.send(sendi);
     }
 
     //(Re)Load all plugin systems/files/cache

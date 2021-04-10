@@ -1,5 +1,6 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
+import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -7,6 +8,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +19,7 @@ public class Claim {
     //Claim Information
     private final ClaimPosition position;
     private final ClaimFlags flags = new ClaimFlags(this);
-    private final List<ClaimMember> members = new ArrayList<>();
+    private final ClaimMembers members = new ClaimMembers(this);
     private final List<ClaimRequest> requests = new ArrayList<>();
     private String name;
     //Database stuff
@@ -35,18 +37,19 @@ public class Claim {
     }
 
     public boolean isMember(Player p) {
-        if (p.getUniqueId().equals(ownerId))
-            return true;
-        for (ClaimMember member : members)
-            if (member.getId().equals(p.getUniqueId()))
-                return true;
-        return false;
+        return members.isMember(p);
     }
 
     //Add
     public void addMember(ClaimMember member, boolean update) {
-        if (update) updated();
-        if (member != null) members.add(member);
+        if (member != null) {
+            for (ClaimMember _member : members.getMembers()) //Duplicate Member, lets remove them from the database too
+                if (_member.uuid.equals(member.uuid)) {
+                    updated();
+                    return;
+                }
+            members.addMember(member, update);
+        }
     }
 
     public void addRequest(ClaimRequest request, boolean update) {
@@ -84,18 +87,25 @@ public class Claim {
     }
 
     public List<ClaimMember> getMembers() {
-        return members;
+        return members.getMembers();
     }
 
-    public ClaimMember getMember(Player player) {
-        for (ClaimMember member : members)
-            if (member.uuid == player.getUniqueId())
-                return member;
-        return null;
+    public ClaimMember getMember(Player p) {
+        return members.getMember(p);
     }
 
     public List<ClaimRequest> getRequests() {
         return requests;
+    }
+
+    public void removeRequest(ClaimRequest request, boolean update) {
+        if (update)
+            updated();
+        requests.remove(request);
+    }
+
+    public void removeMember(ClaimMember member, boolean update) {
+        members.remove(member, update);
     }
 
     //Checks
@@ -105,10 +115,14 @@ public class Claim {
     }
 
     public boolean hasRequestFrom(Player p) {
+        return getRequest(p) != null;
+    }
+
+    public ClaimRequest getRequest(Player p) {
         for (ClaimRequest request : requests)
-            if (request.id == p.getUniqueId())
-                return true;
-        return false;
+            if (request.id.equals(p.getUniqueId()))
+                return request;
+        return null;
     }
 
     //Database
@@ -122,5 +136,14 @@ public class Claim {
 
     public void uploaded() {
         updated = false;
+    }
+
+    public boolean checkPermLevel(Player p, CLAIM_PERMISSION_LEVEL level) {
+        switch (level) {
+            case OWNER: return isOwner(p);
+            case MEMBER: return isMember(p);
+            case NONE: return true;
+        }
+        return false;
     }
 }

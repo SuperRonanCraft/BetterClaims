@@ -2,42 +2,40 @@ package me.RonanCraft.Pueblos.resources.files.msgs;
 
 import org.bukkit.command.CommandSender;
 
-public class MessagesCore implements Message {
+public enum MessagesCore {
+    RELOAD("Reload"),
+    NOPERMISSION("NoPermission"),
+    INVALIDCOMMAND("InvalidCommand"),
+    CLAIM_ITEM_INCLAIM("Claim.Item.InClaim"),
+    CLAIM_ITEM_NOCLAIM("Claim.Item.NoClaim"),
+    CLAIM_ITEM_NOTOWNER("Claim.Item.NotOwner"),
+    CLAIM_CREATE_SUCCESS("Claim.Create.Success"),
+    CLAIM_CREATE_FAILED_SIZE("Claim.Create.Failed.Size"),
+    CLAIM_CREATE_FAILED_OTHERCLAIM("Claim.Create.Failed.OtherClaim"),
+    CLAIM_MEMBER_REMOVED("Claim.Member.Removed"),
+    CLAIM_MEMBER_NOTIFICATION_REMOVED("Claim.Member.Notification.Removed"),
+    REQUEST_NEW("Request.New"),
+    REQUEST_ACCEPTED("Request.Accepted"),
+    REQUEST_DENIED("Request.Denied"),
+    REQUEST_REQUESTER_ACCEPTED("Request.Requester.Accepted"),
+    REQUEST_REQUESTER_DENIED("Request.Requester.Denied"),
+    REQUEST_REQUESTER_ALREADY("Request.Requester.Already"),
+    REQUEST_REQUESTER_SENT("Request.Requester.Sent"),
+    ;
+
+    String section;
+
+    MessagesCore(String section) {
+        this.section = section;
+    }
+
     private static final String pre = "Messages.";
 
-    public void sendReload(CommandSender sendi) {
-        sms(sendi, getLang().getString(pre + "Reload"));
+    public void send(CommandSender sendi) {
+        Message.sms(sendi, Message.getLang().getString(pre + section), null);
     }
 
-    public void sendNoPermission(CommandSender sendi) {
-        sms(sendi, getLang().getString(pre + "NoPermission"));
-    }
-
-    public void sendInvalidCommand(CommandSender sendi) {
-        sms(sendi, getLang().getString(pre + "InvalidCommand"));
-    }
-
-    public void sendClaimItemInClaim(CommandSender sendi) {
-        sms(sendi, getLang().getString(pre + "Claim.Item.InClaim"));
-    }
-
-    public void sendClaimItemNoClaim(CommandSender sendi) {
-        sms(sendi, getLang().getString(pre + "Claim.Item.NoClaim"));
-    }
-
-    public void sendClaimItemNotOwner(CommandSender sendi) {
-        sms(sendi, getLang().getString(pre + "Claim.Item.NotOwner"));
-    }
-
-    public void sendClaimCreateSuccess(CommandSender sendi) {
-        sms(sendi, getLang().getString(pre + "Claim.Create.Success"));
-    }
-
-    public void sendClaimCreateFailedSize(CommandSender sendi) {
-        sms(sendi, getLang().getString(pre + "Claim.Create.Failed.Size"));
-    }
-
-    public void sendClaimCreateFailedOtherClaim(CommandSender sendi) {
-        sms(sendi, getLang().getString(pre + "Claim.Create.Failed.OtherClaim"));
+    public void send(CommandSender sendi, Object placeholderInfo) {
+        Message.sms(sendi, Message.getLang().getString(pre + section), placeholderInfo);
     }
 }
