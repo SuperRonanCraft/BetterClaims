@@ -5,8 +5,10 @@ Messages:
   NoPermission: '&cSorry! &7You don''t have permission to do this!'
   Reload: '&eReloaded config and language file.'
   InvalidFlagValue: '&cFlag value is not valid! &7Please try again.'
+  InvalidFlag: '&cFlag is not valid! &7Please try again.'
+  CannotEdit: '&cUnable to edit this while outside a claim!'
   Claim:
-    NotInside: '&7You are not inside any claim, you can''t edit any settings from here!'
+    None: '&7You are not an owner or member of any claim!'
     NoPermission: '&7You are not a member of &f%claim_owner%&7''s pueblo!'
     Flag: '&7Claim flag &f%claim_flag% &7changed to &f%claim_flag_value%'
     Item:

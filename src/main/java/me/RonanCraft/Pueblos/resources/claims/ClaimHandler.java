@@ -26,6 +26,7 @@ public class ClaimHandler {
         if (error == CLAIM_ERRORS.NONE) {
             if (Pueblos.getInstance().getSystems().getDatabase().createClaim(claim)) {
                 claims.add(claim);
+                ClaimEvents.create(claim);
                 return CLAIM_ERRORS.NONE;
             } else
                 return CLAIM_ERRORS.DATABASE_ERROR;
@@ -111,6 +112,7 @@ public class ClaimHandler {
                     claim.addRequest(request, false);
 
             claim.claimId = result.getInt(Database.COLUMNS.CLAIM_ID.name);
+            claim.dateCreated = result.getDate(Database.COLUMNS.DATE.name);
             return claim;
         } catch (Exception e) {
             e.printStackTrace();

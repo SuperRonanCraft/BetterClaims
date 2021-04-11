@@ -1,11 +1,11 @@
 package me.RonanCraft.Pueblos.inventory;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.inventory.types.*;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
-import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,6 +16,7 @@ public enum PueblosInventory {
     MEMBERS(new InventoryClaimMembers(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.MEMBER),
     MEMBER(new InventoryClaimMember(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
     CLAIM(new InventoryClaim(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.MEMBER),
+    CLAIM_SELECT(new InventoryClaimSelect(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
     REQUESTING(new InventoryRequesting(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.NONE),
     REQUESTS(new InventoryRequests(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
     FLAGS(new InventoryClaimFlags(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
@@ -47,9 +48,9 @@ public enum PueblosInventory {
                 Pueblos.getInstance().getLogger().severe(this.name() + " is not a member type!");
     }
 
-    public void open(Player p, List<Claim> requestable, boolean from_command) {
-        if (inv instanceof PueblosInv_Requesting)
-            Pueblos.getInstance().getSystems().getPlayerInfo().setInventory(p, ((PueblosInv_Requesting) inv).open(p, requestable), this, from_command);
+    public void open(Player p, List<Claim> claims, boolean from_command) {
+        if (inv instanceof PueblosInv_MultiClaim)
+            Pueblos.getInstance().getSystems().getPlayerInfo().setInventory(p, ((PueblosInv_MultiClaim) inv).open(p, claims), this, from_command);
         else
             Pueblos.getInstance().getLogger().severe(this.name() + " is not a request type!");
     }

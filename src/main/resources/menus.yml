@@ -13,14 +13,28 @@ Global:
 Claim:
   Title: '&7Claim | %claim_name%'
   Items:
+    Select:
+      Name: '&e%claim_name%'
+      Item: 'player_head'
+      Lore:
+        - ''
+        - '&7Members: &f%claim_members%'
+        - '&7Size: &f%claim_width% x %claim_length%'
+        - '&7Location: &f%claim_location%'
+        - '&7World: &f%claim_location_world%'
+        - ''
+        - '&fClick to view all members'
     Members:
       Name: '&eMembers'
       Item: 'player_head'
       Lore:
       - ''
-      - '&8Members: &f%claim_members%'
-      - '&8Size: &f%claim_width% x %claim_length%'
-      - '&7View all members in this claim'
+      - '&7Members: &f%claim_members%'
+      - '&7Size: &f%claim_width% x %claim_length%'
+      - '&7Location: &f%claim_location%'
+      - '&7World: &f%claim_location_world%'
+      - ''
+      - '&fClick to view all members'
     Flags:
       Allowed:
         Name: '&eFlags'

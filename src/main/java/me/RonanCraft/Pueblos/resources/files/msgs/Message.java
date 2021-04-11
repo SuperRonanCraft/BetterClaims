@@ -4,6 +4,7 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.FileLanguage;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
+import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
@@ -77,6 +78,10 @@ public class Message {
     private static String claims(String str, Claim claim, CLAIM_FLAG flag) {
         if (str.contains("%claim_name%"))
             str = str.replace("%claim_name%", claim.getName());
+        if (str.contains("%claim_location_world%"))
+            str = str.replace("%claim_location_world%", claim.getPosition().getWorld().getName());
+        if (str.contains("%claim_location%"))
+            str = str.replace("%claim_location%", HelperClaim.getLocationString(claim));
         if (str.contains("%claim_members%"))
             str = str.replace("%claim_members%", String.valueOf(claim.getMembers().size()));
         if (str.contains("%claim_owner%"))

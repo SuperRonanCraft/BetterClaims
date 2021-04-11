@@ -1,5 +1,6 @@
-package me.RonanCraft.Pueblos.inventory;
+package me.RonanCraft.Pueblos.inventory.types;
 
+import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -57,12 +58,12 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     }
 
     @Override
-    public String getSection() {
+    protected String getSection() {
         return "Claim";
     }
 
     @Override
-    List<String> getSections() {
+    protected List<String> getSections() {
         List<String> list = new ArrayList<>();
         for (ITEMS set : ITEMS.values())
             list.add(set.section);

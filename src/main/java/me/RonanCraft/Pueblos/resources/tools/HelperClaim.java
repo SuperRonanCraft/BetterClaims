@@ -1,10 +1,12 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
-import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
+import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.claims.*;
+import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
+import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
+import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Calendar;
@@ -70,5 +72,37 @@ public class HelperClaim {
         MessagesCore.CLAIM_MEMBER_REMOVED.send(p, member);
         if (member.getPlayer().isOnline())
             MessagesCore.CLAIM_MEMBER_NOTIFICATION_REMOVED.send(member.getPlayer().getPlayer(), member);
+    }
+
+    public static CLAIM_ERRORS createClaim(Player owner, Location pos1, Location pos2) {
+        CLAIM_ERRORS error;
+        ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
+        Claim claim = handler.claimCreate(owner.getUniqueId(), owner.getName(), new ClaimPosition(owner.getWorld(), pos1, pos2));
+        if (claim != null) {
+            error = handler.addClaim(claim, owner);
+            switch (error) {
+                case NONE:
+                    MessagesCore.CLAIM_CREATE_SUCCESS.send(owner);
+                    Visualization.fromClaim(claim, owner.getLocation().getBlockY(), VisualizationType.CLAIM, owner.getLocation()).apply(owner);
+                    break;
+                case SIZE:
+                    MessagesCore.CLAIM_CREATE_FAILED_SIZE.send(owner);
+                    break;
+                case OVERLAPPING:
+                    MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
+                    break;
+                default:
+                    Message.sms(owner, "An Error Happened!", null);
+            }
+        } else { //Overlapping
+            MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
+            error = CLAIM_ERRORS.OVERLAPPING;
+        }
+        return error;
+    }
+
+    public static String getLocationString(Claim claim) {
+        ClaimPosition pos = claim.getPosition();
+        return pos.getLeft() + "x, " + pos.getTop() + "z";
     }
 }

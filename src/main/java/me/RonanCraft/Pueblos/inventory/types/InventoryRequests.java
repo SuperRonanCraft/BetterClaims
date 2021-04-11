@@ -1,8 +1,10 @@
-package me.RonanCraft.Pueblos.inventory;
+package me.RonanCraft.Pueblos.inventory.types;
 
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
+import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
+import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
+import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_Claim {
+public class InventoryRequests extends PueblosInvLoader implements PueblosInv_Claim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, Claim> claim = new HashMap<>();
@@ -27,20 +29,16 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
 
         addBorder(inv);
 
-        addButtonBack(inv, p, itemInfo, PueblosInventory.FLAGS, claim);
+        addButtonBack(inv, p, itemInfo, PueblosInventory.REQUESTS, claim);
 
         int slot = 18;
-        for (CLAIM_FLAG flag : CLAIM_FLAG.values()) {
+        for (ClaimRequest request : claim.getRequests()) {
             slot = getNextSlot(slot, inv);
             if (slot == -1)
                 break;
-            ItemStack item;
-            if ((Boolean) claim.getFlags().getFlag(flag))
-                item = getItem(ITEMS.FLAG_ENABLED.section, p, new Object[]{claim, flag});
-            else
-                item = getItem(ITEMS.FLAG_DISABLED.section, p, new Object[]{claim, flag});
+            ItemStack item = getItem(ITEMS.REQUEST.section, p, request);
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, flag));
+            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, request));
         }
         this.itemInfo.put(p, itemInfo);
         this.claim.put(p, claim);
@@ -51,17 +49,21 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
     @Override
     public void clickEvent(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (    !this.itemInfo.containsKey(p)
-                || !this.claim.containsKey(p)
-                || checkItems(e, itemInfo.get(p))
-                || !itemInfo.get(p).containsKey(e.getSlot()))
+        if (!this.itemInfo.containsKey(p) || !this.claim.containsKey(p) || checkItems(e, itemInfo.get(p)))
             return;
 
-        CLAIM_FLAG flag = (CLAIM_FLAG) itemInfo.get(p).get(e.getSlot()).info;
-        Claim claim = this.claim.get(p);
-        HelperClaim.toggleFlag(p, claim, flag);
-        PueblosInventory.FLAGS.open(p, claim, false);
-        //this.itemInfo.remove(p);
+        if (!itemInfo.get(p).containsKey(e.getSlot())) //Not an item we care about
+            return;
+
+        ClaimRequest request = (ClaimRequest) itemInfo.get(p).get(e.getSlot()).info;
+        if (e.getClick().isLeftClick()) { //Accept
+            HelperClaim.requestAction(true, p, request);
+            PueblosInventory.REQUESTS.open(p, claim.get(p), false);
+        } else if (e.getClick().isRightClick()) { //Decline
+            PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.REQUEST_DECLINE, p, request), false);
+            //HelperClaim.requestAction(false, p, request);
+            //PueblosInventory.REQUESTS.open(p, claim.get(p), false);
+        }
     }
 
     @Override
@@ -70,12 +72,12 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
     }
 
     @Override
-    public String getSection() {
-        return "Flags";
+    protected String getSection() {
+        return "Requests";
     }
 
     @Override
-    List<String> getSections() {
+    protected List<String> getSections() {
         List<String> list = new ArrayList<>();
         for (ITEMS set : ITEMS.values())
             list.add(set.section);
@@ -83,8 +85,7 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
     }
 
     private enum ITEMS {
-        FLAG_ENABLED("Enabled"),
-        FLAG_DISABLED("Disabled");
+        REQUEST("Request");
 
         String section;
 

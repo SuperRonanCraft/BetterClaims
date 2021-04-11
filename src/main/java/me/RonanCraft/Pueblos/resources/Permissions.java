@@ -15,13 +15,4 @@ public class Permissions {
     public boolean checkPerm(String str, CommandSender sendi) {
         return depPerms.hasPerm(str, sendi);
     }
-
-    //Permissions
-    public boolean getUse(CommandSender sendi) {
-        return checkPerm(PermissionNodes.USE.node, sendi);
-    }
-
-    public boolean getReload(CommandSender sendi) {
-        return checkPerm(PermissionNodes.RELOAD.node, sendi);
-    }
 }

@@ -12,6 +12,12 @@ commands:
         description: Main pueblos command
 
 permissions:
-    pueblos.user:
-        description: Basic user permissions
+    pueblos.use:
+        description: Use the plugin
+        default: true
+    pueblos.reload:
+        description: Reload the plugin
+        default: op
+    pueblos.request:
+        description: Request to join a claim
         default: true

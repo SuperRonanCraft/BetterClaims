@@ -1,7 +1,7 @@
-package me.RonanCraft.Pueblos.inventory;
+package me.RonanCraft.Pueblos.inventory.types;
 
+import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_Requesting {
+public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv_MultiClaim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, List<Claim>> claims = new HashMap<>();
@@ -24,13 +24,12 @@ public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_
         addBorder(inv);
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
+        int slot = inv.firstEmpty();
         for (Claim claim : claims) {
-            ItemStack item;
-            if (!claim.hasRequestFrom(p))
-                item = getItem(ITEMS.NEW.section, p, claim);
-            else
-                item = getItem(ITEMS.REQUESTED.section, p, claim);
-            int slot = inv.firstEmpty();
+            slot = getNextSlot(slot, inv);
+            if (slot == -1)
+                break;
+            ItemStack item = getItem(ITEMS.SELECT.section, p, claim);
             inv.setItem(slot, item);
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, claim));
         }
@@ -43,12 +42,13 @@ public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_
     @Override
     public void clickEvent(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (!this.itemInfo.containsKey(p) || !this.claims.containsKey(p) || checkItems(e, itemInfo.get(p)))
+        if (    !this.itemInfo.containsKey(p)
+                || !this.claims.containsKey(p)
+                || checkItems(e, itemInfo.get(p)))
             return;
 
         Claim claim = (Claim) itemInfo.get(p).get(e.getSlot()).info;
-        if (HelperClaim.requestJoin(p, claim))
-            p.closeInventory();
+        PueblosInventory.CLAIM.open(p, claim, false);
     }
 
     @Override
@@ -57,12 +57,12 @@ public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_
     }
 
     @Override
-    public String getSection() {
-        return "Requesting";
+    protected String getSection() {
+        return "Claim";
     }
 
     @Override
-    List<String> getSections() {
+    protected List<String> getSections() {
         List<String> list = new ArrayList<>();
         for (ITEMS set : ITEMS.values())
             list.add(set.section);
@@ -70,8 +70,7 @@ public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_
     }
 
     private enum ITEMS {
-        NEW("New"),
-        REQUESTED("Requested");
+        SELECT("Select");
 
         String section;
 

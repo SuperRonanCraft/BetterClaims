@@ -1,5 +1,6 @@
-package me.RonanCraft.Pueblos.inventory;
+package me.RonanCraft.Pueblos.inventory.types;
 
+import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
@@ -83,12 +84,12 @@ public class InventoryConfirm extends PueblosInvLoader implements PueblosInv_Con
     }
 
     @Override
-    String getSection() {
+    protected String getSection() {
         return "Confirm";
     }
 
     @Override
-    List<String> getSections() {
+    protected List<String> getSections() {
         List<String> list = new ArrayList<>();
         for (ITEMS i : ITEMS.values())
             list.add(i.section);

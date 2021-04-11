@@ -4,8 +4,8 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
+import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.*;
-import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
 import org.bukkit.command.CommandSender;
@@ -31,19 +31,28 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
                         ClaimMember member = new ClaimMember(p.getUniqueId(), p.getName(), Calendar.getInstance().getTime(), false, claim);
                         member.setFlag(CLAIM_FLAG_MEMBER.ALLOW_BED, true, true);
                         claim.addMember(member, true);
+                        Pueblos.getInstance().getSystems().getDatabase().updateMembers(claim);
                     }
                     //----
-                    Pueblos.getInstance().getSystems().getDatabase().updateMembers(claim);
                     PueblosInventory.CLAIM.open(p, claim, true);
-                } else
+                } else {
                     MessagesCore.CLAIM_NOPERMISSION.send(sendi, claim);
-            } else
-                MessagesCore.CLAIM_NOTINSIDE.send(sendi);
+                }
+            } else {
+                List<Claim> claims = handler.getClaims(p.getUniqueId());
+                if (!claims.isEmpty()) {
+                    if (claims.size() == 1)
+                        PueblosInventory.CLAIM.open(p, claims.get(0), true);
+                    else
+                        PueblosInventory.CLAIM_SELECT.open(p, claims, true);
+                } else
+                    MessagesCore.CLAIM_NONE.send(sendi);
+            }
         }
     }
 
     public boolean permission(CommandSender sendi) {
-        return true;
+        return PermissionNodes.USE.check(sendi);
     }
 
     @Override

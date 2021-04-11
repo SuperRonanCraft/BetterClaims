@@ -7,10 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Claim {
     public final UUID ownerId;
@@ -22,6 +19,7 @@ public class Claim {
     private final ClaimMembers members = new ClaimMembers(this);
     private final List<ClaimRequest> requests = new ArrayList<>();
     private String name;
+    public Date dateCreated;
     //Database stuff
     private boolean updated = false;
 

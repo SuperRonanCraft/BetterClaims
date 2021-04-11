@@ -5,6 +5,7 @@ import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
+import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
@@ -41,7 +42,7 @@ public class CmdRequest implements PueblosCommand, PueblosCommandHelpable, Puebl
     }
 
     public boolean permission(CommandSender sendi) {
-        return true;
+        return  PermissionNodes.REQUEST.check(sendi);
     }
 
     @Override

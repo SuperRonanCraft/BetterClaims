@@ -13,11 +13,11 @@ public abstract class PueblosInvLoader {
     String title = null;
     HashMap<String, ItemStack> items = new HashMap<>();
 
-    ItemStack getItem(String section, Player p, Object info) {
+    protected ItemStack getItem(String section, Player p, Object info) {
         return HelperItem.getItem(items.get(section).clone(), p, info);
     }
 
-    String getTitle(Player p, Object info) {
+    protected String getTitle(Player p, Object info) {
         return Message.placeholder(p , title, info);
     }
 
@@ -35,8 +35,8 @@ public abstract class PueblosInvLoader {
             }
     }
 
-    abstract String getSection();
+    protected abstract String getSection();
 
-    abstract List<String> getSections();
+    protected abstract List<String> getSections();
 
 }

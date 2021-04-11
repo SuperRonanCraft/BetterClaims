@@ -4,6 +4,7 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
+import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
@@ -13,6 +14,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, PueblosCommandTabComplete {
@@ -26,35 +28,40 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
         ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
 
         //Event
-        Claim claim = handler.getClaim(p.getLocation());
-        if (claim != null) {
-            if (claim.isOwner(p)) {
-                if (args.length == 3) {
-                    for (CLAIM_FLAG flag : CLAIM_FLAG.values())
-                        if (flag.name().equalsIgnoreCase(args[1])) {
-                            try {
-                                Object value = flag.cast(args[2]);
-                                if (value == null)
-                                    throw new Exception();
-                                HelperClaim.setFlag(p, claim, flag, value);
-                            } catch (Exception e) {
-                                MessagesCore.INVALIDFLAGVALUE.send(sendi);
-                            }
-                        }
-                } else {
-                    Message.sms(p, "Usage: /claim flag FLAG_TYPE VALUE", null);
+        if (args.length == 3) {
+            CLAIM_FLAG flag = null;
+            Object value = null;
+            for (CLAIM_FLAG _flag : CLAIM_FLAG.values())
+                if (_flag.name().equalsIgnoreCase(args[1])) {
+                    try {
+                        value = _flag.cast(args[2]);
+                        if (value == null)
+                            throw new Exception();
+                        flag = _flag;
+                    } catch (Exception e) {
+                        MessagesCore.INVALIDFLAGVALUE.send(sendi);
+                        return;
+                    }
                 }
-            } else
-                MessagesCore.NOPERMISSION.send(sendi, claim);
-        } else {
-            MessagesCore.CLAIM_NOTINSIDE.send(sendi);
-        }
-
-
+            if (flag == null) {
+                MessagesCore.INVALIDFLAG.send(sendi);
+                return;
+            }
+            Claim claim = handler.getClaim(p.getLocation());
+            if (claim != null) {
+                if (claim.isOwner(p)) {
+                    HelperClaim.setFlag(p, claim, flag, value);
+                } else
+                    MessagesCore.NOPERMISSION.send(sendi, claim);
+            } else {
+                MessagesCore.CANNOTEDIT.send(sendi);
+            }
+        } else
+            Message.sms(p, "Usage: /claim flag FLAG_TYPE VALUE", null);
     }
 
     public boolean permission(CommandSender sendi) {
-        return true;
+        return PermissionNodes.USE.check(sendi);
     }
 
     @Override
@@ -70,10 +77,12 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
     @Override
     public List<String> tabComplete(CommandSender sendi, String[] args) {
         List<String> list = new ArrayList<>();
-        if (args.length == 2)
+        if (args.length == 2) {
             for (CLAIM_FLAG flag : CLAIM_FLAG.values())
                 if (flag.name().startsWith(args[1].toUpperCase()))
                     list.add(flag.name().toLowerCase());
+        } else if (args.length == 3)
+            list.addAll(Arrays.asList("true", "false"));
         return list;
     }
 }

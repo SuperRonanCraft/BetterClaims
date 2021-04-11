@@ -8,7 +8,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.List;
 
-public interface PueblosInv_Requesting extends PueblosInv {
+public interface PueblosInv_MultiClaim extends PueblosInv {
 
     Inventory open(Player p, List<Claim> claimList);
 

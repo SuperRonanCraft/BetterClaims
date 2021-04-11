@@ -1,5 +1,6 @@
-package me.RonanCraft.Pueblos.inventory;
+package me.RonanCraft.Pueblos.inventory.types;
 
+import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
@@ -55,7 +56,6 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
         return inv;
     }
 
-    @SuppressWarnings("SwitchStatementWithTooFewBranches")
     @Override
     public void clickEvent(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();

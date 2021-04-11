@@ -4,6 +4,7 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
+import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Bukkit;
@@ -93,32 +94,10 @@ public class EventInteract {
             CLAIM_ERRORS error = claimCreation.addLocation(loc);
             if (error == CLAIM_ERRORS.NONE) {
                 List<Location> corners = claimCreation.locations;
-                if (corners.size() >= 2) {
-                    ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
-                    Claim claim = handler.claimCreate(p.getUniqueId(), p.getName(), new ClaimPosition(p.getWorld(), corners.get(0), corners.get(1)));
-                    if (claim != null) {
-                        error = handler.addClaim(claim, p);
-                        switch (error) {
-                            case NONE:
-                                MessagesCore.CLAIM_CREATE_SUCCESS.send(p);
-                                Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
-                                claimCreation.lock(); //Lock us from making another claim using this item
-                                break;
-                            case SIZE:
-                                MessagesCore.CLAIM_CREATE_FAILED_SIZE.send(p);
-                                break;
-                            case OVERLAPPING:
-                                MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(p);
-                                claimCreation.lock(); //Lock us from making another claim using this item
-                                break;
-                            default:
-                                Message.sms(p, "An Error Happened!", null);
-                                claimCreation.lock(); //Lock us from making another claim using this item
-                        }
-                    } else { //Overlapping
-                        MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(p);
+                if (corners.size() >= 2) { //Create claim
+                    error = HelperClaim.createClaim(p, corners.get(0), corners.get(1));
+                    if (error != CLAIM_ERRORS.SIZE) //Let the player select another second location
                         claimCreation.lock(); //Lock us from making another claim using this item
-                    }
                 } else {
                     Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
                 }

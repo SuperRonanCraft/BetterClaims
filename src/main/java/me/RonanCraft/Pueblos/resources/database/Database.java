@@ -23,7 +23,8 @@ public abstract class Database {
         POSITION("position", "text NOT NULL"),
         MEMBERS("members", "text"),
         FLAGS("flags", "text"),
-        REQUESTS("requests", "text");
+        REQUESTS("requests", "text"),
+        DATE("date_created", "text");
         //REPLIER("replier", "text"),
         //RESOLVED("resolved", "text DEFAULT null"),
         //CLAIMED_BY("claimedBy", "text DEFAULT null"),
@@ -93,6 +94,7 @@ public abstract class Database {
         String sql = pre + table + " ("
                 + COLUMNS.OWNER_UUID.name + ", "
                 + COLUMNS.OWNER_NAME.name + ", "
+                + COLUMNS.DATE.name + ", "
                 + COLUMNS.POSITION.name + ""
                 + ") VALUES(?, ?, ?)";
         List<Object> params = new ArrayList<>() {{
