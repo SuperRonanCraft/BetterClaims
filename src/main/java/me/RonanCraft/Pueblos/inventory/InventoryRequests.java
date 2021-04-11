@@ -2,6 +2,8 @@ package me.RonanCraft.Pueblos.inventory;
 
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
+import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
+import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -57,8 +59,9 @@ public class InventoryRequests extends PueblosInvLoader implements PueblosInv_Cl
             HelperClaim.requestAction(true, p, request);
             PueblosInventory.REQUESTS.open(p, claim.get(p), false);
         } else if (e.getClick().isRightClick()) { //Decline
-            HelperClaim.requestAction(false, p, request);
-            PueblosInventory.REQUESTS.open(p, claim.get(p), false);
+            PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.REQUEST_DECLINE, p, request), false);
+            //HelperClaim.requestAction(false, p, request);
+            //PueblosInventory.REQUESTS.open(p, claim.get(p), false);
         }
     }
 

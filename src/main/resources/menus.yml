@@ -75,6 +75,12 @@ Members:
         - '&fRequest(s): &b%claim_requests%'
         - ''
         - '&7Click to view all join requests'
+    Leave:
+      Name: '&cLeave Claim'
+      Item: 'barrier'
+      Lore:
+        - ''
+        - '&7Leave this cruel land &8(confirm)'
 Member:
   Title: '&7Member | %member_name% | %claim_name%'
   Items:
@@ -102,7 +108,7 @@ Member:
       Item: 'barrier'
       Lore:
         - ''
-        - '&fClick to remove &7%member_name%'
+        - '&fClick to remove &7%member_name% &8(confirm)'
 
 Requesting:
   Title: '&7Request to Join'
@@ -149,3 +155,18 @@ Flags:
         - '&fStatus: &b%claim_flag_value%'
         - ''
         - '&fClick to toggle flag'
+Confirm:
+  Title: '&7Confirm | %confirm_type%'
+  Items:
+    Accept:
+      Name: '&e%claim_flag%'
+      Item: 'gold_ingot'
+      Lore:
+        - ''
+        - '&fAccept offer'
+    Decline:
+      Name: '&c&lDecline'
+      Item: 'iron_ingot'
+      Lore:
+        - ''
+        - '&fDecline the offer'

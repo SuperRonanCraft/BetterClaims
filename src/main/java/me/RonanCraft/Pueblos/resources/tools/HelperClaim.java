@@ -48,6 +48,13 @@ public class HelperClaim {
         }*/
     }
 
+    public static void leaveClaim(Player p, ClaimMember member) {
+        member.claim.removeMember(member, true);
+        MessagesCore.CLAIM_MEMBER_LEAVE.send(p, member);
+        if (member.claim.getOwner().isOnline())
+            MessagesCore.CLAIM_MEMBER_NOTIFICATION_LEAVE.send(member.claim.getOwner().getPlayer(), member);
+    }
+
     public static void removeMember(Player p, ClaimMember member) {
         member.claim.removeMember(member, true);
         MessagesCore.CLAIM_MEMBER_REMOVED.send(p, member);

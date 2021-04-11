@@ -10,10 +10,6 @@ import java.util.List;
 
 public interface PueblosInv_Requesting extends PueblosInv {
 
-    default Pueblos getPl() {
-        return Pueblos.getInstance();
-    }
-
     Inventory open(Player p, List<Claim> claimList);
 
 }

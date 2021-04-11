@@ -10,6 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface PueblosInv {
 
@@ -55,16 +56,19 @@ public interface PueblosInv {
     }
 
     default boolean checkItems(InventoryClickEvent e, HashMap<Integer, PueblosItem> items) {
-        if (items.containsKey(e.getSlot())) {
-            Player p = (Player) e.getWhoClicked();
-            PueblosItem item = items.get(e.getSlot());
+        return checkItems(e.getSlot(), (Player) e.getWhoClicked(), items);
+    }
+
+    default boolean checkItems(int slot, Player p, HashMap<Integer, PueblosItem> items) {
+        if (items.containsKey(slot)) {
+            PueblosItem item = items.get(slot);
             if (item.type != ITEM_TYPE.NORMAL) {
                 switch (item.type) {
                     case BACK:
                     case NEXT:
                         PueblosInventory inv = (PueblosInventory) item.info;
                         Pueblos.getInstance().getSystems().getPlayerInfo().removePrevious(p);
-                        inv.openCasted((Player) e.getWhoClicked(), item.info2);
+                        inv.openCasted(p, item.info2);
                 }
                 clear(p);
                 return true;
@@ -83,4 +87,13 @@ public interface PueblosInv {
     }
 
     void clear(Player p); //Called when a special item causes this inventory to close
+
+    default void goBack(Player p, HashMap<Integer, PueblosItem> itemInfo) {
+        for (Map.Entry<Integer, PueblosItem> info : itemInfo.entrySet()) {
+            int slot = info.getKey();
+            PueblosItem item = info.getValue();
+            if (item.type == ITEM_TYPE.BACK)
+                checkItems(slot, p, itemInfo);
+        }
+    }
 }

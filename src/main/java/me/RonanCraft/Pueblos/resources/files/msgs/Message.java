@@ -3,6 +3,7 @@ package me.RonanCraft.Pueblos.resources.files.msgs;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.FileLanguage;
+import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.apache.commons.lang.StringUtils;
@@ -53,6 +54,8 @@ public class Message {
                 str = getPlaceholder(str, (ClaimMember) info, null);
             else if (info instanceof ClaimRequest)
                 str = getPlaceholder(str, (ClaimRequest) info);
+            else if (info instanceof Confirmation)
+                str = getPlaceholder(str, (Confirmation) info);
             else if (info instanceof Object[] && ((Object[]) info).length == 2)
                 str = getPlaceholder(str, (Object[]) info);
         }
@@ -109,5 +112,12 @@ public class Message {
         if (str.contains("%request_date%"))
             str = str.replace("%request_date%", HelperDate.getDate(info.date));
         return getPlaceholder(str, info.claim, null);
+    }
+
+    //Confirmations
+    private static String getPlaceholder(String str, Confirmation info) {
+        if (str.contains("%confirm_type%"))
+            str = str.replace("%request_type%", info.confirmation.name());
+        return str;
     }
 }

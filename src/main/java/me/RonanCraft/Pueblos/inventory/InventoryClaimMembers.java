@@ -2,6 +2,8 @@ package me.RonanCraft.Pueblos.inventory;
 
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
+import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
+import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -25,8 +27,11 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
 
+        //Base Items
         for (ITEMS i : ITEMS.values()) {
             if (i.slot == 0) //Slot 0 = Disabled
+                continue;
+            if (i == ITEMS.LEAVE && claim.isOwner(p))
                 continue;
             ItemStack _item = getItem(i.section, p, claim);
             inv.setItem(i.slot, _item);
@@ -65,6 +70,8 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
             switch (item) {
                 case REQUEST:
                     PueblosInventory.REQUESTS.open(p, claim.get(p), false);
+                case LEAVE:
+                    PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_LEAVE, p, claim.get(p).getMember(p)), false);
             }
         } else if (itemInfo.get(p).get(e.getSlot()).info instanceof ClaimMember) {
             ClaimMember member = (ClaimMember) itemInfo.get(p).get(e.getSlot()).info;
@@ -93,7 +100,8 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
     private enum ITEMS {
         MEMBER("Member", 0),
         OWNER("Owner", 13),
-        REQUEST("Requests", 16);
+        REQUEST("Requests", 16),
+        LEAVE("Leave", 15);
 
         String section;
         int slot;

@@ -3,6 +3,8 @@ package me.RonanCraft.Pueblos.inventory;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG_MEMBER;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
+import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
+import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -72,9 +74,9 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
             ITEMS item = (ITEMS) itemInfo.get(p).get(e.getSlot()).info;
             switch (item) {
                 case REMOVE:
-                    HelperClaim.removeMember(p, member);
-                    Pueblos.getInstance().getSystems().getPlayerInfo().removePrevious(p);
-                    PueblosInventory.MEMBERS.open(p, member.claim, false);
+                    PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.MEMBER_REMOVE, p, member), false);
+                    //HelperClaim.removeMember(p, member);
+                    //goBack(PueblosInventory.MEMBERS, p, member.claim);
             }
         } else if (itemInfo.get(p).get(e.getSlot()).info instanceof CLAIM_FLAG_MEMBER) {
             CLAIM_FLAG_MEMBER flag = (CLAIM_FLAG_MEMBER) itemInfo.get(p).get(e.getSlot()).info;

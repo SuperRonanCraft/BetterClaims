@@ -5,6 +5,8 @@ import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
+import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
+import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -16,7 +18,8 @@ public enum PueblosInventory {
     CLAIM(new InventoryClaim(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.MEMBER),
     REQUESTING(new InventoryRequesting(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.NONE),
     REQUESTS(new InventoryRequests(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
-    FLAGS(new InventoryClaimFlags(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER);
+    FLAGS(new InventoryClaimFlags(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
+    CONFIRM(new InventoryConfirm(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.NONE);
 
     private final PueblosInv inv;
     private final PermissionNodes permNode;
@@ -48,7 +51,14 @@ public enum PueblosInventory {
         if (inv instanceof PueblosInv_Requesting)
             Pueblos.getInstance().getSystems().getPlayerInfo().setInventory(p, ((PueblosInv_Requesting) inv).open(p, requestable), this, from_command);
         else
-            Pueblos.getInstance().getLogger().severe(this.name() + " is not a member type!");
+            Pueblos.getInstance().getLogger().severe(this.name() + " is not a request type!");
+    }
+
+    public void open(Player p, Confirmation confirmation, boolean from_command) {
+        if (inv instanceof PueblosInv_Confirming)
+            Pueblos.getInstance().getSystems().getPlayerInfo().setInventory(p, ((PueblosInv_Confirming) inv).open(p, confirmation), this, from_command);
+        else
+            Pueblos.getInstance().getLogger().severe(this.name() + " is not a confirm type!");
     }
 
     public void openCasted(Player p, Object obj) {
@@ -56,6 +66,10 @@ public enum PueblosInventory {
             open(p, (ClaimMember) obj, false);
         else if (obj instanceof Claim)
             open(p, (Claim) obj, false);
+        else if (obj instanceof Confirmation)
+            open(p, (Confirmation) obj, false);
+        else
+            p.sendMessage("A wrong inventory happened!");
     }
 
     public boolean isAllowed(Player p, Claim claim) {

@@ -8,10 +8,6 @@ import org.bukkit.inventory.Inventory;
 
 public interface PueblosInv_Claim extends PueblosInv {
 
-    default Pueblos getPl() {
-        return Pueblos.getInstance();
-    }
-
     Inventory open(Player p, Claim claim);
 
 }

@@ -17,8 +17,10 @@ Messages:
     Member:
       FlagEdit: '&fFlag &7%member_flag%&f for &7%member_name% &fwas set to &b%member_flag_value%'
       Removed: '&c%member_name% was removed from &b%claim_name%&c!'
+      Leave: '&cYou have left &b%claim_name%&c!'
       Notification:
         Removed: '&cYou were removed from &b%claim_name%&c! &7You can no longer visit here!'
+        Leave: '&cMember &7%member_name% &chas left your pueblo!'
   Request:
     New: '&aNew &frequest from &7%request_name% &fto join your pueblo!'
     Reminder: '&fYou have %claim_requests% request(s) pending!'
