@@ -2,6 +2,8 @@ package me.RonanCraft.Pueblos.inventory;
 
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
+import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -57,7 +59,7 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
 
         CLAIM_FLAG flag = (CLAIM_FLAG) itemInfo.get(p).get(e.getSlot()).info;
         Claim claim = this.claim.get(p);
-        claim.getFlags().setFlag(flag, !(Boolean) claim.getFlags().getFlag(flag), true);
+        HelperClaim.toggleFlag(p, claim, flag);
         PueblosInventory.FLAGS.open(p, claim, false);
         //this.itemInfo.remove(p);
     }

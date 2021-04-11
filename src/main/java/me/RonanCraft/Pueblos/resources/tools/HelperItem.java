@@ -5,6 +5,7 @@ import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
 import me.RonanCraft.Pueblos.resources.files.FileOther;
+import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -21,12 +22,12 @@ public class HelperItem {
         //Item Title
         if (item.getItemMeta() != null) {
             String name = item.getItemMeta().getDisplayName();
-            name = PueblosPlaceholders.getPlaceholder(name, p, info);
+            name = Message.placeholder(p, name, info);
             PueblosInv.setTitle(item, p, name);
             //Item Lore
             if (item.getItemMeta().getLore() != null) {
                 List<String> lore = item.getItemMeta().getLore();
-                lore.forEach(str -> lore.set(lore.indexOf(str), PueblosPlaceholders.getPlaceholder(str, p, info)));
+                lore.forEach(str -> lore.set(lore.indexOf(str), Message.placeholder(p, str, info)));
                 PueblosInv.setLore(item, p, lore);
             }
             if (item.getType() == Material.PLAYER_HEAD) {

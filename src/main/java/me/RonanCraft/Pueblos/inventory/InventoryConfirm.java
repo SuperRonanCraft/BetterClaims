@@ -2,7 +2,6 @@ package me.RonanCraft.Pueblos.inventory;
 
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
-import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
@@ -71,7 +70,7 @@ public class InventoryConfirm extends PueblosInvLoader implements PueblosInv_Con
                         break;
                 }
                 break;
-            case DECLINE:
+            case CANCEL:
                 p.sendMessage("Declined?");
                 goBack(p, this.itemInfo.get(p));
                 break;
@@ -97,8 +96,8 @@ public class InventoryConfirm extends PueblosInvLoader implements PueblosInv_Con
     }
 
     private enum ITEMS {
-        ACCEPT("Accept", 12),
-        DECLINE("Decline", 14);
+        ACCEPT("Accept", 22),
+        CANCEL("Cancel", 16);
 
         String section;
         int slot;

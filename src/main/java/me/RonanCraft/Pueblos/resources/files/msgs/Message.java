@@ -49,13 +49,13 @@ public class Message {
                     str = str.replaceAll("%player_uuid%", ((Player) p).getUniqueId().toString());
             //Placeholders based off info
             if (info instanceof Claim)
-                str = getPlaceholder(str, (Claim) info, null);
+                str = claims(str, (Claim) info, null);
             else if (info instanceof ClaimMember)
-                str = getPlaceholder(str, (ClaimMember) info, null);
+                str = member(str, (ClaimMember) info, null);
             else if (info instanceof ClaimRequest)
-                str = getPlaceholder(str, (ClaimRequest) info);
+                str = requests(str, (ClaimRequest) info);
             else if (info instanceof Confirmation)
-                str = getPlaceholder(str, (Confirmation) info);
+                str = confirmation(str, (Confirmation) info);
             else if (info instanceof Object[] && ((Object[]) info).length == 2)
                 str = getPlaceholder(str, (Object[]) info);
         }
@@ -67,57 +67,71 @@ public class Message {
     //Multiple variables
     private static String getPlaceholder(String str, Object[] info) {
         if (info[0] instanceof ClaimMember && info[1] instanceof CLAIM_FLAG_MEMBER)
-            str = getPlaceholder(str, (ClaimMember) info[0], (CLAIM_FLAG_MEMBER) info[1]);
+            str = member(str, (ClaimMember) info[0], (CLAIM_FLAG_MEMBER) info[1]);
         else if (info[0] instanceof Claim && info[1] instanceof CLAIM_FLAG)
-            str = getPlaceholder(str, (Claim) info[0], (CLAIM_FLAG) info[1]);
+            str = claims(str, (Claim) info[0], (CLAIM_FLAG) info[1]);
         return str;
     }
 
     //Claims
-    private static String getPlaceholder(String str, Claim info, CLAIM_FLAG flag) {
+    private static String claims(String str, Claim claim, CLAIM_FLAG flag) {
         if (str.contains("%claim_name%"))
-            str = str.replace("%claim_name%", info.getName());
+            str = str.replace("%claim_name%", claim.getName());
         if (str.contains("%claim_members%"))
-            str = str.replace("%claim_members%", String.valueOf(info.getMembers().size()));
+            str = str.replace("%claim_members%", String.valueOf(claim.getMembers().size()));
         if (str.contains("%claim_owner%"))
-            str = str.replace("%claim_owner%", String.valueOf(info.ownerName));
+            str = str.replace("%claim_owner%", String.valueOf(claim.ownerName));
         if (str.contains("%claim_requests%"))
-            str = str.replace("%claim_requests%", String.valueOf(info.getRequests().size()));
+            str = str.replace("%claim_requests%", String.valueOf(claim.getRequests().size()));
+        if (str.contains("%claim_requests%"))
+            str = str.replace("%claim_requests%", String.valueOf(claim.getRequests().size()));
+        if (str.contains("%claim_width%"))
+            str = str.replace("%claim_width%", String.valueOf(claim.getGreaterBoundaryCorner().getBlockX() - claim.getLesserBoundaryCorner().getBlockX()));
+        if (str.contains("%claim_length%"))
+            str = str.replace("%claim_length%", String.valueOf(claim.getGreaterBoundaryCorner().getBlockZ() - claim.getLesserBoundaryCorner().getBlockZ()));
         if (flag != null) {
             if (str.contains("%claim_flag%"))
                 str = str.replace("%claim_flag%", StringUtils.capitalize(flag.name().toLowerCase().replace("_", " ")));
             if (str.contains("%claim_flag_value%"))
-                str = str.replace("%claim_flag_value%", info.getFlags().getFlag(flag).toString());
+                str = str.replace("%claim_flag_value%", claim.getFlags().getFlag(flag).toString());
         }
         return str;
     }
 
     //Claim Members
-    private static String getPlaceholder(String str, ClaimMember info, CLAIM_FLAG_MEMBER flag) {
+    private static String member(String str, ClaimMember member, CLAIM_FLAG_MEMBER flag) {
         if (str.contains("%member_name%"))
-            str = str.replace("%member_name%", info.getName());
+            str = str.replace("%member_name%", member.getName());
+        if (str.contains("%member_date%"))
+            str = str.replace("%member_date%", HelperDate.getDate(member.date));
         if (flag != null) {
             if (str.contains("%member_flag%"))
                 str = str.replace("%member_flag%", StringUtils.capitalize(flag.name().toLowerCase().replace("_", " ")));
             if (str.contains("%member_flag_value%"))
-                str = str.replace("%member_flag_value%", info.getFlags().getOrDefault(flag, flag.getDefault()).toString());
+                str = str.replace("%member_flag_value%", member.getFlags().getOrDefault(flag, flag.getDefault()).toString());
         }
-        return getPlaceholder(str, info.claim, null);
+        return claims(str, member.claim, null);
     }
 
     //Claim Requests
-    private static String getPlaceholder(String str, ClaimRequest info) {
+    private static String requests(String str, ClaimRequest request) {
         if (str.contains("%request_name%"))
-            str = str.replace("%request_name%", info.name);
+            str = str.replace("%request_name%", request.name);
         if (str.contains("%request_date%"))
-            str = str.replace("%request_date%", HelperDate.getDate(info.date));
-        return getPlaceholder(str, info.claim, null);
+            str = str.replace("%request_date%", HelperDate.getDate(request.date));
+        return claims(str, request.claim, null);
     }
 
     //Confirmations
-    private static String getPlaceholder(String str, Confirmation info) {
+    private static String confirmation(String str, Confirmation confirmation) {
         if (str.contains("%confirm_type%"))
-            str = str.replace("%request_type%", info.confirmation.name());
+            str = str.replace("%confirm_type%", StringUtils.capitalize(confirmation.type.name().toLowerCase().replace("_", " ")));
+        if (str.contains("%confirm_action%")) {
+            String action = "";
+            if (confirmation.info instanceof ClaimMember)
+                action = ((ClaimMember) confirmation.info).name;
+            str = str.replace("%confirm_action%", action);
+        }
         return str;
     }
 }

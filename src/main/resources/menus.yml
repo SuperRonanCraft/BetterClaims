@@ -19,6 +19,7 @@ Claim:
       Lore:
       - ''
       - '&8Members: &f%claim_members%'
+      - '&8Size: &f%claim_width% x %claim_length%'
       - '&7View all members in this claim'
     Flags:
       Allowed:
@@ -58,6 +59,8 @@ Members:
       Item: 'player_head'
       Lore:
         - ''
+        - '&7Member Since: &f%member_date%'
+        - ''
         - '&fClick to edit &8%member_name%'
     Owner:
       Name: '&eClaim Members'
@@ -90,6 +93,8 @@ Member:
       Lore:
         - ''
         - '&f%member_name%'
+        - ''
+        - '&7Member Since: &f%member_date%'
     Flag:
       Enabled:
         Name: '&e%member_flag%'
@@ -159,14 +164,14 @@ Confirm:
   Title: '&7Confirm | %confirm_type%'
   Items:
     Accept:
-      Name: '&e%claim_flag%'
-      Item: 'gold_ingot'
+      Name: '&e&lConfirm Action'
+      Item: 'redstone'
       Lore:
         - ''
-        - '&fAccept offer'
-    Decline:
-      Name: '&c&lDecline'
-      Item: 'iron_ingot'
+        - '&fClick to approve %confirm_action%'
+    Cancel:
+      Name: '&c&lCancel'
+      Item: 'barrier'
       Lore:
         - ''
-        - '&fDecline the offer'
+        - '&fClick to cancel action'

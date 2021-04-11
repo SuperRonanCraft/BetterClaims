@@ -1,5 +1,6 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
+import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
@@ -9,6 +10,15 @@ import org.bukkit.entity.Player;
 import java.util.Calendar;
 
 public class HelperClaim {
+
+    public static void toggleFlag(Player p, Claim claim, CLAIM_FLAG flag) {
+        setFlag(p, claim, flag, !(Boolean) claim.getFlags().getFlag(flag));
+    }
+
+    public static void setFlag(Player p, Claim claim, CLAIM_FLAG flag, Object value) {
+        claim.getFlags().setFlag(flag, value, true);
+        MessagesCore.CLAIM_FLAGCHANGE.send(p, new Object[]{claim, flag});
+    }
 
     public static boolean requestJoin(Player p, Claim claim) {
         if (claim.hasRequestFrom(p)) { //Already has a request

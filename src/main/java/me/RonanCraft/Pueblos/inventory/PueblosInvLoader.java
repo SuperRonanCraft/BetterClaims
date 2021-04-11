@@ -1,8 +1,8 @@
 package me.RonanCraft.Pueblos.inventory;
 
 import me.RonanCraft.Pueblos.resources.files.FileOther;
+import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.tools.HelperItem;
-import me.RonanCraft.Pueblos.resources.tools.PueblosPlaceholders;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,7 +18,7 @@ public abstract class PueblosInvLoader {
     }
 
     String getTitle(Player p, Object info) {
-        return PueblosPlaceholders.getPlaceholder(title, p, info);
+        return Message.placeholder(p , title, info);
     }
 
     public void load() {

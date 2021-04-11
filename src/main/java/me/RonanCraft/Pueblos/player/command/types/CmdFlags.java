@@ -6,7 +6,9 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
+import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -25,25 +27,27 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
 
         //Event
         Claim claim = handler.getClaim(p.getLocation());
-        if (claim != null && claim.isMember(p)) {
-            if (args.length == 3) {
-                for (CLAIM_FLAG flag : CLAIM_FLAG.values())
-                    if (flag.name().equalsIgnoreCase(args[1])) {
-                        try {
-                            Object value = flag.cast(args[2]);
-                            if (value == null)
-                                throw new Exception();
-                            claim.getFlags().setFlag(flag, value, true);
-                            Message.sms(p, "Set " + flag.name().toLowerCase() + " to " + value, null);
-                        } catch (Exception e) {
-                            Message.sms(p, "Invalid value!", null);
+        if (claim != null) {
+            if (claim.isOwner(p)) {
+                if (args.length == 3) {
+                    for (CLAIM_FLAG flag : CLAIM_FLAG.values())
+                        if (flag.name().equalsIgnoreCase(args[1])) {
+                            try {
+                                Object value = flag.cast(args[2]);
+                                if (value == null)
+                                    throw new Exception();
+                                HelperClaim.setFlag(p, claim, flag, value);
+                            } catch (Exception e) {
+                                MessagesCore.INVALIDFLAGVALUE.send(sendi);
+                            }
                         }
-                    }
-            } else {
-                Message.sms(p, "Usage: /claim flag FLAG_TYPE VALUE", null);
-            }
+                } else {
+                    Message.sms(p, "Usage: /claim flag FLAG_TYPE VALUE", null);
+                }
+            } else
+                MessagesCore.NOPERMISSION.send(sendi, claim);
         } else {
-            Message.sms(p, "&cThis is not your claim!", null);
+            MessagesCore.CLAIM_NOTINSIDE.send(sendi);
         }
 
 
