@@ -89,7 +89,7 @@ public class HelperClaim {
                     MessagesCore.CLAIM_CREATE_FAILED_SIZE.send(owner, claim);
                     break;
                 case OVERLAPPING:
-                    MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner, claim);
+                    MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
                     break;
                 default:
                     Message.sms(owner, "An Error Happened!", null);

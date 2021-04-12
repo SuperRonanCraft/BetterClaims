@@ -1,7 +1,6 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -20,7 +19,7 @@ import java.util.*;
 
 public class EventListener implements Listener {
 
-    HashMap<Player, PlayerClaimCreation> claimCreation = new HashMap<>();
+    HashMap<Player, PlayerClaimInteraction> claimInteraction = new HashMap<>();
     EventBlocks blocks = new EventBlocks(this);
     EventInteract interact = new EventInteract(this);
     EventItemChange itemChange = new EventItemChange(this);

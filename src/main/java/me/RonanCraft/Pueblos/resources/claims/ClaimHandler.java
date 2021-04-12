@@ -22,7 +22,7 @@ public class ClaimHandler {
     }
 
     public CLAIM_ERRORS addClaim(Claim claim, Player p) {
-        CLAIM_ERRORS error = isClaimValid(claim, p);
+        CLAIM_ERRORS error = isLocationValid(claim, p);
         if (error == CLAIM_ERRORS.NONE) {
             if (Pueblos.getInstance().getSystems().getDatabase().createClaim(claim)) {
                 claims.add(claim);
@@ -34,12 +34,17 @@ public class ClaimHandler {
         return error;
     }
 
-    private CLAIM_ERRORS isClaimValid(Claim claim, Player p) {
+    private CLAIM_ERRORS isLocationValid(Claim claim, Player p) {
         Location greater = claim.getPosition().getGreaterBoundaryCorner();
         Location lower = claim.getPosition().getLesserBoundaryCorner();
         //Size
+        return isLocationValid(greater, lower, p, null);
+    }
+
+    public CLAIM_ERRORS isLocationValid(Location greater, Location lower, Player p, Claim claimIgnored) {
+        //Size
         if (Math.abs(greater.getBlockX() - lower.getBlockX()) < 10 || Math.abs(greater.getBlockZ() - lower.getBlockZ()) < 10) {
-            Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.ERROR_SMALL, p.getLocation()).apply(p);
+            Visualization.fromLocation(lower, greater, p.getLocation().getBlockY(), VisualizationType.ERROR_SMALL, p.getLocation()).apply(p);
             return CLAIM_ERRORS.SIZE;
         }
         //Overlapping
@@ -48,6 +53,8 @@ public class ClaimHandler {
         int y1 = lower.getBlockZ();
         int y2 = greater.getBlockZ();
         for (Claim _claim : claims) {
+            if (claimIgnored != null && _claim == claimIgnored) //Ignore this claim
+                continue;
             Location greater_2 = _claim.getPosition().getGreaterBoundaryCorner();
             Location lower_2 = _claim.getPosition().getLesserBoundaryCorner();
             int x3 = lower_2.getBlockX();
@@ -64,18 +71,16 @@ public class ClaimHandler {
 
     public List<Claim> getClaims(UUID uuid) {
         List<Claim> claims = new ArrayList<>();
-        for (Claim claim : this.claims) {
+        for (Claim claim : this.claims)
             if (claim.ownerId.equals(uuid))
                 claims.add(claim);
-        }
         return claims;
     }
 
     public Claim getClaim(Location loc) {
-        for (Claim claim : this.claims) {
+        for (Claim claim : this.claims)
             if (claim.contains(loc))
                 return claim;
-        }
         return null;
     }
 

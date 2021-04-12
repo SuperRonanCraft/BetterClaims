@@ -87,7 +87,7 @@ public class Visualization {
         //}
 
         //add top level last so that it takes precedence (it shows on top when the child claim boundaries overlap with its boundaries)
-        visualization.addElements(claim, height, visualizationType, locality);
+        visualization.addElements(claim.getPosition().getLesserBoundaryCorner(), claim.getPosition().getGreaterBoundaryCorner(), height, visualizationType, locality);
 
         return visualization;
     }
@@ -104,11 +104,21 @@ public class Visualization {
         return visualization;
     }
 
+    public static Visualization fromLocation(Location min, Location max, int height, VisualizationType visualizationType, Location locality) {
+
+        Visualization visualization = new Visualization();
+
+        //add top level last so that it takes precedence (it shows on top when the child claim boundaries overlap with its boundaries)
+        visualization.addElements(min, max, height, visualizationType, locality);
+
+        return visualization;
+    }
+
     //adds a claim's visualization to the current visualization
     //handy for combining several visualizations together, as when visualization a top level claim with several subdivisions inside
     //locality is a performance consideration.  only create visualization blocks for around 100 blocks of the locality
 
-    private void addElements(Claim claim, int height, VisualizationType visualizationType, Location locality) {
+    private void addElements(Location min, Location max, int height, VisualizationType visualizationType, Location locality) {
         BlockData cornerBlockData;
         BlockData accentBlockData;
 
@@ -127,7 +137,7 @@ public class Visualization {
             accentBlockData = Material.NETHERRACK.createBlockData();
         }
         int step = visualizationType != VisualizationType.ERROR_SMALL ? 10 : 1;
-        addSides(claim.getPosition().getLesserBoundaryCorner(), claim.getPosition().getGreaterBoundaryCorner(), locality, height, cornerBlockData, accentBlockData, step);
+        addSides(min, max, locality, height, cornerBlockData, accentBlockData, step);
         //return visualization;
     }
 

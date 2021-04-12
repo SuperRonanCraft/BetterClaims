@@ -136,4 +136,9 @@ public class Claim {
         }
         return false;
     }
+
+    public void editCorners(Location loc_1, Location loc_2) {
+        getPosition().editCorners(loc_1, loc_2);
+        updated();
+    }
 }

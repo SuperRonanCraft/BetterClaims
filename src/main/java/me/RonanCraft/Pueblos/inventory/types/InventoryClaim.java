@@ -3,14 +3,11 @@ package me.RonanCraft.Pueblos.inventory.types;
 import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
-import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -86,7 +83,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         ITEMS allowed;
         ITEMS disallowed;
 
-        CLAIM_SETTINGS(String section, int slot, PueblosInventory inv, @Nonnull ITEMS allowed, ITEMS disallowed) {
+        CLAIM_SETTINGS(String section, int slot, PueblosInventory inv, ITEMS allowed, ITEMS disallowed) {
             this.section = section;
             this.slot = slot;
             this.inv = inv;

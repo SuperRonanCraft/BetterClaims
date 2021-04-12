@@ -23,16 +23,16 @@ public class EventItemChange {
     }
 
     void onItemChange(PlayerItemHeldEvent e) {
-        listener.claimCreation.remove(e.getPlayer());
+        listener.claimInteraction.remove(e.getPlayer());
         if (claimShowing.containsKey(e.getPlayer()))
             return;
         ItemStack item = e.getPlayer().getInventory().getItem(e.getNewSlot());
-        if (item != null && item.getType().equals(getClaimItem()) && !listener.claimCreation.containsKey(e.getPlayer())) {
+        if (item != null && item.getType().equals(getClaimItem()) && !listener.claimInteraction.containsKey(e.getPlayer())) {
             //Messages.core.sms(e.getPlayer(), "Shovel!");
             Claim claim = listener.getClaim(e.getPlayer().getLocation());
             showClaimLater(claim, e.getPlayer());
         } else
-            listener.claimCreation.remove(e.getPlayer());
+            listener.claimInteraction.remove(e.getPlayer());
     }
 
     void showClaimLater(Claim claim, Player p) {

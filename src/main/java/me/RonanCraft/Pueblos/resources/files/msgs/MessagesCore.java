@@ -23,6 +23,7 @@ public enum MessagesCore {
     CLAIM_MEMBER_LEAVE("Claim.Member.Leave"),
     CLAIM_MEMBER_NOTIFICATION_REMOVED("Claim.Member.Notification.Removed"),
     CLAIM_MEMBER_NOTIFICATION_LEAVE("Claim.Member.Notification.Leave"),
+    CLAIM_RESIZED("Claim.Resized"),
     REQUEST_NEW("Request.New"),
     REQUEST_ACCEPTED("Request.Accepted"),
     REQUEST_DENIED("Request.Denied"),
