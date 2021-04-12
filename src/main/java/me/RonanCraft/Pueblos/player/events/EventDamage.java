@@ -33,7 +33,7 @@ public class EventDamage {
             e.setCancelled(true); //In a cooldown till we check the claims again
             return;
         }
-        
+
         Claim claim = listener.getClaim(damager.getLocation());
         if (claim == null)
             claim = listener.getClaim(damaged.getLocation());
