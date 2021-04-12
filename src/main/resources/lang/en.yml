@@ -8,7 +8,7 @@ Messages:
   InvalidFlag: '&cFlag is not valid! &7Please try again.'
   CannotEdit: '&cUnable to edit this while outside a claim!'
   Claim:
-    Resized: '&fClaim successfully resized!'
+    Resized: '&7Claim successfully resized to &f%claim_width% x %claim_length%'
     Teleport: '&7Teleported to &f%claim_name%''s &7home!'
     None: '&7You are not an owner or member of any claim!'
     NoPermission: '&7You are not a member of &f%claim_owner%&7''s pueblo!'
@@ -22,6 +22,7 @@ Messages:
       Failed:
         Size: '&cError! &7This claim is not big enough! Please make it larger than 10x10!'
         OtherClaim: '&cError! &7This area is overlapping another claim!'
+        Database: '&cError! &7Something really bad happened creating this claim, please report this!'
     Member:
       FlagEdit: '&fFlag &7%member_flag%&f for &7%member_name% &fwas set to &b%member_flag_value%'
       Removed: '&c%member_name% was removed from &b%claim_name%&c!'

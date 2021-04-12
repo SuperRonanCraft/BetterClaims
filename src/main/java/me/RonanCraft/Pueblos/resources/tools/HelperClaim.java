@@ -94,6 +94,7 @@ public class HelperClaim {
                 default:
                     Message.sms(owner, "An Error Happened!", null);
             }
+            error.sendMsg(owner, claim);
         } else { //Overlapping
             MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
             error = CLAIM_ERRORS.OVERLAPPING;

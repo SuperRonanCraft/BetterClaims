@@ -19,6 +19,7 @@ public enum MessagesCore {
     CLAIM_CREATE_SUCCESS("Claim.Create.Success"),
     CLAIM_CREATE_FAILED_SIZE("Claim.Create.Failed.Size"),
     CLAIM_CREATE_FAILED_OTHERCLAIM("Claim.Create.Failed.OtherClaim"),
+    CLAIM_CREATE_FAILED_DATABASE("Claim.Create.Failed.Database"),
     CLAIM_MEMBER_REMOVED("Claim.Member.Removed"),
     CLAIM_MEMBER_LEAVE("Claim.Member.Leave"),
     CLAIM_MEMBER_NOTIFICATION_REMOVED("Claim.Member.Notification.Removed"),

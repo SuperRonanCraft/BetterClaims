@@ -97,7 +97,7 @@ public class EventInteract {
                     if (claimInteraction.mode == PlayerClaimInteraction.CLAIM_MODE.CREATE) {
                         error = HelperClaim.createClaim(p, corners.get(0), corners.get(1));
                     } else if (claimInteraction.mode == PlayerClaimInteraction.CLAIM_MODE.EDIT) { //Edit claim size mode
-                        error = resizeClaim(p, claimInteraction.editting, corners);
+                        error = resizeClaim(p, claimInteraction.editing, corners);
                     }
                     if (error != CLAIM_ERRORS.SIZE) //Let the player select another second location
                         claimInteraction.lock(); //Lock us from using the same locations again
@@ -109,10 +109,10 @@ public class EventInteract {
             } else if (error == CLAIM_ERRORS.LOCATION_ALREADY_EXISTS) {
                 Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
             } else if (error == CLAIM_ERRORS.OVERLAPPING) {
-                MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(p);
                 claimInteraction.lock();
                 cancelInteraction(p, 2L);
             }
+            error.sendMsg(p, null);
         }
     }
 
@@ -141,12 +141,8 @@ public class EventInteract {
             claim.editCorners(positionStiff, positionMovingCorner);
             MessagesCore.CLAIM_RESIZED.send(p, claim);
             Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
-        } else if (error == CLAIM_ERRORS.OVERLAPPING) {
-            MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(p);
-        } else if (error == CLAIM_ERRORS.SIZE)
-            MessagesCore.CLAIM_CREATE_FAILED_SIZE.send(p);
-        else
-            p.sendMessage("A claim error happened!");
+        } else
+            error.sendMsg(p, claim);
         return error;
     }
 

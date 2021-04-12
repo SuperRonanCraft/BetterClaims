@@ -53,9 +53,8 @@ public class Visualization {
                 VisualizationElement element = visualization.elements.get(i);
 
                 //check player still in world where visualization exists
-                if (i == 0) {
+                if (i == 0)
                     if (!player.getWorld().equals(element.location.getWorld())) return;
-                }
 
                 player.sendBlockChange(element.location, element.realBlock);
             }
@@ -99,7 +98,7 @@ public class Visualization {
         Visualization visualization = new Visualization();
 
         //add top level last so that it takes precedence (it shows on top when the child claim boundaries overlap with its boundaries)
-        visualization.addSides(location, location, locality, height, Material.DIAMOND_BLOCK.createBlockData(), Material.DIAMOND_BLOCK.createBlockData(), 1);
+        visualization.addSides(location, location, locality, height, Material.EMERALD_BLOCK.createBlockData(), Material.EMERALD_BLOCK.createBlockData(), 1);
 
         return visualization;
     }
@@ -119,26 +118,21 @@ public class Visualization {
     //locality is a performance consideration.  only create visualization blocks for around 100 blocks of the locality
 
     private void addElements(Location min, Location max, int height, VisualizationType visualizationType, Location locality) {
-        BlockData cornerBlockData;
+        BlockData cornerBlockData = Material.GLOWSTONE.createBlockData();
         BlockData accentBlockData;
 
         if (visualizationType == VisualizationType.CLAIM) {
-            cornerBlockData = Material.GLOWSTONE.createBlockData();
-            accentBlockData = Material.DIAMOND_BLOCK.createBlockData();
+            accentBlockData = Material.EMERALD_BLOCK.createBlockData();
         } else if (visualizationType == VisualizationType.ADMIN_CLAIM) {
-            cornerBlockData = Material.GLOWSTONE.createBlockData();
             accentBlockData = Material.COAL_BLOCK.createBlockData();
         } else if (visualizationType == VisualizationType.SUB) {
-            cornerBlockData = Material.GLOWSTONE.createBlockData();
             accentBlockData = Material.WHITE_WOOL.createBlockData();
         } else {
-            cornerBlockData = Material.REDSTONE_ORE.createBlockData();
-            ((Lightable) cornerBlockData).setLit(true);
+            //((Lightable) cornerBlockData).setLit(true); //For redstone
             accentBlockData = Material.NETHERRACK.createBlockData();
         }
         int step = visualizationType != VisualizationType.ERROR_SMALL ? 10 : 1;
         addSides(min, max, locality, height, cornerBlockData, accentBlockData, step);
-        //return visualization;
     }
 
     //adds a general claim cuboid (represented by min and max) visualization to the current visualization

@@ -18,7 +18,7 @@ public class PlayerClaimInteraction {
     final List<Location> locations = new ArrayList<>();
     boolean locked = false;
     CLAIM_MODE mode;
-    Claim editting;
+    Claim editing;
 
     PlayerClaimInteraction(Player player, CLAIM_MODE mode) {
         this.player = player;
@@ -34,14 +34,15 @@ public class PlayerClaimInteraction {
                     if (locations.size() == 0 && claim.getPosition().isCorner(loc)) { //Clicked a corner (first)
                         if (claim.isOwner(p)) {
                             mode = CLAIM_MODE.EDIT;
-                            editting = claim;
+                            editing = claim;
+                            break;
+                        } else {
+                            //Clicked a corner, but not allowed to resize this claim
                         }
-                        break;
-                    } else {
-                        if (!(mode == CLAIM_MODE.EDIT && editting == claim)) {
-                            Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
-                            return CLAIM_ERRORS.OVERLAPPING;
-                        }
+                    }
+                    if (!(mode == CLAIM_MODE.EDIT && editing == claim)) {
+                        Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
+                        return CLAIM_ERRORS.OVERLAPPING;
                     }
                 }
             locations.add(loc);
