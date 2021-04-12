@@ -8,8 +8,11 @@ import me.RonanCraft.Pueblos.resources.files.FileOther;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.List;
@@ -56,6 +59,15 @@ public class HelperItem {
         //Lore
         PueblosInv.setLore(item, null, file.getStringList(path + "Lore"));
         return item;
+    }
+
+    public static void enchantItem(ItemStack item, Enchantment enchant) {
+        item.addUnsafeEnchantment(enchant, 1);
+        if (item.getItemMeta() != null) {
+            ItemMeta meta = item.getItemMeta();
+            meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            item.setItemMeta(meta);
+        }
     }
 
     private static Material getMat(String str) {

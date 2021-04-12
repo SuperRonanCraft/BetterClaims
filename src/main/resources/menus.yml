@@ -13,17 +13,6 @@ Global:
 Claim:
   Title: '&7Claim | %claim_name%'
   Items:
-    Select:
-      Name: '&e%claim_name%'
-      Item: 'player_head'
-      Lore:
-        - ''
-        - '&7Members: &f%claim_members%'
-        - '&7Size: &f%claim_width% x %claim_length%'
-        - '&7Location: &f%claim_location%'
-        - '&7World: &f%claim_location_world%'
-        - ''
-        - '&fClick to view all members'
     Members:
       Name: '&eMembers'
       Item: 'player_head'
@@ -65,6 +54,26 @@ Claim:
           - '&fRequest(s): &b%claim_requests%'
           - ''
           - '&8Unable to edit'
+    Teleport:
+      Name: '&eTeleport To Claim'
+      Item: 'nether_star'
+      Lore:
+        - ''
+        - '&7Click to teleport to claim home'
+ClaimSelect:
+  Title: '&7Select Claim'
+  Items:
+    Select:
+      Name: '&e%claim_name%'
+      Item: 'player_head'
+      Lore:
+        - ''
+        - '&7Members: &f%claim_members%'
+        - '&7Size: &f%claim_width% x %claim_length%'
+        - '&7Location: &f%claim_location%'
+        - '&7World: &f%claim_location_world%'
+        - ''
+        - '&fClick to view claim!'
 Members:
   Title: '&7Members | %claim_name%'
   Items:

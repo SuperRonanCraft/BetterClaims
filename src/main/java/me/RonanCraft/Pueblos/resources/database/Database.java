@@ -2,6 +2,7 @@ package me.RonanCraft.Pueblos.resources.database;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 
 import java.sql.*;
@@ -96,11 +97,12 @@ public abstract class Database {
                 + COLUMNS.OWNER_NAME.name + ", "
                 + COLUMNS.DATE.name + ", "
                 + COLUMNS.POSITION.name + ""
-                + ") VALUES(?, ?, ?)";
+                + ") VALUES(?, ?, ?, ?)";
         List<Object> params = new ArrayList<>() {{
                 //add(claim.ownerId != null ? claim.ownerId : "null");
                 add(claim.ownerId != null ? claim.ownerId : "null");
                 add(claim.ownerName);
+                add(HelperDate.getDate(claim.dateCreated));
                 add(claim.getPositionJSON());
         }};
         return sqlCreateClaim(sql, params, claim);

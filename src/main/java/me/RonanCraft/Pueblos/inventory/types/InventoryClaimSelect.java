@@ -2,7 +2,9 @@ package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.tools.HelperItem;
 import org.bukkit.Bukkit;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -24,15 +26,18 @@ public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv
         addBorder(inv);
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
-        int slot = inv.firstEmpty();
+        int slot = 0;
         for (Claim claim : claims) {
             slot = getNextSlot(slot, inv);
             if (slot == -1)
                 break;
             ItemStack item = getItem(ITEMS.SELECT.section, p, claim);
+            //if (claim.contains(p.getLocation()))
+            //    HelperItem.enchantItem(item, Enchantment.values()[0]);
             inv.setItem(slot, item);
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, claim));
         }
+
         this.itemInfo.put(p, itemInfo);
         this.claims.put(p, claims);
         p.openInventory(inv);
@@ -58,7 +63,7 @@ public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv
 
     @Override
     protected String getSection() {
-        return "Claim";
+        return "ClaimSelect";
     }
 
     @Override

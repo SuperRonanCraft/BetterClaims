@@ -10,6 +10,7 @@ public enum MessagesCore {
     INVALIDFLAG("InvalidFlag"),
     CANNOTEDIT("CannotEdit"),
     CLAIM_NONE("Claim.None"),
+    CLAIM_TELEPORT("Claim.Teleport"),
     CLAIM_NOPERMISSION("Claim.NoPermission"),
     CLAIM_FLAGCHANGE("Claim.Flag"),
     CLAIM_ITEM_INCLAIM("Claim.Item.InClaim"),

@@ -72,14 +72,6 @@ public class Claim {
         return JSONEncoding.getJsonFromClaim(position);
     }
 
-    public Location getLesserBoundaryCorner() {
-        return new Location(position.getWorld(), position.getLeft(), 0, position.getBottom());
-    }
-
-    public Location getGreaterBoundaryCorner() {
-        return new Location(position.getWorld(), position.getRight(), 0, position.getTop());
-    }
-
     public String getName() {
         return name != null ? name : ownerName;
     }

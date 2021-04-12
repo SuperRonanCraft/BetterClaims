@@ -35,8 +35,8 @@ public class ClaimHandler {
     }
 
     private CLAIM_ERRORS isClaimValid(Claim claim, Player p) {
-        Location greater = claim.getGreaterBoundaryCorner();
-        Location lower = claim.getLesserBoundaryCorner();
+        Location greater = claim.getPosition().getGreaterBoundaryCorner();
+        Location lower = claim.getPosition().getLesserBoundaryCorner();
         //Size
         if (Math.abs(greater.getBlockX() - lower.getBlockX()) < 10 || Math.abs(greater.getBlockZ() - lower.getBlockZ()) < 10) {
             Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.ERROR_SMALL, p.getLocation()).apply(p);
@@ -48,8 +48,8 @@ public class ClaimHandler {
         int y1 = lower.getBlockZ();
         int y2 = greater.getBlockZ();
         for (Claim _claim : claims) {
-            Location greater_2 = _claim.getGreaterBoundaryCorner();
-            Location lower_2 = _claim.getLesserBoundaryCorner();
+            Location greater_2 = _claim.getPosition().getGreaterBoundaryCorner();
+            Location lower_2 = _claim.getPosition().getLesserBoundaryCorner();
             int x3 = lower_2.getBlockX();
             int x4 = greater_2.getBlockX();
             int y3 = lower_2.getBlockZ();

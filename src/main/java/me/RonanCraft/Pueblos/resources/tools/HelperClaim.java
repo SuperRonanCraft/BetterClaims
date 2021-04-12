@@ -82,14 +82,14 @@ public class HelperClaim {
             error = handler.addClaim(claim, owner);
             switch (error) {
                 case NONE:
-                    MessagesCore.CLAIM_CREATE_SUCCESS.send(owner);
+                    MessagesCore.CLAIM_CREATE_SUCCESS.send(owner, claim);
                     Visualization.fromClaim(claim, owner.getLocation().getBlockY(), VisualizationType.CLAIM, owner.getLocation()).apply(owner);
                     break;
                 case SIZE:
-                    MessagesCore.CLAIM_CREATE_FAILED_SIZE.send(owner);
+                    MessagesCore.CLAIM_CREATE_FAILED_SIZE.send(owner, claim);
                     break;
                 case OVERLAPPING:
-                    MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
+                    MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner, claim);
                     break;
                 default:
                     Message.sms(owner, "An Error Happened!", null);
@@ -104,5 +104,10 @@ public class HelperClaim {
     public static String getLocationString(Claim claim) {
         ClaimPosition pos = claim.getPosition();
         return pos.getLeft() + "x, " + pos.getTop() + "z";
+    }
+
+    public static void teleportTo(Player p, Claim claim) {
+        p.teleport(claim.getPosition().getLocation());
+        MessagesCore.CLAIM_TELEPORT.send(p, claim);
     }
 }

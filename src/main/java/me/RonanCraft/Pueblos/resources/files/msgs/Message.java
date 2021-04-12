@@ -91,9 +91,11 @@ public class Message {
         if (str.contains("%claim_requests%"))
             str = str.replace("%claim_requests%", String.valueOf(claim.getRequests().size()));
         if (str.contains("%claim_width%"))
-            str = str.replace("%claim_width%", String.valueOf(claim.getGreaterBoundaryCorner().getBlockX() - claim.getLesserBoundaryCorner().getBlockX()));
+            str = str.replace("%claim_width%", String.valueOf(claim.getPosition().getGreaterBoundaryCorner().getBlockX()
+                    - claim.getPosition().getLesserBoundaryCorner().getBlockX()));
         if (str.contains("%claim_length%"))
-            str = str.replace("%claim_length%", String.valueOf(claim.getGreaterBoundaryCorner().getBlockZ() - claim.getLesserBoundaryCorner().getBlockZ()));
+            str = str.replace("%claim_length%", String.valueOf(claim.getPosition().getGreaterBoundaryCorner().getBlockZ()
+                    - claim.getPosition().getLesserBoundaryCorner().getBlockZ()));
         if (flag != null) {
             if (str.contains("%claim_flag%"))
                 str = str.replace("%claim_flag%", StringUtils.capitalize(flag.name().toLowerCase().replace("_", " ")));

@@ -58,4 +58,16 @@ public class ClaimPosition {
     public int getBottom() {
         return Math.min(getZ_1(), getZ_2());
     }
+
+    public Location getLesserBoundaryCorner() {
+        return new Location(getWorld(), getLeft(), 0, getBottom());
+    }
+
+    public Location getGreaterBoundaryCorner() {
+        return new Location(getWorld(), getRight(), 0, getTop());
+    }
+
+    public Location getLocation() {
+        return new Location(getWorld(), getLeft() + 0.5, getWorld().getHighestBlockYAt(getLeft(), getTop()) + 1.25, getTop() + 0.5);
+    }
 }

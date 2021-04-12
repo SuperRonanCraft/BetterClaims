@@ -1,6 +1,8 @@
 package me.RonanCraft.Pueblos.player.command;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.PermissionNodes;
+import me.RonanCraft.Pueblos.resources.Permissions;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.command.CommandSender;
@@ -25,7 +27,7 @@ public class Commands {
     }
 
     public void commandExecuted(CommandSender sendi, String label, String[] args) {
-        if (getPl().getPermissions().getUse(sendi)) {
+        if (PermissionNodes.USE.check(sendi)) {
             if (args != null && args.length > 0) {
                 for (PueblosCommand cmd : commands) {
                     if (cmd.getName().equalsIgnoreCase(args[0])) {
@@ -35,7 +37,7 @@ public class Commands {
                             cmd.execute(sendi, label, args);
                         } else
                             noPerm(sendi);
-                        return;
+                        return; 
                     }
                 }
                 invalid(sendi, label);

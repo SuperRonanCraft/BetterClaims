@@ -127,7 +127,7 @@ public class Visualization {
             accentBlockData = Material.NETHERRACK.createBlockData();
         }
         int step = visualizationType != VisualizationType.ERROR_SMALL ? 10 : 1;
-        addSides(claim.getLesserBoundaryCorner(), claim.getGreaterBoundaryCorner(), locality, height, cornerBlockData, accentBlockData, step);
+        addSides(claim.getPosition().getLesserBoundaryCorner(), claim.getPosition().getGreaterBoundaryCorner(), locality, height, cornerBlockData, accentBlockData, step);
         //return visualization;
     }
 

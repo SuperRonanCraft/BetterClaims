@@ -2,6 +2,7 @@ package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -28,10 +29,10 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
         for (CLAIM_SETTINGS set : CLAIM_SETTINGS.values()) {
             ItemStack item = getItem(set.getItem(p, claim).section, p, claim);
-
             inv.setItem(set.slot, item);
             itemInfo.put(set.slot, new PueblosItem(item, ITEM_TYPE.NORMAL, set));
         }
+
         this.itemInfo.put(p, itemInfo);
         this.claim.put(p, claim);
         p.openInventory(inv);
@@ -49,7 +50,10 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
 
         CLAIM_SETTINGS setting = (CLAIM_SETTINGS) itemInfo.get(p).get(e.getSlot()).info;
         Claim claim = this.claim.get(p);
-        setting.inv.open(p, claim, false);
+        if (setting == CLAIM_SETTINGS.TELEPORT) {
+            HelperClaim.teleportTo(p, claim);
+        } else
+            setting.inv.open(p, claim, false);
     }
 
     @Override
@@ -73,7 +77,8 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     private enum CLAIM_SETTINGS {
         MEMBERS("Members", 20, PueblosInventory.MEMBERS, ITEMS.MEMBERS, null),
         FLAGS("Flags", 22, PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
-        REQUESTS("Requests", 24, PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED);
+        REQUESTS("Requests", 24, PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
+        TELEPORT("Teleport", 16, null, ITEMS.TELEPORT, null);
 
         String section;
         int slot;
@@ -104,7 +109,8 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         FLAGS_ALLOWED("Flags.Allowed"),
         FLAGS_DISALLOWED("Flags.Disallowed"),
         REQUESTS_ALLOWED("Requests.Allowed"),
-        REQUESTS_DISALLOWED("Requests.Disallowed");
+        REQUESTS_DISALLOWED("Requests.Disallowed"),
+        TELEPORT("Teleport");
 
         String section;
 
