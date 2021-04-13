@@ -87,7 +87,7 @@ public abstract class Database {
         return null;
     }
 
-    //Create a ticket
+    //Create a claim
     public boolean createClaim(Claim claim) {
         String pre;
         if (sqlEnabled) pre = "INSERT IGNORE INTO ";

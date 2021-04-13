@@ -12,7 +12,11 @@ public class HelperDate {
     }
 
     public static Date getDate(String date) throws ParseException {
-        return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(date);
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse(date);
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     public static Date getDate() {

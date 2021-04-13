@@ -48,7 +48,7 @@ public class Commands {
     }
 
     private void invalid(CommandSender sendi, String cmd) {
-        MessagesCore.INVALIDCOMMAND.send(sendi);
+        MessagesCore.INVALIDCOMMAND.send(sendi, cmd);
     }
 
     private void noPerm(CommandSender sendi) {

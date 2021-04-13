@@ -14,6 +14,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.util.*;
 
@@ -28,9 +29,12 @@ public class EventListener implements Listener {
     EventDamage damage = new EventDamage(this);
     EventClick click = new EventClick();
     EventClose close = new EventClose();
+    EventJoin join = new EventJoin();
 
-    public void load() {
-        Pueblos.getInstance().getServer().getPluginManager().registerEvents(this, Pueblos.getInstance());
+    public void load(boolean reload) {
+        if (!reload)
+            Pueblos.getInstance().getServer().getPluginManager().registerEvents(this, Pueblos.getInstance());
+        interact.load();
     }
 
     //Player Interact
@@ -93,6 +97,12 @@ public class EventListener implements Listener {
     @EventHandler (priority = EventPriority.HIGH)
     void onClose(InventoryCloseEvent e) {
         close.exit(e);
+    }
+
+    //Player Join Event
+    @EventHandler
+    private void onJoin(PlayerJoinEvent e) {
+        join.event(e);
     }
 
     //Tools

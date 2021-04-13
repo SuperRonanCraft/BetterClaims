@@ -7,7 +7,8 @@ public enum PermissionNodes {
 
     USE("use"),
     RELOAD("reload"),
-    REQUEST("request");
+    REQUEST("request"),
+    UPDATE("update");
 
     public String node;
 

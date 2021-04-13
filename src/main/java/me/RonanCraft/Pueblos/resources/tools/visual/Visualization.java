@@ -131,7 +131,12 @@ public class Visualization {
             //((Lightable) cornerBlockData).setLit(true); //For redstone
             accentBlockData = Material.NETHERRACK.createBlockData();
         }
-        int step = visualizationType != VisualizationType.ERROR_SMALL ? 10 : 1;
+        int step;
+        switch (visualizationType) {
+            case ERROR_LARGE:
+            case ERROR_SMALL: step = 1; break;
+            default: step = 10;
+        }
         addSides(min, max, locality, height, cornerBlockData, accentBlockData, step);
     }
 

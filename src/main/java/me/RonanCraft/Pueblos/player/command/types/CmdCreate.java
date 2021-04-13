@@ -25,7 +25,7 @@ public class CmdCreate implements PueblosCommand, PueblosCommandHelpable {
 
         HelperClaim.createClaim(p,
                 p.getLocation().clone().add(-8, 0, -8),
-                p.getLocation().clone().add(8, 0, 8));
+                p.getLocation().clone().add(8, 0, 8), true);
     }
 
     public boolean permission(CommandSender sendi) {

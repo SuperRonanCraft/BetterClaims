@@ -21,13 +21,13 @@ public class Pueblos extends JavaPlugin {
     private final Permissions permissions = new Permissions();
     private final Commands commands = new Commands();
     private final Systems systems = new Systems();
-    public boolean PlaceholderAPI;
+    private boolean PlaceholderAPI;
 
     @Override
     public void onEnable() {
         instance = this;
-        loadAll();
-        systems.getEvents().load();
+        loadAll(false);
+        new Updater(this);
     }
 
     @Override
@@ -50,14 +50,15 @@ public class Pueblos extends JavaPlugin {
     public void reload(CommandSender sendi) {
         systems.getDatabase().saveChanges();
         closeMenus();
-        loadAll();
+        loadAll(true);
         MessagesCore.RELOAD.send(sendi);
     }
 
     //(Re)Load all plugin systems/files/cache
-    private void loadAll() {
+    private void loadAll(boolean reload) {
         registerDependencies();
         files.loadAll();
+        systems.getEvents().load(reload);
         commands.load();
         systems.load();
         permissions.register();

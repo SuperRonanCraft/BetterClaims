@@ -21,6 +21,7 @@ Messages:
       Success: '&aSuccess! &7This &f%claim_width% x %claim_length% &7claim is now yours!'
       Failed:
         Size: '&cError! &7This claim is not big enough! Please make it larger than 10x10!'
+        SizeLarge: '&cError! &7This claim is too big now! Please make it smaller than %max%x%max%!'
         OtherClaim: '&cError! &7This area is overlapping another claim!'
         Database: '&cError! &7Something really bad happened creating this claim, please report this!'
     Member:
@@ -47,6 +48,7 @@ Help:
   Reload: ' &7- &e/%command% reload &7- Reload the plugin'
   Create: ' &7- &e/%command% create &7- Create a claim'
   Info: ' &7- &e/%command% info &7- View claim information'
+  List: ' &7- &e/%command% list &7- List all claims you are allowed in'
   Request: ' &7- &e/%command% request &7- Request to join a claim'
   Flags: ' &7- &e/%command% flags &7- Change claim flags'
 

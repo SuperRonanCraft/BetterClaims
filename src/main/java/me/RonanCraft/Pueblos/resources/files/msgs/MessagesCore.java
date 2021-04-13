@@ -18,6 +18,7 @@ public enum MessagesCore {
     CLAIM_ITEM_NOTOWNER("Claim.Item.NotOwner"),
     CLAIM_CREATE_SUCCESS("Claim.Create.Success"),
     CLAIM_CREATE_FAILED_SIZE("Claim.Create.Failed.Size"),
+    CLAIM_CREATE_FAILED_SIZELARGE("Claim.Create.Failed.SizeLarge"),
     CLAIM_CREATE_FAILED_OTHERCLAIM("Claim.Create.Failed.OtherClaim"),
     CLAIM_CREATE_FAILED_DATABASE("Claim.Create.Failed.Database"),
     CLAIM_MEMBER_REMOVED("Claim.Member.Removed"),

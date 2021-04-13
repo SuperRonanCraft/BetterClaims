@@ -2,6 +2,8 @@ package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.database.Database;
+import me.RonanCraft.Pueblos.resources.files.FileOther;
+import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
@@ -14,16 +16,21 @@ import java.util.*;
 
 public class ClaimHandler {
     private final List<Claim> claims = new ArrayList<>();
+    private int claim_maxSize = 256;
 
     public void load() {
         claims.clear();
         List<Claim> claims = Pueblos.getInstance().getSystems().getDatabase().getClaims();
         this.claims.addAll(claims);
+        claim_maxSize = FileOther.FILETYPE.CONFIG.getInt("Claim.MaxSize");
+        if (claim_maxSize <= 10)
+            claim_maxSize = 64;
     }
 
-    public CLAIM_ERRORS addClaim(Claim claim, Player p) {
+    public CLAIM_ERRORS uploadClaim(Claim claim, Player p) {
         CLAIM_ERRORS error = isLocationValid(claim, p);
         if (error == CLAIM_ERRORS.NONE) {
+            claim.dateCreated = Calendar.getInstance().getTime();
             if (Pueblos.getInstance().getSystems().getDatabase().createClaim(claim)) {
                 claims.add(claim);
                 ClaimEvents.create(claim);
@@ -45,7 +52,10 @@ public class ClaimHandler {
         //Size
         if (Math.abs(greater.getBlockX() - lower.getBlockX()) < 10 || Math.abs(greater.getBlockZ() - lower.getBlockZ()) < 10) {
             Visualization.fromLocation(lower, greater, p.getLocation().getBlockY(), VisualizationType.ERROR_SMALL, p.getLocation()).apply(p);
-            return CLAIM_ERRORS.SIZE;
+            return CLAIM_ERRORS.SIZE_SMALL;
+        } else if (Math.abs(greater.getBlockX() - lower.getBlockX()) > claim_maxSize || Math.abs(greater.getBlockZ() - lower.getBlockZ()) > claim_maxSize) {
+            Visualization.fromLocation(lower, greater, p.getLocation().getBlockY(), VisualizationType.ERROR_LARGE, p.getLocation()).apply(p);
+            return CLAIM_ERRORS.SIZE_LARGE;
         }
         //Overlapping
         int x1 = lower.getBlockX();
@@ -117,7 +127,7 @@ public class ClaimHandler {
                     claim.addRequest(request, false);
 
             claim.claimId = result.getInt(Database.COLUMNS.CLAIM_ID.name);
-            claim.dateCreated = result.getDate(Database.COLUMNS.DATE.name);
+            claim.dateCreated = HelperDate.getDate(result.getString(Database.COLUMNS.DATE.name));
             return claim;
         } catch (Exception e) {
             e.printStackTrace();

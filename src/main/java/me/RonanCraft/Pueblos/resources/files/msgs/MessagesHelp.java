@@ -6,6 +6,7 @@ public enum MessagesHelp {
     RELOAD("Reload"),
     CREATE("Create"),
     INFO("Info"),
+    LIST("List"),
     REQUEST("Request"),
     FLAGS("Flags"),
     PREFIX("Prefix");

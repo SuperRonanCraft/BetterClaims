@@ -59,7 +59,7 @@ public class EventItemChange {
     }
 
     private Material getClaimItem() {
-        return Material.GOLDEN_SHOVEL;
+        return listener.interact.claim_item;
     }
 
 }

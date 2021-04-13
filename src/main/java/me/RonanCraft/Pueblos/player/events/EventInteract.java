@@ -2,6 +2,7 @@ package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.*;
+import me.RonanCraft.Pueblos.resources.files.FileOther;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -21,9 +22,20 @@ public class EventInteract {
 
     private final EventListener listener;
     private final HashMap<Player, Integer> cancelTimers = new HashMap<>();
+    Material claim_item;
 
     EventInteract(EventListener listener) {
         this.listener = listener;
+    }
+
+    void load() {
+        String item = FileOther.FILETYPE.CONFIG.getString("Claim.Item");
+        try {
+            claim_item = Material.valueOf(item.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            Pueblos.getInstance().getLogger().severe("The item `" + item + "` is not a valid item! Please change the `ClaimItem` in the config!");
+            claim_item = Material.GOLDEN_SHOVEL;
+        }
     }
 
     //Player Interact
@@ -72,7 +84,7 @@ public class EventInteract {
         if (    e.getItem() == null
                 || (e.isCancelled() && e.getAction() != Action.RIGHT_CLICK_AIR)
                 || (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR)
-                || !e.getItem().getType().equals(Material.GOLDEN_SHOVEL))
+                || !e.getItem().getType().equals(claim_item))
             return;
 
         Block block = e.getClickedBlock();
@@ -95,11 +107,11 @@ public class EventInteract {
                 List<Location> corners = claimInteraction.locations;
                 if (corners.size() >= 2) { //Create claim
                     if (claimInteraction.mode == PlayerClaimInteraction.CLAIM_MODE.CREATE) {
-                        error = HelperClaim.createClaim(p, corners.get(0), corners.get(1));
+                        error = HelperClaim.createClaim(p, corners.get(0), corners.get(1), false);
                     } else if (claimInteraction.mode == PlayerClaimInteraction.CLAIM_MODE.EDIT) { //Edit claim size mode
                         error = resizeClaim(p, claimInteraction.editing, corners);
                     }
-                    if (error != CLAIM_ERRORS.SIZE) //Let the player select another second location
+                    if (error != CLAIM_ERRORS.SIZE_SMALL && error != CLAIM_ERRORS.SIZE_LARGE) //Let the player select another second location
                         claimInteraction.lock(); //Lock us from using the same locations again
                 } else {
                     Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);

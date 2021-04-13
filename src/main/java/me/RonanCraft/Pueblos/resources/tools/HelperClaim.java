@@ -74,31 +74,29 @@ public class HelperClaim {
             MessagesCore.CLAIM_MEMBER_NOTIFICATION_REMOVED.send(member.getPlayer().getPlayer(), member);
     }
 
-    public static CLAIM_ERRORS createClaim(Player owner, Location pos1, Location pos2) {
+    public static CLAIM_ERRORS createClaim(Player owner, Location pos1, Location pos2, boolean sendMsg) {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
         Claim claim = handler.claimCreate(owner.getUniqueId(), owner.getName(), new ClaimPosition(owner.getWorld(), pos1, pos2));
         if (claim != null) {
-            error = handler.addClaim(claim, owner);
+            error = handler.uploadClaim(claim, owner);
             switch (error) {
                 case NONE:
                     MessagesCore.CLAIM_CREATE_SUCCESS.send(owner, claim);
                     Visualization.fromClaim(claim, owner.getLocation().getBlockY(), VisualizationType.CLAIM, owner.getLocation()).apply(owner);
-                    break;
-                case SIZE:
-                    MessagesCore.CLAIM_CREATE_FAILED_SIZE.send(owner, claim);
-                    break;
+                case SIZE_SMALL:
+                case SIZE_LARGE:
                 case OVERLAPPING:
-                    MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
                     break;
                 default:
                     Message.sms(owner, "An Error Happened!", null);
             }
-            error.sendMsg(owner, claim);
         } else { //Overlapping
-            MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
+            //MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
             error = CLAIM_ERRORS.OVERLAPPING;
         }
+        if (sendMsg)
+            error.sendMsg(owner, claim);
         return error;
     }
 

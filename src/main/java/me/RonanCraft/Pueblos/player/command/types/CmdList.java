@@ -42,7 +42,7 @@ public class CmdList implements PueblosCommand, PueblosCommandHelpable {
 
     @Override
     public String getHelp() {
-        return MessagesHelp.INFO.get();
+        return MessagesHelp.LIST.get();
     }
 
     @Override

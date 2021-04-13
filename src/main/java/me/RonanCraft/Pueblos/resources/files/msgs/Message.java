@@ -37,7 +37,7 @@ public class Message {
 
     public static String placeholder(CommandSender p, String str, Object info) {
         if (str != null) {
-            if (Pueblos.getInstance().PlaceholderAPI)
+            if (Pueblos.getInstance().papiEnabled())
                 try {
                     str = PlaceholderAPI.setPlaceholders((Player) p, str);
                 } catch (Exception e) {
@@ -49,7 +49,9 @@ public class Message {
                 if (p instanceof Player)
                     str = str.replaceAll("%player_uuid%", ((Player) p).getUniqueId().toString());
             //Placeholders based off info
-            if (info instanceof Claim)
+            if (info instanceof String && str.contains("%command%"))
+                str = str.replace("%command%", (String) info);
+            else if (info instanceof Claim)
                 str = claims(str, (Claim) info, null);
             else if (info instanceof ClaimMember)
                 str = member(str, (ClaimMember) info, null);
