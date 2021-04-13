@@ -1,11 +1,13 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.inventory.PueblosInventory;
+import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 
 import java.util.*;
 
@@ -137,8 +139,10 @@ public class Claim {
         return false;
     }
 
-    public void editCorners(Location loc_1, Location loc_2) {
-        getPosition().editCorners(loc_1, loc_2);
-        updated();
+    public void editCorners(Player editor, Location loc_1, Location loc_2) {
+        if (!HelperEvent.claimResize(this, editor, loc_1, loc_2).isCancelled()) {
+            getPosition().editCorners(loc_1, loc_2);
+            updated();
+        }
     }
 }

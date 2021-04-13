@@ -1,8 +1,6 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
-import me.RonanCraft.Pueblos.resources.claims.events.ClaimEvent_Create;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public enum CLAIM_ERRORS {
@@ -11,7 +9,8 @@ public enum CLAIM_ERRORS {
     SIZE_SMALL(MessagesCore.CLAIM_CREATE_FAILED_SIZE),
     SIZE_LARGE(MessagesCore.CLAIM_CREATE_FAILED_SIZELARGE),
     DATABASE_ERROR(MessagesCore.CLAIM_CREATE_FAILED_DATABASE),
-    LOCATION_ALREADY_EXISTS(null);
+    LOCATION_ALREADY_EXISTS(null),
+    CANCELLED(null);
 
     private final MessagesCore msg;
 

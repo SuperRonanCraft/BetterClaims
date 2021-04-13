@@ -8,6 +8,7 @@ import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 
 import java.util.Calendar;
 
@@ -61,42 +62,49 @@ public class HelperClaim {
     }
 
     public static void leaveClaim(Player p, ClaimMember member) {
-        member.claim.removeMember(member, true);
-        MessagesCore.CLAIM_MEMBER_LEAVE.send(p, member);
-        if (member.claim.getOwner().isOnline())
-            MessagesCore.CLAIM_MEMBER_NOTIFICATION_LEAVE.send(member.claim.getOwner().getPlayer(), member);
+        if (!HelperEvent.memberLeave(member).isCancelled()) {
+            member.claim.removeMember(member, true);
+            MessagesCore.CLAIM_MEMBER_LEAVE.send(p, member);
+            if (member.claim.getOwner().isOnline())
+                MessagesCore.CLAIM_MEMBER_NOTIFICATION_LEAVE.send(member.claim.getOwner().getPlayer(), member);
+        }
     }
 
     public static void removeMember(Player p, ClaimMember member) {
-        member.claim.removeMember(member, true);
-        MessagesCore.CLAIM_MEMBER_REMOVED.send(p, member);
-        if (member.getPlayer().isOnline())
-            MessagesCore.CLAIM_MEMBER_NOTIFICATION_REMOVED.send(member.getPlayer().getPlayer(), member);
+        if (!HelperEvent.memberLeave(member).isCancelled()) {
+            member.claim.removeMember(member, true);
+            MessagesCore.CLAIM_MEMBER_REMOVED.send(p, member);
+            if (member.getPlayer().isOnline())
+                MessagesCore.CLAIM_MEMBER_NOTIFICATION_REMOVED.send(member.getPlayer().getPlayer(), member);
+        }
     }
 
     public static CLAIM_ERRORS createClaim(Player owner, Location pos1, Location pos2, boolean sendMsg) {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
         Claim claim = handler.claimCreate(owner.getUniqueId(), owner.getName(), new ClaimPosition(owner.getWorld(), pos1, pos2));
-        if (claim != null) {
-            error = handler.uploadClaim(claim, owner);
-            switch (error) {
-                case NONE:
-                    MessagesCore.CLAIM_CREATE_SUCCESS.send(owner, claim);
-                    Visualization.fromClaim(claim, owner.getLocation().getBlockY(), VisualizationType.CLAIM, owner.getLocation()).apply(owner);
-                case SIZE_SMALL:
-                case SIZE_LARGE:
-                case OVERLAPPING:
-                    break;
-                default:
-                    Message.sms(owner, "An Error Happened!", null);
+        if (!HelperEvent.claimCreate(claim, owner).isCancelled()) {
+            if (claim != null) {
+                error = handler.uploadClaim(claim, owner);
+                switch (error) {
+                    case NONE:
+                        MessagesCore.CLAIM_CREATE_SUCCESS.send(owner, claim);
+                        Visualization.fromClaim(claim, owner.getLocation().getBlockY(), VisualizationType.CLAIM, owner.getLocation()).apply(owner);
+                    case SIZE_SMALL:
+                    case SIZE_LARGE:
+                    case OVERLAPPING:
+                        break;
+                    default:
+                        Message.sms(owner, "An Error Happened!", null);
+                }
+            } else { //Overlapping
+                //MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
+                error = CLAIM_ERRORS.OVERLAPPING;
             }
-        } else { //Overlapping
-            //MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
-            error = CLAIM_ERRORS.OVERLAPPING;
-        }
-        if (sendMsg)
-            error.sendMsg(owner, claim);
+            if (sendMsg)
+                error.sendMsg(owner, claim);
+        } else
+            error = CLAIM_ERRORS.CANCELLED;
         return error;
     }
 
@@ -106,7 +114,9 @@ public class HelperClaim {
     }
 
     public static void teleportTo(Player p, Claim claim) {
-        p.teleport(claim.getPosition().getLocation());
-        MessagesCore.CLAIM_TELEPORT.send(p, claim);
+        if (!HelperEvent.teleportToClaim(claim, p, p.getLocation()).isCancelled()) {
+            p.teleport(claim.getPosition().getLocation());
+            MessagesCore.CLAIM_TELEPORT.send(p, claim);
+        }
     }
 }
