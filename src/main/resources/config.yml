@@ -5,5 +5,4 @@ Language-File: 'en.yml'
 DisableUpdater: false
 Claim:
   Item: 'golden_shovel'
-  Limit: 3
   MaxSize: 256
