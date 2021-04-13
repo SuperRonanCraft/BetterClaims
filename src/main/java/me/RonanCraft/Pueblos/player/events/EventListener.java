@@ -10,11 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import java.util.*;
 
@@ -51,6 +53,10 @@ public class EventListener implements Listener {
     @EventHandler (priority = EventPriority.NORMAL)
     void onItemChange(PlayerItemHeldEvent e) {
         itemChange.onItemChange(e);
+    }
+
+    void event(EntityPickupItemEvent e) {
+        interact.onPickup(e);
     }
 
     //Explosion

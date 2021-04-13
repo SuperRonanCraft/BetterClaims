@@ -11,9 +11,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.InventoryHolder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,7 +42,7 @@ public class EventInteract {
         }
     }
 
-    //Player Interact
+    //Player Interact with Button, Levers, Beds, Doors, Chests...
     void onInteract(PlayerInteractEvent e) {
         if (e.getClickedBlock() == null || e.isCancelled())
             return;
@@ -67,9 +71,9 @@ public class EventInteract {
                 if (memberFlag != null)
                     flagValue = member.getFlags().getOrDefault(memberFlag, memberFlag.getDefault()); //Get the members flag value
                 e.setCancelled(!(Boolean) flagValue); //Are they allowed to do this here?
-            } else {
+            } else { //Blocks with inventories specific to claim members
                 CLAIM_FLAG_MEMBER memberFlag = null;
-                if (block.getType().name().contains("CHEST"))
+                if (block.getState() instanceof InventoryHolder)
                     memberFlag = CLAIM_FLAG_MEMBER.ALLOW_CHEST;
                 Object flagValue = null;
                 if (memberFlag != null)
@@ -80,6 +84,7 @@ public class EventInteract {
         }
     }
 
+    //Create a claim
     void onInteractCreateClaim(PlayerInteractEvent e) {
         if (    e.getItem() == null
                 || (e.isCancelled() && e.getAction() != Action.RIGHT_CLICK_AIR)
@@ -164,5 +169,16 @@ public class EventInteract {
         cancelTimers.put(p, Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
             listener.claimInteraction.remove(p);
         }, time * 20L));
+    }
+
+    //Stop picking up items from other claims
+    public void onPickup(EntityPickupItemEvent e) {
+        if (e.isCancelled())
+            return;
+        if (e.getEntity() instanceof Player) {
+            Claim claim = listener.getClaim(e.getItem().getLocation());
+            if (!(claim != null && claim.isMember((Player) e.getEntity())))
+                e.setCancelled(true);
+        }
     }
 }
