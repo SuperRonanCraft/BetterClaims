@@ -55,6 +55,7 @@ public class EventListener implements Listener {
         itemChange.onItemChange(e);
     }
 
+    @EventHandler
     void event(EntityPickupItemEvent e) {
         interact.onPickup(e);
     }

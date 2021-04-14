@@ -177,7 +177,7 @@ public class EventInteract {
             return;
         if (e.getEntity() instanceof Player) {
             Claim claim = listener.getClaim(e.getItem().getLocation());
-            if (!(claim != null && claim.isMember((Player) e.getEntity())))
+            if (claim != null && !claim.isMember((Player) e.getEntity()))
                 e.setCancelled(true);
         }
     }
