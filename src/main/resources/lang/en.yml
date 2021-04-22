@@ -51,6 +51,7 @@ Help:
   List: ' &7- &e/%command% list &7- List all claims you are allowed in'
   Request: ' &7- &e/%command% request &7- Request to join a claim'
   Flags: ' &7- &e/%command% flags &7- Change claim flags'
+  AdminClaim: ' &7- &e/%command% adminclaim &7- Toggle claim-mode to admin claim'
 
 Usage:
   Player: '&cUsage&7: /%command% player <player> [world] [biome1, biome2]'

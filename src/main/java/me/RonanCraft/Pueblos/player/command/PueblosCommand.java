@@ -1,5 +1,6 @@
 package me.RonanCraft.Pueblos.player.command;
 
+import me.RonanCraft.Pueblos.Pueblos;
 import org.bukkit.command.CommandSender;
 
 public interface PueblosCommand {
@@ -12,5 +13,9 @@ public interface PueblosCommand {
 
     default boolean isPlayerOnly() {
         return false;
+    }
+
+    default Pueblos getPl() {
+        return Pueblos.getInstance();
     }
 }

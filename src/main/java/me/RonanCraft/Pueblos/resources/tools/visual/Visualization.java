@@ -81,8 +81,8 @@ public class Visualization {
         }*/
 
         //special visualization for administrative land claims
-        //if (visualizationType == VisualizationType.CLAIM) {
-        //    visualizationType = VisualizationType.ADMIN_CLAIM;
+        if (visualizationType == VisualizationType.CLAIM && claim.isAdminClaim())
+            visualizationType = VisualizationType.ADMIN_CLAIM;
         //}
 
         //add top level last so that it takes precedence (it shows on top when the child claim boundaries overlap with its boundaries)

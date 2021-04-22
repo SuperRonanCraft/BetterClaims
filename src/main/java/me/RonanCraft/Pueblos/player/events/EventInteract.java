@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.FileOther;
@@ -44,18 +45,19 @@ public class EventInteract {
         }
     }
 
-    //Player Interact with Button, Levers, Beds, Doors, Chests...
+    //Player Interact with Button, Levers, Beds, Doors, Chests (for members)...
     void onInteract(PlayerInteractEvent e) {
         if (e.getClickedBlock() == null || e.isCancelled())
             return;
         Block block = e.getClickedBlock();
         Claim claim = listener.getClaim(block.getLocation());
-        if (claim != null && !claim.isOwner(e.getPlayer())) {
-            ClaimMember member = claim.getMember(e.getPlayer());
-            if (member == null) {
-                e.setCancelled(true);
-                return;
-            }
+        if (claim == null || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(e.getPlayer()))) //No claim here or is an admin claim
+            return;
+        else if (claim.isAdminClaim()) {
+            e.setCancelled(true);
+            return;
+        }
+        if (!claim.isOwner(e.getPlayer())) { //There is a claim, and not the owner (owners are ignored)
             CLAIM_FLAG flag = null;
             if (block.getType().name().contains("LEVER")) {
                 flag = CLAIM_FLAG.ALLOW_LEVER;
@@ -66,22 +68,28 @@ public class EventInteract {
             } else if (block.getType().name().contains("BED")) {
                 flag = CLAIM_FLAG.ALLOW_BED;
             }
-            if (flag != null) {
-                //Check member flag value (if it exists)
-                CLAIM_FLAG_MEMBER memberFlag = flag.getMemberEquivalent();
-                Object flagValue = claim.getFlags().getFlag(flag); //Get the claims flag value
-                if (memberFlag != null)
-                    flagValue = member.getFlags().getOrDefault(memberFlag, memberFlag.getDefault()); //Get the members flag value
-                e.setCancelled(!(Boolean) flagValue); //Are they allowed to do this here?
-            } else { //Blocks with inventories specific to claim members
-                CLAIM_FLAG_MEMBER memberFlag = null;
-                if (block.getState() instanceof InventoryHolder)
-                    memberFlag = CLAIM_FLAG_MEMBER.ALLOW_CHEST;
-                Object flagValue = null;
-                if (memberFlag != null)
-                    flagValue = member.getFlags().getOrDefault(memberFlag, memberFlag.getDefault());
-                if (flagValue != null)
+            ClaimMember member = claim.getMember(e.getPlayer());
+            if (member != null) { //Is this player a member of this claim?
+                if (flag != null) {
+                    //Check member flag value (if it exists)
+                    CLAIM_FLAG_MEMBER memberFlag = flag.getMemberEquivalent();
+                    Object flagValue = claim.getFlags().getFlag(flag); //Get the claims flag value
+                    if (memberFlag != null)
+                        flagValue = member.getFlags().getOrDefault(memberFlag, memberFlag.getDefault()); //Get the members flag value
                     e.setCancelled(!(Boolean) flagValue); //Are they allowed to do this here?
+                } else { //Blocks with inventories specific to claim members
+                    CLAIM_FLAG_MEMBER memberFlag = null;
+                    if (block.getState() instanceof InventoryHolder)
+                        memberFlag = CLAIM_FLAG_MEMBER.ALLOW_CHEST;
+                    Object flagValue = null;
+                    if (memberFlag != null)
+                        flagValue = member.getFlags().getOrDefault(memberFlag, memberFlag.getDefault());
+                    if (flagValue != null)
+                        e.setCancelled(!(Boolean) flagValue); //Are they allowed to do this here?
+                }
+            } else { //Cancel interactions if the claim flag is enabled
+                Object flagValue = claim.getFlags().getFlag(flag); //Get the claims flag value
+                e.setCancelled(!(Boolean) flagValue);
             }
         }
     }
@@ -171,16 +179,5 @@ public class EventInteract {
         cancelTimers.put(p, Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
             listener.claimInteraction.remove(p);
         }, time * 20L));
-    }
-
-    //Stop picking up items from other claims
-    public void onPickup(EntityPickupItemEvent e) {
-        if (e.isCancelled())
-            return;
-        if (e.getEntity() instanceof Player) {
-            Claim claim = listener.getClaim(e.getItem().getLocation());
-            if (claim != null && !claim.isMember((Player) e.getEntity()))
-                e.setCancelled(true);
-        }
     }
 }

@@ -18,6 +18,7 @@ public class Claim {
     public final String ownerName;
     public long claimId; //ID given by the database
     //Claim Information
+    private final boolean adminClaim;
     private final ClaimPosition position;
     private final ClaimFlags flags = new ClaimFlags(this);
     private final ClaimMembers members = new ClaimMembers(this);
@@ -31,6 +32,11 @@ public class Claim {
         this.ownerId = ownerId;
         this.ownerName = ownerName;
         this.position = position;
+        this.adminClaim = this.ownerId == null;
+    }
+
+    Claim(ClaimPosition position) {
+        this(null, null, position);
     }
 
     //Is
@@ -147,5 +153,9 @@ public class Claim {
             getPosition().editCorners(loc_1, loc_2);
             updated();
         }
+    }
+
+    public boolean isAdminClaim() {
+        return adminClaim;
     }
 }

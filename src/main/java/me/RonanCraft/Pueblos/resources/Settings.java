@@ -38,7 +38,8 @@ public class Settings {
     public enum SETTING {
         CLAIM_MAXDEPTH("Claim.MaxDepth", TYPE.INT),
         CLAIM_MAXSIZE("Claim.MaxSize", TYPE.INT),
-        CLAIM_ITEM("Claim.Item", TYPE.STRING);
+        CLAIM_ITEM("Claim.Item", TYPE.STRING),
+        PLAYER_PROTECTDEATHDROP("Player.ProtectDeathDrops", TYPE.BOOLEAN);
 
         private final String path;
         private final TYPE type;

@@ -22,3 +22,9 @@ permissions:
     pueblos.request:
         description: Request to join a claim
         default: true
+    pueblos.admin.claim:
+        description: Create & Edit admin claims, toggled with "/pueblos adminclaim"
+        default: op
+    pueblos.admin.override:
+        description: Override all claims when executing "/peublos override"
+        default: op

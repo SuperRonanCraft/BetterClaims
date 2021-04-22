@@ -8,7 +8,9 @@ public enum PermissionNodes {
     USE("use"),
     RELOAD("reload"),
     REQUEST("request"),
-    UPDATE("update");
+    UPDATE("update"),
+    ADMIN_CLAIM("admin.claim"),
+    ADMIN_OVERRIDE("admin.override");
 
     public String node;
 

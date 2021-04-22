@@ -9,7 +9,8 @@ public enum MessagesHelp {
     LIST("List"),
     REQUEST("Request"),
     FLAGS("Flags"),
-    PREFIX("Prefix");
+    PREFIX("Prefix"),
+    ADMIN_CLAIM("AdminClaim");
 
     String section;
 

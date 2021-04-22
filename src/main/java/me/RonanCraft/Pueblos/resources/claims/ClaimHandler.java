@@ -18,6 +18,7 @@ import java.util.*;
 public class ClaimHandler {
     private final List<Claim> claims = new ArrayList<>();
     private int claim_maxSize = 256;
+    private final List<UUID> adminClaimMode = new ArrayList<>();
 
     public void load() {
         claims.clear();
@@ -137,6 +138,20 @@ public class ClaimHandler {
     }
 
     public Claim claimCreate(UUID owner, String name, ClaimPosition position) {
-        return new Claim(owner, name, position);
+        if (adminClaimMode.contains(owner))
+            return new Claim(position);
+        else
+            return new Claim(owner, name, position);
+    }
+
+    public void toggleAdminClaimMode(UUID playerId) {
+        if (!adminClaimMode.contains(playerId))
+            adminClaimMode.add(playerId);
+        else
+            adminClaimMode.remove(playerId);
+    }
+
+    public void removeAdminClaimMode(UUID playerId) {
+        adminClaimMode.remove(playerId);
     }
 }

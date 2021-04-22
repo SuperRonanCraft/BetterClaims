@@ -8,9 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -32,11 +30,13 @@ public class EventListener implements Listener {
     EventClick click = new EventClick();
     EventClose close = new EventClose();
     EventJoin join = new EventJoin();
+    EventItems items = new EventItems(this);
 
     public void load(boolean reload) {
         if (!reload)
             Pueblos.getInstance().getServer().getPluginManager().registerEvents(this, Pueblos.getInstance());
         interact.load();
+        items.load();
     }
 
     //Player Interact
@@ -55,10 +55,16 @@ public class EventListener implements Listener {
         itemChange.onItemChange(e);
     }
 
-    @EventHandler
+    //Items OWN LISTENER EVENT
+    /*@EventHandler
     void event(EntityPickupItemEvent e) {
-        interact.onPickup(e);
+        items.onPickup(e);
     }
+
+    @EventHandler
+    void event(PlayerDeathEvent e) {
+        items.onDrop(e);
+    }*/
 
     //Explosion
     @EventHandler (priority = EventPriority.HIGHEST)
@@ -115,6 +121,10 @@ public class EventListener implements Listener {
     //Tools
     boolean isProtected(Location loc) {
         return getClaim(loc) != null;
+    }
+
+    void sendNotAllowedMsg(Player p, Claim claim) {
+        p.sendMessage("You are not allowed to do this here! If you believe you should, send a request to join this claim!");
     }
 
     Claim getClaim(Location loc) {
