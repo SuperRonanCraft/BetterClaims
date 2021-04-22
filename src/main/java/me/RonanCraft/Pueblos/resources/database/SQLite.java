@@ -1,22 +1,32 @@
 package me.RonanCraft.Pueblos.resources.database;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.files.FileOther;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Iterator;
+import java.util.List;
 import java.util.logging.Level;
 
-public class SQLite extends Database {
+public class SQLite {
 
     private static final String db_file_name = "database";
     //private final boolean sqlEnabled;
+    String table;
     private String host, database, username, password;
     private int port;
+    boolean sqlEnabled;
+    Connection connection;
 
     public String addMissingColumns = "ALTER TABLE %table% ADD COLUMN %column% %type%";
+
+    private final DATABASE_TYPE type;
+
+    public SQLite(DATABASE_TYPE type) {
+        this.type = type;
+    }
 
     // SQL creation stuff
     public Connection getSQLConnection() {
@@ -75,18 +85,28 @@ public class SQLite extends Database {
         database = sql.getString(pre + "database");
         username = sql.getString(pre + "username");
         password = sql.getString(pre + "password");
-        table = sql.getString(pre + "tablePrefix") + "data";
         connection = getSQLConnection();
         if (!sqlEnabled) { //Update table names back to default if online database fails
-            table = "Pueblos_Data";
+            if (type == DATABASE_TYPE.USERS)
+                table = "Pueblos_Users";
+            else
+                table = "Pueblos_Data";
+        } else {
+            if (type == DATABASE_TYPE.USERS)
+                table = sql.getString(pre + "tablePrefix") + "users";
+            else
+                table = sql.getString(pre + "tablePrefix") + "data";
         }
+
         try {
             Statement s = connection.createStatement();
             s.executeUpdate(getCreateTable());
             //s.executeUpdate(createTable_bank);
-            for (COLUMNS c : COLUMNS.values()) { //Add missing columns dynamically
+            for (Enum<?> c : getColumns(type)) { //Add missing columns dynamically
                 try {
-                    s.executeUpdate(addMissingColumns.replace("%table%", table).replace("%column%", c.name).replace("%type%", c.type));
+                    String _name = getColumnName(type, c);
+                    String _type = getColumnType(type, c);
+                    s.executeUpdate(addMissingColumns.replace("%table%", table).replace("%column%", _name).replace("%type%", _type));
                 } catch (SQLException e) {
                     //e.printStackTrace();
                 }
@@ -108,14 +128,121 @@ public class SQLite extends Database {
 
     private String getCreateTable() {
         String str = "CREATE TABLE IF NOT EXISTS " + table + " (";
-        for (COLUMNS col : COLUMNS.values()) {
-            str = str.concat("`" + col.name + "` " + col.type);
-            if (col.equals(COLUMNS.values()[COLUMNS.values().length - 1]))
+        Enum<?>[] columns = getColumns(DATABASE_TYPE.CLAIMS);
+        for (Enum<?> c : columns) {
+            String _name = getColumnName(type, c);
+            String _type = getColumnType(type, c);
+            str = str.concat("`" + _name + "` " + _type);
+            if (c.equals(columns[columns.length - 1]))
                 str = str.concat(")");
             else
                 str = str.concat(", ");
         }
         //System.out.println("MySQL column string: `" + str + "`");
         return str;
+    }
+
+    private Enum<?>[] getColumns(DATABASE_TYPE type) {
+        if (type == DATABASE_TYPE.USERS)
+            return DatabaseUsers.COLUMNS.values();
+        return DatabaseClaims.COLUMNS.values();
+    }
+
+    private String getColumnName(DATABASE_TYPE type, Enum<?> column) {
+        if (type == DATABASE_TYPE.USERS)
+            return ((DatabaseUsers.COLUMNS) column).name;
+        return ((DatabaseClaims.COLUMNS) column).name;
+    }
+
+    private String getColumnType(DATABASE_TYPE type, Enum<?> column) {
+        if (type == DATABASE_TYPE.USERS)
+            return ((DatabaseUsers.COLUMNS) column).type;
+        return ((DatabaseClaims.COLUMNS) column).type;
+    }
+
+    //Processing
+    boolean sqlUpdate(String statement, List<Object> params) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        boolean success = true;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement(statement);
+            if (params != null) {
+                Iterator<Object> it = params.iterator();
+                int paramIndex = 1;
+                while (it.hasNext()) {
+                    ps.setObject(paramIndex, it.next());
+                    paramIndex++;
+                }
+            }
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            success = false;
+        } finally {
+            close(ps, null, conn);
+        }
+        return success;
+    }
+
+    boolean sqlUpdate(List<String> statement1, List<List<Object>> params1) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        boolean success = true;
+        try {
+            conn = getSQLConnection();
+            for (int i = 0; i < statement1.size(); i++) {
+                String statement = statement1.get(i);
+                List<Object> params = params1.get(i);
+                ps = conn.prepareStatement(statement);
+                if (params != null) {
+                    Iterator<Object> it = params.iterator();
+                    int paramIndex = 1;
+                    while (it.hasNext()) {
+                        ps.setObject(paramIndex, it.next());
+                        paramIndex++;
+                    }
+                }
+                ps.executeUpdate();
+                ps.close();
+            }
+        } catch (SQLException ex) {
+            Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
+            success = false;
+        } finally {
+            close(ps, null, conn);
+        }
+        return success;
+    }
+
+    public void initialize() { //Let in console know if its all setup or not
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            conn = getSQLConnection();
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE " + DatabaseClaims.COLUMNS.OWNER_UUID.name + " = 0");
+
+            rs = ps.executeQuery();
+        } catch (SQLException ex) {
+            Pueblos.getInstance().getLogger().log(Level.SEVERE, "Unable to retreive connection", ex);
+        } finally {
+            close(ps, rs, conn);
+        }
+    }
+
+    void close(PreparedStatement ps, ResultSet rs, Connection conn) {
+        try {
+            if (ps != null) ps.close();
+            if (conn != null) conn.close();
+            if (rs != null) rs.close();
+        } catch (SQLException ex) {
+            Error.close(Pueblos.getInstance(), ex);
+        }
+    }
+
+    public enum DATABASE_TYPE {
+        CLAIMS, USERS
     }
 }

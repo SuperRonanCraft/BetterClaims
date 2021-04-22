@@ -6,3 +6,4 @@ DisableUpdater: false
 Claim:
   Item: 'golden_shovel'
   MaxSize: 256
+  MaxDepth: 32

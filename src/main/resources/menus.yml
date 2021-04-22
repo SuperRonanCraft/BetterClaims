@@ -78,13 +78,20 @@ Members:
   Title: '&7Members | %claim_name%'
   Items:
     Member:
-      Name: '&e%member_name%'
-      Item: 'player_head'
-      Lore:
-        - ''
-        - '&7Member Since: &f%member_date%'
-        - ''
-        - '&fClick to edit &8%member_name%'
+      Edit:
+        Name: '&e%member_name%'
+        Item: 'player_head'
+        Lore:
+          - ''
+          - '&7Member Since: &f%member_date%'
+          - ''
+          - '&fClick to edit &8%member_name%'
+      Disallowed:
+        Name: '&e%member_name%'
+        Item: 'player_head'
+        Lore:
+          - ''
+          - '&7Member Since: &f%member_date%'
     Owner:
       Name: '&eClaim Members'
       Item: 'player_head'

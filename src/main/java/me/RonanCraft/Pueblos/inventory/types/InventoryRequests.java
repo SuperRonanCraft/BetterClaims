@@ -60,9 +60,10 @@ public class InventoryRequests extends PueblosInvLoader implements PueblosInv_Cl
             HelperClaim.requestAction(true, p, request);
             PueblosInventory.REQUESTS.open(p, claim.get(p), false);
         } else if (e.getClick().isRightClick()) { //Decline
-            PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.REQUEST_DECLINE, p, request), false);
-            //HelperClaim.requestAction(false, p, request);
-            //PueblosInventory.REQUESTS.open(p, claim.get(p), false);
+            if (e.getClick().isShiftClick()) //Ignore this player from any other requests in all their claims
+                PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.REQUEST_DECLINE_IGNORE, p, request), false);
+            else //Decline this request
+                PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.REQUEST_DECLINE, p, request), false);
         }
     }
 

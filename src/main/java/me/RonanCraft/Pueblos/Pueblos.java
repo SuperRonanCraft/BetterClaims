@@ -33,7 +33,7 @@ public class Pueblos extends JavaPlugin {
     @Override
     public void onDisable() {
         closeMenus();
-        systems.getDatabase().saveChanges();
+        systems.getClaimDatabase().saveChanges();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class Pueblos extends JavaPlugin {
     }
 
     public void reload(CommandSender sendi) {
-        systems.getDatabase().saveChanges();
+        systems.getClaimDatabase().saveChanges();
         closeMenus();
         loadAll(true);
         MessagesCore.RELOAD.send(sendi);
@@ -58,9 +58,9 @@ public class Pueblos extends JavaPlugin {
     private void loadAll(boolean reload) {
         registerDependencies();
         files.loadAll();
+        systems.load();
         systems.getEvents().load(reload);
         commands.load();
-        systems.load();
         permissions.register();
         for (PueblosInventory inv : PueblosInventory.values())
             if (inv.get() instanceof PueblosInvLoader)

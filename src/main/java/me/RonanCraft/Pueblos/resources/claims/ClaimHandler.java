@@ -1,7 +1,8 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.database.Database;
+import me.RonanCraft.Pueblos.resources.Settings;
+import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
 import me.RonanCraft.Pueblos.resources.files.FileOther;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
@@ -20,18 +21,18 @@ public class ClaimHandler {
 
     public void load() {
         claims.clear();
-        List<Claim> claims = Pueblos.getInstance().getSystems().getDatabase().getClaims();
+        List<Claim> claims = Pueblos.getInstance().getSystems().getClaimDatabase().getClaims();
         this.claims.addAll(claims);
-        claim_maxSize = FileOther.FILETYPE.CONFIG.getInt("Claim.MaxSize");
-        if (claim_maxSize <= 10)
-            claim_maxSize = 64;
+        claim_maxSize = Pueblos.getInstance().getSystems().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE);
+        if (claim_maxSize < 10)
+            claim_maxSize = 10;
     }
 
     public CLAIM_ERRORS uploadClaim(Claim claim, Player p) {
         CLAIM_ERRORS error = isLocationValid(claim, p);
         if (error == CLAIM_ERRORS.NONE) {
             claim.dateCreated = Calendar.getInstance().getTime();
-            if (Pueblos.getInstance().getSystems().getDatabase().createClaim(claim)) {
+            if (Pueblos.getInstance().getSystems().getClaimDatabase().createClaim(claim)) {
                 claims.add(claim);
                 ClaimEvents.create(claim);
                 return CLAIM_ERRORS.NONE;
@@ -101,33 +102,33 @@ public class ClaimHandler {
     public Claim loadClaim(ResultSet result) throws SQLException {
         UUID id;
         try {
-            id = UUID.fromString(result.getString(Database.COLUMNS.OWNER_UUID.name));
+            id = UUID.fromString(result.getString(DatabaseClaims.COLUMNS.OWNER_UUID.name));
         } catch (IllegalArgumentException e) {
             id = UUID.randomUUID();
         }
-        String name = result.getString(Database.COLUMNS.OWNER_NAME.name);
+        String name = result.getString(DatabaseClaims.COLUMNS.OWNER_NAME.name);
         try {
-            Claim claim = new Claim(id, name, JSONEncoding.getPosition(result.getString(Database.COLUMNS.POSITION.name)));
+            Claim claim = new Claim(id, name, JSONEncoding.getPosition(result.getString(DatabaseClaims.COLUMNS.POSITION.name)));
             //Members Load
-            List<ClaimMember> members = JSONEncoding.getMember(result.getString(Database.COLUMNS.MEMBERS.name), claim);
+            List<ClaimMember> members = JSONEncoding.getMember(result.getString(DatabaseClaims.COLUMNS.MEMBERS.name), claim);
             if (members != null)
                 for (ClaimMember member : members)
                     claim.addMember(member, false);
 
             //Flags Load
-            HashMap<CLAIM_FLAG, Object> flags = JSONEncoding.getFlags(result.getString(Database.COLUMNS.FLAGS.name));
+            HashMap<CLAIM_FLAG, Object> flags = JSONEncoding.getFlags(result.getString(DatabaseClaims.COLUMNS.FLAGS.name));
             if (flags != null)
                 for (Map.Entry<CLAIM_FLAG, Object> flag : flags.entrySet())
                     claim.getFlags().setFlag(flag.getKey(), flag.getValue(), false);
             
             //Join Requests Load
-            List<ClaimRequest> requests = JSONEncoding.getRequests(result.getString(Database.COLUMNS.REQUESTS.name), claim);
+            List<ClaimRequest> requests = JSONEncoding.getRequests(result.getString(DatabaseClaims.COLUMNS.REQUESTS.name), claim);
             if (requests != null)
                 for (ClaimRequest request : requests)
                     claim.addRequest(request, false);
 
-            claim.claimId = result.getInt(Database.COLUMNS.CLAIM_ID.name);
-            claim.dateCreated = HelperDate.getDate(result.getString(Database.COLUMNS.DATE.name));
+            claim.claimId = result.getInt(DatabaseClaims.COLUMNS.CLAIM_ID.name);
+            claim.dateCreated = HelperDate.getDate(result.getString(DatabaseClaims.COLUMNS.DATE.name));
             return claim;
         } catch (Exception e) {
             e.printStackTrace();

@@ -5,6 +5,8 @@ import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Mob;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
@@ -13,7 +15,7 @@ import java.util.HashMap;
 public class EventDamage {
 
     private final EventListener listener;
-    private final HashMap<Entity, Integer> damageCooldown = new HashMap<Entity, Integer>();
+    private final HashMap<Entity, Integer> damageCooldown = new HashMap<>();
 
     EventDamage(EventListener listener) {
         this.listener = listener;
@@ -38,9 +40,13 @@ public class EventDamage {
         if (claim == null)
             claim = listener.getClaim(damaged.getLocation());
         if (claim != null) {
-            if (damaged instanceof Player && damager instanceof Player) //PvP
+            if (damaged instanceof Player && damager instanceof Player) { //Player vs Player
                 if (((Boolean) claim.getFlags().getFlag(CLAIM_FLAG.PVP))) //PvP is allowed
                     return;
+            } else if (damager instanceof Player && claim.isMember((Player) damager)) {
+                return;
+            } else if (damaged instanceof Monster && damaged.getCustomName() == null) //Garbage mob
+                return;
             e.setCancelled(true);
             cooldown(damaged);
             cooldown(damager);
@@ -52,6 +58,7 @@ public class EventDamage {
             Bukkit.getScheduler().cancelTask(damageCooldown.get(e));
         damageCooldown.put(e, Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
             damageCooldown.remove(e);
-        }, 20L * 10));
+            //Bukkit.getServer().broadcastMessage("Removed " + e.getName());
+        }, 20L));
     }
 }

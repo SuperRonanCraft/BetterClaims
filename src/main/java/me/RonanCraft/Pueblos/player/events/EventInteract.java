@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.FileOther;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
@@ -33,11 +34,12 @@ public class EventInteract {
     }
 
     void load() {
-        String item = FileOther.FILETYPE.CONFIG.getString("Claim.Item");
+        String item = Pueblos.getInstance().getSystems().getSettings().getString(Settings.SETTING.CLAIM_ITEM);
         try {
             claim_item = Material.valueOf(item.toUpperCase());
         } catch (IllegalArgumentException e) {
-            Pueblos.getInstance().getLogger().severe("The item `" + item + "` is not a valid item! Please change the `ClaimItem` in the config!");
+            Pueblos.getInstance().getLogger().severe("The item `" + item + "` is not a valid item, changed back to golden_shovel! " +
+                    "Please change the claim `Item` in the config!");
             claim_item = Material.GOLDEN_SHOVEL;
         }
     }

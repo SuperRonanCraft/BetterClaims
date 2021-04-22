@@ -1,5 +1,5 @@
 main: me.RonanCraft.Pueblos.Pueblos
-version: '1.0.2'
+version: '1.1.0'
 name: Pueblos
 author: RonanCraft
 softdepend:
@@ -9,7 +9,7 @@ api-version: '1.13'
 
 commands:
     pueblos:
-        aliases: [pueblo, claim, town, towns]
+        aliases: [pueblo, claim, claims, town, towns]
         description: Main pueblos command
 
 permissions:

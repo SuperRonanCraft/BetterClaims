@@ -31,7 +31,7 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
                         ClaimMember member = new ClaimMember(p.getUniqueId(), p.getName(), Calendar.getInstance().getTime(), false, claim);
                         member.setFlag(CLAIM_FLAG_MEMBER.ALLOW_BED, true, true);
                         claim.addMember(member, true);
-                        Pueblos.getInstance().getSystems().getDatabase().updateMembers(claim);
+                        Pueblos.getInstance().getSystems().getClaimDatabase().updateMembers(claim);
                     }
                     //----
                     PueblosInventory.CLAIM.open(p, claim, true);

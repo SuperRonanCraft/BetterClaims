@@ -42,11 +42,13 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
         addButtonBack(inv, p, itemInfo, PueblosInventory.MEMBERS, claim);
 
         int slot = 18;
+
+        ITEMS _i = claim.isOwner(p) ? ITEMS.MEMBER_EDIT : ITEMS.MEMBER_DISALLOWED;
         for (ClaimMember member : claim.getMembers()) {
             slot = getNextSlot(slot, inv);
             if (slot == -1)
                 break;
-            ItemStack item = getItem(ITEMS.MEMBER.section, p, member);
+            ItemStack item = getItem(_i.section, p, member);
             inv.setItem(slot, item);
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, member));
         }
@@ -98,7 +100,8 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
     }
 
     private enum ITEMS {
-        MEMBER("Member", 0),
+        MEMBER_EDIT("Member.Edit", 0),
+        MEMBER_DISALLOWED("Member.Disallowed", 0),
         OWNER("Owner", 13),
         REQUEST("Requests", 16),
         LEAVE("Leave", 15);
