@@ -50,4 +50,8 @@ public enum MessagesCore {
     public void send(CommandSender sendi, Object placeholderInfo) {
         Message.sms(sendi, Message.getLang().getString(pre + section), placeholderInfo);
     }
+
+    public String get(Object placeholderInfo) {
+        return Message.placeholder(null, Message.getLang().getString(pre + section), placeholderInfo);
+    }
 }

@@ -83,7 +83,7 @@ public class Claim {
     }
 
     public String getName() {
-        return name != null ? name : ownerName;
+        return name != null ? name : (ownerName != null ? ownerName : (!isAdminClaim() ? getOwner().getName() : "Admin Claim"));
     }
 
     public List<ClaimMember> getMembers() {

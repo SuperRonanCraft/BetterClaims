@@ -22,7 +22,9 @@ public class Commands {
     }
 
     public void registerCommand(PueblosCommand cmd) {
-        //if (!cmd.isPlayerOnly()) //If debug only, can it be enabled?
+        if (cmd instanceof PueblosCommandEnableable) //If can be disabled, check if enabled
+            if (!((PueblosCommandEnableable) cmd).isEnabled())
+                return;
         commands.add(cmd);
     }
 

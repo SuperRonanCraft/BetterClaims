@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public enum CLAIM_ERRORS {
@@ -18,8 +19,12 @@ public enum CLAIM_ERRORS {
         this.msg = msg;
     }
 
-    public void sendMsg(Player p, Object info) {
+    public void sendMsg(CommandSender sendi, Object info) {
         if (this.msg != null)
-            this.msg.send(p, info);
+            this.msg.send(sendi, info);
+    }
+
+    public String getMsg(Object info) {
+        return msg.get(info);
     }
 }

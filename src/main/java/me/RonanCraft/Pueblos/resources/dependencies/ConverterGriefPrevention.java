@@ -1,0 +1,81 @@
+package me.RonanCraft.Pueblos.resources.dependencies;
+
+import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.claims.CLAIM_ERRORS;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
+import me.RonanCraft.Pueblos.resources.claims.ClaimPosition;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.util.Objects;
+import java.util.UUID;
+
+public class ConverterGriefPrevention {
+
+    public static boolean pathExist() {
+        return getFile().exists();
+    }
+
+    private static File getFile() {
+        File path = Pueblos.getInstance().getDataFolder().getParentFile();
+        return new File(path, "GriefPreventionData" + File.separator + "ClaimData");
+    }
+
+    public void load(CommandSender converter) {
+        File file = getFile();
+        if (!file.exists() || file.listFiles() == null)
+            return;
+        ClaimHandler claimHandler = Pueblos.getInstance().getSystems().getClaimHandler();
+        for (File f : Objects.requireNonNull(file.listFiles(filter()))) {
+            try {
+                YamlConfiguration config = YamlConfiguration.loadConfiguration(f);
+                ClaimPosition position = getPosition(config);
+                UUID uuid = getID(config);
+                Claim claim;
+                claim = claimHandler.claimCreate(uuid, null, position);
+                CLAIM_ERRORS error = claimHandler.uploadClaim(claim, null);
+                if (error != CLAIM_ERRORS.NONE) {
+                    Pueblos.getInstance().getLogger().warning(error.getMsg(claim));
+                    error.sendMsg(converter, claim);
+                } else {
+                    converter.sendMessage("Successfully converted " + f.getName());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                String msg = "Unable to convert the file " + f.getName() + " as a Pueblos claim!";
+                converter.sendMessage(msg);
+                Pueblos.getInstance().getLogger().severe(msg);
+            }
+        }
+    }
+
+    private ClaimPosition getPosition(YamlConfiguration config) {
+        String[] lesser_boundary_corner = Objects.requireNonNull(config.getString("Lesser Boundary Corner")).split(";");
+        String[] greater_boundary_corner = Objects.requireNonNull(config.getString("Greater Boundary Corner")).split(";");
+        World world = Bukkit.getWorld(lesser_boundary_corner[0]);
+        int x1 = Integer.parseInt(lesser_boundary_corner[1]);
+        int z1 = Integer.parseInt(lesser_boundary_corner[3]);
+        int x2 = Integer.parseInt(greater_boundary_corner[1]);
+        int z2 = Integer.parseInt(greater_boundary_corner[3]);
+        return new ClaimPosition(world, x1, z1, x2, z2);
+    }
+
+    private UUID getID(YamlConfiguration config) {
+        try {
+            return UUID.fromString(Objects.requireNonNull(config.getString("Owner")));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
+
+    private FilenameFilter filter() {
+        return (dir, name) -> name.endsWith(".yml");
+    }
+}

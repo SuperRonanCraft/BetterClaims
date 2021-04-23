@@ -11,6 +11,7 @@ import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nullable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -29,7 +30,7 @@ public class ClaimHandler {
             claim_maxSize = 10;
     }
 
-    public CLAIM_ERRORS uploadClaim(Claim claim, Player p) {
+    public CLAIM_ERRORS uploadClaim(Claim claim, @Nullable Player p) {
         CLAIM_ERRORS error = isLocationValid(claim, p);
         if (error == CLAIM_ERRORS.NONE) {
             claim.dateCreated = Calendar.getInstance().getTime();
@@ -43,20 +44,22 @@ public class ClaimHandler {
         return error;
     }
 
-    private CLAIM_ERRORS isLocationValid(Claim claim, Player p) {
+    private CLAIM_ERRORS isLocationValid(Claim claim, @Nullable Player p) {
         Location greater = claim.getPosition().getGreaterBoundaryCorner();
         Location lower = claim.getPosition().getLesserBoundaryCorner();
         //Size
         return isLocationValid(greater, lower, p, null);
     }
 
-    public CLAIM_ERRORS isLocationValid(Location greater, Location lower, Player p, Claim claimIgnored) {
+    public CLAIM_ERRORS isLocationValid(Location greater, Location lower, @Nullable Player p, Claim claimIgnored) {
         //Size
         if (Math.abs(greater.getBlockX() - lower.getBlockX()) < 10 || Math.abs(greater.getBlockZ() - lower.getBlockZ()) < 10) {
-            Visualization.fromLocation(lower, greater, p.getLocation().getBlockY(), VisualizationType.ERROR_SMALL, p.getLocation()).apply(p);
+            if (p != null)
+                Visualization.fromLocation(lower, greater, p.getLocation().getBlockY(), VisualizationType.ERROR_SMALL, p.getLocation()).apply(p);
             return CLAIM_ERRORS.SIZE_SMALL;
         } else if (Math.abs(greater.getBlockX() - lower.getBlockX()) > claim_maxSize || Math.abs(greater.getBlockZ() - lower.getBlockZ()) > claim_maxSize) {
-            Visualization.fromLocation(lower, greater, p.getLocation().getBlockY(), VisualizationType.ERROR_LARGE, p.getLocation()).apply(p);
+            if (p != null)
+                Visualization.fromLocation(lower, greater, p.getLocation().getBlockY(), VisualizationType.ERROR_LARGE, p.getLocation()).apply(p);
             return CLAIM_ERRORS.SIZE_LARGE;
         }
         //Overlapping
@@ -74,7 +77,8 @@ public class ClaimHandler {
             int y3 = lower_2.getBlockZ();
             int y4 = greater_2.getBlockZ();
             if (!(x3 > x2 || y3 > y2 || x1 > x4 || y1 > y4)) {
-                Visualization.fromClaim(_claim, p.getLocation().getBlockY(), VisualizationType.ERROR, p.getLocation()).apply(p);
+                if (p != null)
+                    Visualization.fromClaim(_claim, p.getLocation().getBlockY(), VisualizationType.ERROR, p.getLocation()).apply(p);
                 return CLAIM_ERRORS.OVERLAPPING;
             }
         }
