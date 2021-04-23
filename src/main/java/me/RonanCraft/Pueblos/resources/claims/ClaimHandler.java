@@ -1,9 +1,9 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
-import me.RonanCraft.Pueblos.resources.files.FileOther;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -19,7 +19,6 @@ import java.util.*;
 public class ClaimHandler {
     private final List<Claim> claims = new ArrayList<>();
     private int claim_maxSize = 256;
-    private final List<UUID> adminClaimMode = new ArrayList<>();
 
     public void load() {
         claims.clear();
@@ -88,7 +87,7 @@ public class ClaimHandler {
     public List<Claim> getClaims(UUID uuid) {
         List<Claim> claims = new ArrayList<>();
         for (Claim claim : this.claims)
-            if (claim.ownerId.equals(uuid))
+            if (claim.getOwnerID().equals(uuid))
                 claims.add(claim);
         return claims;
     }
@@ -141,21 +140,10 @@ public class ClaimHandler {
         }
     }
 
-    public Claim claimCreate(UUID owner, String name, ClaimPosition position) {
-        if (adminClaimMode.contains(owner))
+    public Claim claimCreate(UUID owner, String name, ClaimPosition position, PlayerClaimInteraction.CLAIM_MODE mode) {
+        if (owner == null || mode == PlayerClaimInteraction.CLAIM_MODE.ADMIN)
             return new Claim(position);
         else
             return new Claim(owner, name, position);
-    }
-
-    public void toggleAdminClaimMode(UUID playerId) {
-        if (!adminClaimMode.contains(playerId))
-            adminClaimMode.add(playerId);
-        else
-            adminClaimMode.remove(playerId);
-    }
-
-    public void removeAdminClaimMode(UUID playerId) {
-        adminClaimMode.remove(playerId);
     }
 }

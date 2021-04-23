@@ -5,6 +5,7 @@ import me.RonanCraft.Pueblos.player.events.custom.EventClaimResize;
 import me.RonanCraft.Pueblos.player.events.custom.EventClaimTeleportTo;
 import me.RonanCraft.Pueblos.player.events.custom.EventMemberLeave;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimInfo;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,7 +21,7 @@ public class HelperEvent {
         return (Cancellable) event;
     }
 
-    public static Cancellable claimResize(Claim claim, Player editor, Location loc_1, Location loc_2) {
+    public static Cancellable claimResize(ClaimInfo claim, Player editor, Location loc_1, Location loc_2) {
         Event event = new EventClaimResize(claim, editor, loc_1, loc_2);
         Bukkit.getPluginManager().callEvent(event);
         return (Cancellable) event;

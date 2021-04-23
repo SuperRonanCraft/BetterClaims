@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.player.events.custom;
 
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimInfo;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -12,7 +13,7 @@ public class EventClaimResize extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
 
     private boolean cancelled;
-    private final Claim claim;
+    private final ClaimInfo claim;
     private final Player editor;
     private final Location newLoc_1;
     private final Location newLoc_2;
@@ -22,7 +23,7 @@ public class EventClaimResize extends Event implements Cancellable {
      * @param claim The claim that was just created
      * @param editor The player who is changing the size of this claim
      */
-    public EventClaimResize(Claim claim, Player editor, Location loc_1, Location loc_2) {
+    public EventClaimResize(ClaimInfo claim, Player editor, Location loc_1, Location loc_2) {
         this.claim = claim;
         this.editor = editor;
         this.newLoc_1 = loc_1;
@@ -51,7 +52,7 @@ public class EventClaimResize extends Event implements Cancellable {
         return editor;
     }
 
-    public Claim getClaim() {
+    public ClaimInfo getClaim() {
         return claim;
     }
 

@@ -79,7 +79,7 @@ public class Message {
     //Claims
     private static String claims(String str, Claim claim, CLAIM_FLAG flag) {
         if (str.contains("%claim_name%"))
-            str = str.replace("%claim_name%", claim.getName());
+            str = str.replace("%claim_name%", claim.getClaimName());
         if (str.contains("%claim_location_world%"))
             str = str.replace("%claim_location_world%", claim.getPosition().getWorld().getName());
         if (str.contains("%claim_location%"))
@@ -87,7 +87,7 @@ public class Message {
         if (str.contains("%claim_members%"))
             str = str.replace("%claim_members%", String.valueOf(claim.getMembers().size()));
         if (str.contains("%claim_owner%"))
-            str = str.replace("%claim_owner%", String.valueOf(claim.ownerName));
+            str = str.replace("%claim_owner%", String.valueOf(claim.getOwnerName()));
         if (str.contains("%claim_requests%"))
             str = str.replace("%claim_requests%", String.valueOf(claim.getRequests().size()));
         if (str.contains("%claim_requests%"))

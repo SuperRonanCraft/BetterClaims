@@ -13,10 +13,18 @@ Messages:
     None: '&7You are not an owner or member of any claim!'
     NoPermission: '&7You are not a member of &f%claim_owner%&7''s pueblo!'
     Flag: '&7Claim flag &f%claim_flag% &7changed to &f%claim_flag_value%'
+    Mode:
+      Enabled:
+        Admin: '&fAdmin Mode &aenabled&f, any new claim you make will now be an admin claim'
+      Disabled:
+        Admin: '&fAdmin Mode &cdisabled&f, any new claim you make will now be a user claim'
+      Failed:
+        Item: '&fChanging your claim mode is disallowed! &7Please equip the claim item!'
+        Location: '&fChanging your claim mode is disallowed! &7Please !'
     Item:
       InClaim: '&7Right-Click a corner of this claim to change size!'
       NoClaim: '&7Right-Click two corners to make a claim!'
-      NotOwner: '&7This claim is not yours! You can''t resize it!'
+      NotOwner: '&7You are inside a claim which you cannot edit!'
     Create:
       Success: '&aSuccess! &7This &f%claim_width% x %claim_length% &7claim is now yours!'
       Failed:
@@ -31,6 +39,12 @@ Messages:
       Notification:
         Removed: '&cYou were removed from &b%claim_name%&c! &7You can no longer visit here!'
         Leave: '&cMember &7%member_name% &chas left your pueblo!'
+  Convert:
+    Started: '&fConversion for the plugin &7%plugin% &fhas begun...'
+    Finished: '&fConversion for the plugin &7%plugin% &fhas finished!'
+    Failed: '&fConversion for the claim id &7%claim%&f for the plugin &7%plugin% &cFAILED &fto convert! &7More info in console'
+    Success: '&fConversion for the claim id &7%claim%&f for the plugin &7%plugin% &aSUCCESSFULLY &fto converted!'
+    Unknown: '&7Unknown plugin %plugin% given, please choose from this list &f%list%'
   Request:
     New: '&aNew &frequest from &7%request_name% &fto join your pueblo!'
     Reminder: '&fYou have %claim_requests% request(s) pending!'
@@ -54,4 +68,4 @@ Help:
   AdminClaim: ' &7- &e/%command% adminclaim &7- Toggle claim-mode to admin claim'
 
 Usage:
-  Player: '&cUsage&7: /%command% player <player> [world] [biome1, biome2]'
+  Convert: '%prefix% &cUsage&7: /%command% convert <plugin_name>'

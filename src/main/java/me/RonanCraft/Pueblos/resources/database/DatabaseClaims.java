@@ -73,8 +73,8 @@ public class DatabaseClaims extends SQLite {
                 + ") VALUES(?, ?, ?, ?)";
         List<Object> params = new ArrayList<>() {{
                 //add(claim.ownerId != null ? claim.ownerId : "null");
-                add(claim.ownerId != null ? claim.ownerId : "null");
-                add(claim.ownerName);
+                add(claim.getOwnerID() != null ? claim.getOwnerID() : "null");
+                add(claim.getOwnerName());
                 add(HelperDate.getDate(claim.dateCreated));
                 add(claim.getPositionJSON());
         }};

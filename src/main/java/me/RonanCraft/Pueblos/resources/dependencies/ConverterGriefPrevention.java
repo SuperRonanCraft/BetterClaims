@@ -5,12 +5,11 @@ import me.RonanCraft.Pueblos.resources.claims.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.claims.ClaimPosition;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -39,19 +38,20 @@ public class ConverterGriefPrevention {
                 ClaimPosition position = getPosition(config);
                 UUID uuid = getID(config);
                 Claim claim;
-                claim = claimHandler.claimCreate(uuid, null, position);
+                claim = claimHandler.claimCreate(uuid, null, position, null);
                 CLAIM_ERRORS error = claimHandler.uploadClaim(claim, null);
                 if (error != CLAIM_ERRORS.NONE) {
                     Pueblos.getInstance().getLogger().warning(error.getMsg(claim));
-                    error.sendMsg(converter, claim);
+                    //error.sendMsg(converter, claim);
+                    converter.sendMessage(MessagesCore.CONVERT_FAILED.get(null).replace("%claim%", f.getName()).replace("%plugin%", "GriefPrevention"));
+                    Pueblos.getInstance().getLogger().severe(error.getMsg(claim));
                 } else {
-                    converter.sendMessage("Successfully converted " + f.getName());
+                    converter.sendMessage(MessagesCore.CONVERT_SUCCESS.get(null).replace("%claim%", f.getName()).replace("%plugin%", "GriefPrevention"));
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                String msg = "Unable to convert the file " + f.getName() + " as a Pueblos claim!";
-                converter.sendMessage(msg);
-                Pueblos.getInstance().getLogger().severe(msg);
+                converter.sendMessage(MessagesCore.CONVERT_FAILED.get(null).replace("%claim%", f.getName()).replace("%plugin%", "GriefPrevention"));
+                e.printStackTrace();
             }
         }
     }

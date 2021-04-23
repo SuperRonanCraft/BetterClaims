@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
@@ -8,7 +9,6 @@ import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 
 import java.util.Calendar;
 
@@ -79,10 +79,10 @@ public class HelperClaim {
         }
     }
 
-    public static CLAIM_ERRORS createClaim(Player owner, Location pos1, Location pos2, boolean sendMsg) {
+    public static CLAIM_ERRORS createClaim(Player owner, Location pos1, Location pos2, boolean sendMsg, PlayerClaimInteraction.CLAIM_MODE mode) {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
-        Claim claim = handler.claimCreate(owner.getUniqueId(), owner.getName(), new ClaimPosition(owner.getWorld(), pos1, pos2));
+        Claim claim = handler.claimCreate(owner.getUniqueId(), owner.getName(), new ClaimPosition(owner.getWorld(), pos1, pos2), mode);
         if (!HelperEvent.claimCreate(claim, owner).isCancelled()) {
             if (claim != null) {
                 error = handler.uploadClaim(claim, owner);

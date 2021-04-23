@@ -3,16 +3,14 @@ package me.RonanCraft.Pueblos.resources.claims;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 public class ClaimMembers {
     private final List<ClaimMember> members = new ArrayList<>();
 
-    private final Claim claim;
+    private final ClaimInfo claim;
 
-    ClaimMembers(Claim claim) {
+    ClaimMembers(ClaimInfo claim) {
         this.claim = claim;
     }
 
@@ -35,7 +33,7 @@ public class ClaimMembers {
     }
 
     public boolean isMember(Player p) {
-        if (p.getUniqueId().equals(claim.ownerId))
+        if (p.getUniqueId().equals(claim.getOwnerID()))
             return true;
         for (ClaimMember member : members)
             if (member.uuid.equals(p.getUniqueId()))

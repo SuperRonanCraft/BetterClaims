@@ -16,7 +16,7 @@ public class CmdAdminclaim implements PueblosCommand, PueblosCommandHelpable {
 
     public void execute(CommandSender sendi, String label, String[] args) {
         Player p = (Player) sendi;
-        getPl().getSystems().getClaimHandler().toggleAdminClaimMode(p.getUniqueId());
+        getPl().getSystems().getEvents().toggleAdminClaim(p);
     }
 
     public boolean permission(CommandSender sendi) {

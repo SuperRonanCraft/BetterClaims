@@ -9,7 +9,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class PlayerClaimInteraction {
@@ -56,8 +55,17 @@ public class PlayerClaimInteraction {
         locked = true;
     }
 
-    enum CLAIM_MODE {
+    public void reset() {
+        locked = false;
+        locations.clear();
+        if (mode == CLAIM_MODE.EDIT)
+            mode = CLAIM_MODE.CREATE;
+    }
+
+    public enum CLAIM_MODE {
         EDIT,
-        CREATE
+        CREATE,
+        ADMIN,
+        SUBCLAIM
     }
 }

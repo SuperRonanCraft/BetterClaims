@@ -4,7 +4,6 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.*;
-import me.RonanCraft.Pueblos.resources.files.FileOther;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -13,11 +12,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.InventoryHolder;
 
@@ -114,15 +110,14 @@ public class EventInteract {
         if (!listener.claimInteraction.containsKey(p))
             listener.claimInteraction.put(p, new PlayerClaimInteraction(p, PlayerClaimInteraction.CLAIM_MODE.CREATE));
         PlayerClaimInteraction claimInteraction = listener.claimInteraction.get(p);
-        //Can we create a claim?
-        if (!claimInteraction.locked) {
-            cancelInteraction(p, 60L);
+        if (!claimInteraction.locked) { //Are we NOT locked from doing anything?
+            resetInteraction(p, 60L);
             CLAIM_ERRORS error = claimInteraction.addLocation(p, loc);
             if (error == CLAIM_ERRORS.NONE) {
                 List<Location> corners = claimInteraction.locations;
                 if (corners.size() >= 2) { //Create claim
                     if (claimInteraction.mode == PlayerClaimInteraction.CLAIM_MODE.CREATE) {
-                        error = HelperClaim.createClaim(p, corners.get(0), corners.get(1), false);
+                        error = HelperClaim.createClaim(p, corners.get(0), corners.get(1), false, claimInteraction.mode);
                     } else if (claimInteraction.mode == PlayerClaimInteraction.CLAIM_MODE.EDIT) { //Edit claim size mode
                         error = resizeClaim(p, claimInteraction.editing, corners);
                     }
@@ -132,12 +127,12 @@ public class EventInteract {
                     Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
                 }
                 if (claimInteraction.locked)
-                    cancelInteraction(p, 2L);
+                    resetInteraction(p, 2L);
             } else if (error == CLAIM_ERRORS.LOCATION_ALREADY_EXISTS) {
                 Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
             } else if (error == CLAIM_ERRORS.OVERLAPPING) {
                 claimInteraction.lock();
-                cancelInteraction(p, 2L);
+                resetInteraction(p, 2L);
             }
             error.sendMsg(p, null);
         }
@@ -173,11 +168,12 @@ public class EventInteract {
         return error;
     }
 
-    private void cancelInteraction(Player p, Long time) {
+    //Reset all locations, but keep out edit mode (admin, normal, subclaim)
+    private void resetInteraction(Player p, Long time) {
         if (cancelTimers.containsKey(p))
             Bukkit.getScheduler().cancelTask(cancelTimers.get(p));
         cancelTimers.put(p, Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
-            listener.claimInteraction.remove(p);
+            listener.claimInteraction.get(p).reset();
         }, time * 20L));
     }
 }

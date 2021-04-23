@@ -3,14 +3,21 @@ package me.RonanCraft.Pueblos.player.command.types;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandEnableable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
+import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.dependencies.ConverterGriefPrevention;
+import me.RonanCraft.Pueblos.resources.files.msgs.Message;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesUsage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CmdConvert implements PueblosCommand, PueblosCommandEnableable {
+import java.util.ArrayList;
+import java.util.List;
+
+public class CmdConvert implements PueblosCommand, PueblosCommandEnableable, PueblosCommandTabComplete {
 
     public String getName() {
         return "convert";
@@ -18,11 +25,24 @@ public class CmdConvert implements PueblosCommand, PueblosCommandEnableable {
 
     public void execute(CommandSender sendi, String label, String[] args) {
         Player p = (Player) sendi;
-        new ConverterGriefPrevention().load(p);
+        if (args.length >= 2) {
+            try {
+                CONVERTIONS con = CONVERTIONS.valueOf(args[1].toUpperCase());
+                switch (con) {
+                    case GRIEFPREVENTION:
+                        new ConverterGriefPrevention().load(p); break;
+                    default:
+                        sendi.sendMessage("Not yet finished/implemented!");
+                }
+            } catch (IllegalArgumentException e) {
+                MessagesCore.CONVERT_UNKNOWN.send(sendi);
+            }
+        } else
+            MessagesUsage.CONVERT.send(sendi);
     }
 
     public boolean permission(CommandSender sendi) {
-        return PermissionNodes.ADMIN_CLAIM.check(sendi);
+        return PermissionNodes.ADMIN_CONVERT.check(sendi);
     }
 
     @Override
@@ -33,5 +53,17 @@ public class CmdConvert implements PueblosCommand, PueblosCommandEnableable {
     @Override
     public boolean isEnabled() {
         return ConverterGriefPrevention.pathExist();
+    }
+
+    @Override
+    public List<String> tabComplete(CommandSender sendi, String[] args) {
+        List<String> list = new ArrayList<>();
+        for (CONVERTIONS con : CONVERTIONS.values())
+            list.add(con.name().toLowerCase());
+        return list;
+    }
+
+    private enum CONVERTIONS {
+        GRIEFPREVENTION
     }
 }

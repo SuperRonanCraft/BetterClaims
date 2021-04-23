@@ -2,6 +2,7 @@ package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,7 +15,6 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
 
 import java.util.*;
 
@@ -37,6 +37,23 @@ public class EventListener implements Listener {
             Pueblos.getInstance().getServer().getPluginManager().registerEvents(this, Pueblos.getInstance());
         interact.load();
         items.load();
+    }
+
+    public void toggleAdminClaim(Player p) { //Can fail if not having the claim item equipped and has no locations
+        if (claimInteraction.containsKey(p)) {
+            PlayerClaimInteraction interaction = claimInteraction.get(p);
+            if (interaction.locations.isEmpty()) {
+                if (interaction.mode != PlayerClaimInteraction.CLAIM_MODE.ADMIN) {
+                    interaction.mode = PlayerClaimInteraction.CLAIM_MODE.ADMIN;
+                    MessagesCore.CLAIM_MODE_ENABLED_ADMIN.send(p);
+                } else {
+                    interaction.mode = PlayerClaimInteraction.CLAIM_MODE.CREATE;
+                    MessagesCore.CLAIM_MODE_DISABLED_ADMIN.send(p);
+                }
+            } else
+                MessagesCore.CLAIM_MODE_FAILED_LOCATION.send(p);
+        } else
+            MessagesCore.CLAIM_MODE_FAILED_ITEM.send(p);
     }
 
     //Player Interact

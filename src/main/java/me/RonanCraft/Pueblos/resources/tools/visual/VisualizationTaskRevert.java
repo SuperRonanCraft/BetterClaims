@@ -1,11 +1,7 @@
 package me.RonanCraft.Pueblos.resources.tools.visual;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-
-import java.util.Collections;
 
 class VisualizationTaskRevert implements Runnable {
     private final Visualization visualization;

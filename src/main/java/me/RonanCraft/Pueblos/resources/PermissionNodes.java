@@ -10,9 +10,10 @@ public enum PermissionNodes {
     REQUEST("request"),
     UPDATE("update"),
     ADMIN_CLAIM("admin.claim"),
+    ADMIN_CONVERT("admin.convert"),
     ADMIN_OVERRIDE("admin.override");
 
-    public String node;
+    public final String node;
 
     PermissionNodes(String node) {
         this.node = "pueblos." + node;

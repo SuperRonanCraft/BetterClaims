@@ -1,7 +1,6 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
@@ -9,13 +8,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 
 import java.util.*;
 
-public class Claim {
-    public final UUID ownerId;
-    public final String ownerName;
+public class Claim implements ClaimInfo {
+    private final UUID ownerId;
+    private final String ownerName;
     public long claimId; //ID given by the database
     //Claim Information
     private final boolean adminClaim;
@@ -37,6 +35,22 @@ public class Claim {
 
     Claim(ClaimPosition position) {
         this(null, null, position);
+    }
+
+    //Get
+    @Override
+    public UUID getOwnerID() {
+        return ownerId;
+    }
+
+    @Override
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    @Override
+    public String getClaimName() {
+        return name != null ? name : (ownerName != null ? ownerName : (!isAdminClaim() ? getOwner().getName() : "Admin Claim"));
     }
 
     //Is
@@ -82,10 +96,6 @@ public class Claim {
         return JSONEncoding.getJsonFromClaim(position);
     }
 
-    public String getName() {
-        return name != null ? name : (ownerName != null ? ownerName : (!isAdminClaim() ? getOwner().getName() : "Admin Claim"));
-    }
-
     public List<ClaimMember> getMembers() {
         return members.getMembers();
     }
@@ -127,14 +137,17 @@ public class Claim {
     }
 
     //Database
+    @Override
     public void updated() {
         updated = true;
     }
 
+    @Override
     public boolean wasUpdated() {
         return updated;
     }
 
+    @Override
     public void uploaded() {
         updated = false;
     }
