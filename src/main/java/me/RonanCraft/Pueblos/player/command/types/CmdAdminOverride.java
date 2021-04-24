@@ -4,28 +4,27 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CmdAdminclaim implements PueblosCommand, PueblosCommandHelpable {
+public class CmdAdminOverride implements PueblosCommand, PueblosCommandHelpable {
 
     public String getName() {
-        return "adminclaim";
+        return "adminoverride";
     }
 
     public void execute(CommandSender sendi, String label, String[] args) {
         Player p = (Player) sendi;
-        getPl().getSystems().getEvents().toggleAdminClaim(p);
+        getPl().getSystems().getPlayerInfo().addOverride(p);
     }
 
     public boolean permission(CommandSender sendi) {
-        return PermissionNodes.ADMIN_CLAIM.check(sendi);
+        return PermissionNodes.ADMIN_OVERRIDE.check(sendi);
     }
 
     @Override
     public String getHelp() {
-        return MessagesHelp.ADMIN_CLAIM.get();
+        return MessagesHelp.ADMIN_OVERRIDE.get();
     }
 
     @Override

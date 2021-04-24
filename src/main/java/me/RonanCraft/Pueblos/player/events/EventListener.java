@@ -15,6 +15,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.*;
 
@@ -29,7 +30,7 @@ public class EventListener implements Listener {
     EventDamage damage = new EventDamage(this);
     EventClick click = new EventClick();
     EventClose close = new EventClose();
-    EventJoin join = new EventJoin();
+    EventJoinLeave joinLeave = new EventJoinLeave();
     EventItems items = new EventItems(this);
 
     public void load(boolean reload) {
@@ -129,10 +130,15 @@ public class EventListener implements Listener {
         close.exit(e);
     }
 
-    //Player Join Event
+    //Player Join/Quit Event
     @EventHandler
     private void onJoin(PlayerJoinEvent e) {
-        join.event(e);
+        joinLeave.join(e);
+    }
+
+    @EventHandler
+    private void onQuit(PlayerQuitEvent e) {
+        joinLeave.leave(e);
     }
 
     //Tools

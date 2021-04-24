@@ -65,7 +65,10 @@ Help:
   List: ' &7- &e/%command% list &7- List all claims you are allowed in'
   Request: ' &7- &e/%command% request &7- Request to join a claim'
   Flags: ' &7- &e/%command% flags &7- Change claim flags'
+  Convert: ' &7- &e/%command% convert <plugin_name> &7- Convert the plugins claims into Pueblos claims'
+  ClaimItem: ' &7- &e/%command% claimitem &7- Get a copy of the claiming item'
   AdminClaim: ' &7- &e/%command% adminclaim &7- Toggle claim-mode to admin claim'
+  AdminOverride: ' &7- &e/%command% adminoverride &7- Enable the ability to edit in any claim'
 
 Usage:
-  Convert: '%prefix% &cUsage&7: /%command% convert <plugin_name>'
+  Convert: '&cUsage&7: /%command% convert <plugin_name>'

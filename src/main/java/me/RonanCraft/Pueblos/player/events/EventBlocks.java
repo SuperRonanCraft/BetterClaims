@@ -1,5 +1,6 @@
 package me.RonanCraft.Pueblos.player.events;
 
+import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.bukkit.entity.Player;
@@ -30,6 +31,8 @@ public class EventBlocks {
         if (claim == null)
             return false;
         else if (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))
+            return false;
+        else if (Pueblos.getInstance().getSystems().getPlayerInfo().isOverriding(p))
             return false;
         else
             return !claim.isMember(p);

@@ -9,6 +9,7 @@ public enum PermissionNodes {
     RELOAD("reload"),
     REQUEST("request"),
     UPDATE("update"),
+    CLAIM_ITEM("item"),
     ADMIN_CLAIM("admin.claim"),
     ADMIN_CONVERT("admin.convert"),
     ADMIN_OVERRIDE("admin.override");

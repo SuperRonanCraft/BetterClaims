@@ -10,7 +10,10 @@ public enum MessagesHelp {
     REQUEST("Request"),
     FLAGS("Flags"),
     PREFIX("Prefix"),
-    ADMIN_CLAIM("AdminClaim");
+    CONVERT("Convert"),
+    CLAIM_ITEM("ClaimItem"),
+    ADMIN_CLAIM("AdminClaim"),
+    ADMIN_OVERRIDE("AdminOverride");
 
     String section;
 

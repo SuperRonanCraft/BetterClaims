@@ -4,14 +4,13 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CmdAdminclaim implements PueblosCommand, PueblosCommandHelpable {
+public class CmdClaimItem implements PueblosCommand, PueblosCommandHelpable {
 
     public String getName() {
-        return "adminclaim";
+        return "claimitem";
     }
 
     public void execute(CommandSender sendi, String label, String[] args) {
@@ -20,12 +19,12 @@ public class CmdAdminclaim implements PueblosCommand, PueblosCommandHelpable {
     }
 
     public boolean permission(CommandSender sendi) {
-        return PermissionNodes.ADMIN_CLAIM.check(sendi);
+        return PermissionNodes.CLAIM_ITEM.check(sendi);
     }
 
     @Override
     public String getHelp() {
-        return MessagesHelp.ADMIN_CLAIM.get();
+        return MessagesHelp.CLAIM_ITEM.get();
     }
 
     @Override

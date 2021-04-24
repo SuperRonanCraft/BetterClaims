@@ -7,6 +7,7 @@ import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,8 @@ public class CmdHelp implements PueblosCommand, PueblosCommandHelpable {
     }
 
     public void execute(CommandSender sendi, String label, String[] args) {
+        if (!(sendi instanceof Player)) //Console warning message
+            sendi.sendMessage("Console might not be able to execute some of these commands!");
         List<String> list = new ArrayList<>();
         list.add(MessagesHelp.PREFIX.get());
         for (PueblosCommand cmd : Pueblos.getInstance().getCmd().commands)

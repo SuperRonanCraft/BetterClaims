@@ -7,10 +7,15 @@ import me.RonanCraft.Pueblos.resources.files.FileOther;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 
-public class EventJoin {
+public class EventJoinLeave {
 
-    void event(PlayerJoinEvent e) {
+    void leave(PlayerQuitEvent e) {
+        Pueblos.getInstance().getSystems().getPlayerInfo().clear(e.getPlayer());
+    }
+
+    void join(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         updater(p);
     }

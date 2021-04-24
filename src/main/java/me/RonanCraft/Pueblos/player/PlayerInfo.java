@@ -13,11 +13,12 @@ import java.util.List;
 
 public class PlayerInfo {
     private final HashMap<Player, Visualization> visualization = new HashMap<>();
-    private final HashMap<Player, Boolean> overriding = new HashMap<>();
+    private final List<Player> overriding = new ArrayList<>();
     private final HashMap<Player, Inventory> inventory = new HashMap<>();
     private final HashMap<Player, List<PueblosInventory>> previous = new HashMap<>();
     private final HashMap<Player, PueblosInventory> current = new HashMap<>();
 
+    //Visualization
     public void addVisualization(Player p, Visualization vis) {
         visualization.put(p, vis);
     }
@@ -30,6 +31,7 @@ public class PlayerInfo {
         visualization.remove(p);
     }
 
+    //Inventory Menus
     public void setInventory(Player p, Inventory inv, PueblosInventory pinv, boolean from_command) {
         if (from_command)
             clear(p);
@@ -80,6 +82,16 @@ public class PlayerInfo {
         current.remove(p);
     }
 
+    //Overrides
+    public void addOverride(Player p) {
+        if (!overriding.contains(p))
+            overriding.add(p);
+    }
+
+    public boolean isOverriding(Player p) {
+        return overriding.contains(p);
+    }
+
     public void clear() {
         visualization.clear();
         overriding.clear();
@@ -87,9 +99,10 @@ public class PlayerInfo {
         current.clear();
     }
 
-    private void clear(Player p) {
+    public void clear(Player p) {
         inventory.remove(p);
         current.remove(p);
         previous.remove(p);
+        overriding.remove(p);
     }
 }

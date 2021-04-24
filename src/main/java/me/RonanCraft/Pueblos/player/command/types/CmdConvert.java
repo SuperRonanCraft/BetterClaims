@@ -17,20 +17,19 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CmdConvert implements PueblosCommand, PueblosCommandEnableable, PueblosCommandTabComplete {
+public class CmdConvert implements PueblosCommand,PueblosCommandHelpable, PueblosCommandEnableable, PueblosCommandTabComplete {
 
     public String getName() {
         return "convert";
     }
 
     public void execute(CommandSender sendi, String label, String[] args) {
-        Player p = (Player) sendi;
         if (args.length >= 2) {
             try {
                 CONVERTIONS con = CONVERTIONS.valueOf(args[1].toUpperCase());
                 switch (con) {
                     case GRIEFPREVENTION:
-                        new ConverterGriefPrevention().load(p); break;
+                        new ConverterGriefPrevention().load(sendi); break;
                     default:
                         sendi.sendMessage("Not yet finished/implemented!");
                 }
@@ -38,16 +37,11 @@ public class CmdConvert implements PueblosCommand, PueblosCommandEnableable, Pue
                 MessagesCore.CONVERT_UNKNOWN.send(sendi);
             }
         } else
-            MessagesUsage.CONVERT.send(sendi);
+            MessagesUsage.CONVERT.send(sendi, label);
     }
 
     public boolean permission(CommandSender sendi) {
         return PermissionNodes.ADMIN_CONVERT.check(sendi);
-    }
-
-    @Override
-    public boolean isPlayerOnly() {
-        return true;
     }
 
     @Override
@@ -61,6 +55,11 @@ public class CmdConvert implements PueblosCommand, PueblosCommandEnableable, Pue
         for (CONVERTIONS con : CONVERTIONS.values())
             list.add(con.name().toLowerCase());
         return list;
+    }
+
+    @Override
+    public String getHelp() {
+        return MessagesHelp.CONVERT.get();
     }
 
     private enum CONVERTIONS {

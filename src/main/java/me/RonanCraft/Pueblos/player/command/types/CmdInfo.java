@@ -21,33 +21,31 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
 
     public void execute(CommandSender sendi, String label, String[] args) {
         ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
-        if (sendi instanceof Player) {
-            Player p = (Player) sendi;
-            Claim claim = handler.getClaim(p.getLocation());
-            if (claim != null) {
-                if (claim.isMember(p)) {
-                    //---- JUNK CLAIM MEMBER
-                    if (claim.getMembers().size() == 0) {
-                        ClaimMember member = new ClaimMember(p.getUniqueId(), p.getName(), Calendar.getInstance().getTime(), false, claim);
-                        member.setFlag(CLAIM_FLAG_MEMBER.ALLOW_BED, true, true);
-                        claim.addMember(member, true);
-                        Pueblos.getInstance().getSystems().getClaimDatabase().updateMembers(claim);
-                    }
-                    //----
-                    PueblosInventory.CLAIM.open(p, claim, true);
-                } else {
-                    MessagesCore.CLAIM_NOPERMISSION.send(sendi, claim);
+        Player p = (Player) sendi;
+        Claim claim = handler.getClaim(p.getLocation());
+        if (claim != null) {
+            if (claim.isMember(p)) {
+                //---- JUNK CLAIM MEMBER
+                if (claim.getMembers().size() == 0) {
+                    ClaimMember member = new ClaimMember(p.getUniqueId(), p.getName(), Calendar.getInstance().getTime(), false, claim);
+                    member.setFlag(CLAIM_FLAG_MEMBER.ALLOW_BED, true, true);
+                    claim.addMember(member, true);
+                    Pueblos.getInstance().getSystems().getClaimDatabase().updateMembers(claim);
                 }
+                //----
+                PueblosInventory.CLAIM.open(p, claim, true);
             } else {
-                List<Claim> claims = handler.getClaims(p.getUniqueId());
-                if (!claims.isEmpty()) {
-                    if (claims.size() == 1)
-                        PueblosInventory.CLAIM.open(p, claims.get(0), true);
-                    else
-                        PueblosInventory.CLAIM_SELECT.open(p, claims, true);
-                } else
-                    MessagesCore.CLAIM_NONE.send(sendi);
+                MessagesCore.CLAIM_NOPERMISSION.send(sendi, claim);
             }
+        } else {
+            List<Claim> claims = handler.getClaims(p.getUniqueId());
+            if (!claims.isEmpty()) {
+                if (claims.size() == 1)
+                    PueblosInventory.CLAIM.open(p, claims.get(0), true);
+                else
+                    PueblosInventory.CLAIM_SELECT.open(p, claims, true);
+            } else
+                MessagesCore.CLAIM_NONE.send(sendi);
         }
     }
 
