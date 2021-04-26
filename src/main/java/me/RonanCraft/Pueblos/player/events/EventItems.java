@@ -19,16 +19,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class EventItems implements Listener {
+public class EventItems implements Listener, PueblosEvents {
 
-    private final EventListener listener;
                         //Item, Player
     private final HashMap<UUID, UUID> items = new HashMap<>();
     private final HashMap<UUID, Integer> schedule = new HashMap<>();
-
-    EventItems(EventListener listener) {
-        this.listener = listener;
-    }
 
     void load() {
         if (Pueblos.getInstance().getSystems().getSettings().getBoolean(Settings.SETTING.PLAYER_PROTECTDEATHDROP))
@@ -53,7 +48,7 @@ public class EventItems implements Listener {
             remove(e.getItem().getUniqueId());
             return; //Let players who died in another claim pick up their items
         }
-        Claim claim = listener.getClaim(e.getItem().getLocation());
+        Claim claim = getClaim(e.getItem().getLocation());
         if (claim != null && (!(e.getEntity() instanceof Player) || !claim.isMember((Player) e.getEntity())))
             e.setCancelled(true);
     }

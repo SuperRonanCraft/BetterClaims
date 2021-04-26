@@ -20,12 +20,7 @@ import java.util.List;
 
 public class EventFallingBlock implements PueblosEvents {
 
-    private final EventListener listener;
     private final HashMap<Entity, Integer> damageCooldown = new HashMap<>();
-
-    EventFallingBlock(EventListener listener) {
-        this.listener = listener;
-    }
 
     public void onEntityChangeBLock(EntityChangeBlockEvent event) {
         if (event.getEntityType() == EntityType.ENDERMAN) {

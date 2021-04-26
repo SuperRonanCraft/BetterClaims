@@ -13,12 +13,6 @@ import java.util.List;
 
 public class EventPistons implements PueblosEvents {
 
-    private final EventListener listener;
-
-    EventPistons(EventListener listener) {
-        this.listener = listener;
-    }
-
     void onPiston(BlockPistonExtendEvent e) {
         pistonEvent(e, e.getBlocks(), e.getDirection());
     }

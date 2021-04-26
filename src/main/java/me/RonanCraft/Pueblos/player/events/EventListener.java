@@ -16,23 +16,27 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.world.PortalCreateEvent;
 
 import java.util.*;
 
 public class EventListener implements Listener {
 
     HashMap<Player, PlayerClaimInteraction> claimInteraction = new HashMap<>();
+
+    //Events
     EventBlocks blocks = new EventBlocks();
     EventInteract interact = new EventInteract(this);
     EventItemChange itemChange = new EventItemChange(this);
-    EventPistons pistons = new EventPistons(this);
+    EventPistons pistons = new EventPistons();
     EventExplosion explosion = new EventExplosion();
     EventDamage damage = new EventDamage();
     EventClick click = new EventClick();
     EventClose close = new EventClose();
     EventJoinLeave joinLeave = new EventJoinLeave();
-    EventItems items = new EventItems(this);
-    EventFallingBlock fallingBlock = new EventFallingBlock(this);
+    EventItems items = new EventItems();
+    EventFallingBlock fallingBlock = new EventFallingBlock();
+    EventPortal portal = new EventPortal();
 
     public void load(boolean reload) {
         if (!reload)
@@ -143,9 +147,14 @@ public class EventListener implements Listener {
     }
 
     //Falling Blocks
-
     @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
     private void fallingBlock(EntityChangeBlockEvent e) {
         fallingBlock.onEntityChangeBLock(e);
+    }
+
+    //Nether Portal
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    private void portal(PortalCreateEvent e) {
+        portal.onPortal(e);
     }
 }
