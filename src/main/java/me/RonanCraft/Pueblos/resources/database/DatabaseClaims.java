@@ -81,14 +81,27 @@ public class DatabaseClaims extends SQLite {
         return sqlCreateClaim(sql, params, claim);
     }
 
-    //Set Open/Closed Status
-    public boolean updateMembers(Claim claim) {
+    //Create a claim
+    public boolean deleteClaim(Claim claim) {
+        String pre = "DELETE FROM ";
+        //if (sqlEnabled) pre = "INSERT IGNORE INTO ";
+        //else pre = "INSERT OR IGNORE INTO ";
+        String sql = pre + table + " WHERE "
+                + COLUMNS.CLAIM_ID.name + " = ?";
+        List<Object> params = new ArrayList<>() {{
+            add(claim.claimId);
+        }};
+        return sqlCreateClaim(sql, params, claim);
+    }
+
+    //Update Members
+    /*public boolean updateMembers(Claim claim) {
         String sql = "UPDATE " + table + " SET " + COLUMNS.MEMBERS.name + " = ?  WHERE" + " " + COLUMNS.CLAIM_ID.name + " = ?";
         List<Object> params = new ArrayList<>() {{
             add(JSONEncoding.getJsonFromMembers(claim.getMembers()));
             add(claim.claimId); }};
         return sqlUpdate(sql, params);
-    }
+    }*/
 
     //Claim Saving
     void saveClaim(Claim claim) {

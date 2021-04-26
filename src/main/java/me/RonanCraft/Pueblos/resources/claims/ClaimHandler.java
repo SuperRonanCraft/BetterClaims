@@ -5,7 +5,9 @@ import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
+import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
+import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
@@ -22,6 +24,10 @@ import java.util.*;
 public class ClaimHandler {
     private final List<Claim> claims = new ArrayList<>();
     private int claim_maxSize = 256;
+
+    private DatabaseClaims getDatabase() {
+        return Pueblos.getInstance().getSystems().getClaimDatabase();
+    }
 
     public void load() {
         claims.clear();
@@ -73,13 +79,23 @@ public class ClaimHandler {
         CLAIM_ERRORS error = isLocationValid(claim, p);
         if (error == CLAIM_ERRORS.NONE) {
             claim.dateCreated = Calendar.getInstance().getTime();
-            if (Pueblos.getInstance().getSystems().getClaimDatabase().createClaim(claim)) {
+            if (getDatabase().createClaim(claim)) {
                 claims.add(claim);
-                ClaimEvents.create(claim);
+                HelperEvent.claimCreate(claim, null);
                 return CLAIM_ERRORS.NONE;
             } else
                 return CLAIM_ERRORS.DATABASE_ERROR;
         }
+        return error;
+    }
+
+    public CLAIM_ERRORS deleteClaim(Claim claim) {
+        CLAIM_ERRORS error = CLAIM_ERRORS.NONE;
+        if (getDatabase().deleteClaim(claim)) {
+            claims.remove(claim);
+            HelperEvent.claimDelete(claim);
+        } else
+            error = CLAIM_ERRORS.DATABASE_ERROR;
         return error;
     }
 

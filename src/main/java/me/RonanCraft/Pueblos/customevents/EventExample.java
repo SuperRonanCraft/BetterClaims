@@ -1,4 +1,4 @@
-package me.RonanCraft.Pueblos.player.events.custom;
+package me.RonanCraft.Pueblos.customevents;
 
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.bukkit.entity.Player;
@@ -6,7 +6,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class EventClaimCreate extends Event implements Cancellable {
+public class EventExample extends Event implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
 
@@ -19,7 +19,7 @@ public class EventClaimCreate extends Event implements Cancellable {
      * @param claim The claim that was just created
      * @param creator The player who created this claim
      */
-    public EventClaimCreate(Claim claim, Player creator) {
+    public EventExample(Claim claim, Player creator) {
         this.claim = claim;
         this.creator = creator;
     }
