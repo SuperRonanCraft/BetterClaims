@@ -104,6 +104,11 @@ public class Claim implements ClaimInfo {
         return members.getMember(p);
     }
 
+    public boolean canBuild(Player p) {
+        ClaimMember member = getMember(p);
+        return member != null;
+    }
+
     public List<ClaimRequest> getRequests() {
         return requests;
     }

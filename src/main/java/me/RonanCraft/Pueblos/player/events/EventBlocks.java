@@ -6,36 +6,18 @@ import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.*;
 
-public class EventBlocks {
-
-    private final EventListener listener;
-
-    EventBlocks(EventListener listener) {
-        this.listener = listener;
-    }
+public class EventBlocks implements PueblosEvents {
 
     //Player Block Break
     void onBreak(BlockBreakEvent e) {
         if (!e.isCancelled())
-            e.setCancelled(cantBuilt(e, e.getPlayer()));
+            e.setCancelled(!allowBreak(e.getPlayer(), e.getBlock().getLocation()));
     }
 
     //Player Block Place
     void onPlace(BlockPlaceEvent e) {
         if (!e.isCancelled())
-            e.setCancelled(cantBuilt(e, e.getPlayer()));
-    }
-
-    boolean cantBuilt(BlockEvent e, Player p) {
-        Claim claim = listener.getClaim(e.getBlock().getLocation());
-        if (claim == null)
-            return false;
-        else if (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))
-            return false;
-        else if (Pueblos.getInstance().getSystems().getPlayerInfo().isOverriding(p))
-            return false;
-        else
-            return !claim.isMember(p);
+            e.setCancelled(!allowBreak(e.getPlayer(), e.getBlock().getLocation()));
     }
 
 }

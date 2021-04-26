@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class EventPistons {
+public class EventPistons implements PueblosEvents {
 
     private final EventListener listener;
 
@@ -47,7 +47,7 @@ public class EventPistons {
         //Blocks going between claimed and unclaimed land
         HashMap<Location, Boolean> locations_protected = new HashMap<>();
         for (Location loc : locations)
-            locations_protected.put(loc, listener.isProtected(loc));
+            locations_protected.put(loc, isProtected(loc));
 
         //Blocks going between unprotected and protected land
         boolean all_match = (locations_protected.containsValue(true) && !locations_protected.containsValue(false))

@@ -20,7 +20,7 @@ import org.bukkit.inventory.InventoryHolder;
 import java.util.HashMap;
 import java.util.List;
 
-public class EventInteract {
+public class EventInteract implements PueblosEvents {
 
     private final EventListener listener;
     private final HashMap<Player, Integer> cancelTimers = new HashMap<>();
@@ -45,9 +45,11 @@ public class EventInteract {
     void onInteract(PlayerInteractEvent e) {
         if (e.getClickedBlock() == null || e.isCancelled())
             return;
-        Block block = e.getClickedBlock();
-        Claim claim = listener.getClaim(block.getLocation());
-        if (claim == null || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(e.getPlayer()))) //No claim here or is an admin claim
+        //Block block = e.getClickedBlock();
+        //Claim claim = getClaim(block.getLocation());
+        if (!allowInteract(e.getPlayer(), e.getClickedBlock()))
+            e.setCancelled(true);
+        /*if (claim == null || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(e.getPlayer()))) //No claim here or is an admin claim
             return;
         else if (claim.isAdminClaim()) {
             e.setCancelled(true);
@@ -87,7 +89,7 @@ public class EventInteract {
                 Object flagValue = claim.getFlags().getFlag(flag); //Get the claims flag value
                 e.setCancelled(!(Boolean) flagValue);
             }
-        }
+        }*/
     }
 
     //Create a claim

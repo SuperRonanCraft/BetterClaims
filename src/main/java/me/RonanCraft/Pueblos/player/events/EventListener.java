@@ -22,16 +22,17 @@ import java.util.*;
 public class EventListener implements Listener {
 
     HashMap<Player, PlayerClaimInteraction> claimInteraction = new HashMap<>();
-    EventBlocks blocks = new EventBlocks(this);
+    EventBlocks blocks = new EventBlocks();
     EventInteract interact = new EventInteract(this);
     EventItemChange itemChange = new EventItemChange(this);
     EventPistons pistons = new EventPistons(this);
-    EventExplosion explosion = new EventExplosion(this);
-    EventDamage damage = new EventDamage(this);
+    EventExplosion explosion = new EventExplosion();
+    EventDamage damage = new EventDamage();
     EventClick click = new EventClick();
     EventClose close = new EventClose();
     EventJoinLeave joinLeave = new EventJoinLeave();
     EventItems items = new EventItems(this);
+    EventFallingBlock fallingBlock = new EventFallingBlock(this);
 
     public void load(boolean reload) {
         if (!reload)
@@ -58,17 +59,17 @@ public class EventListener implements Listener {
     }
 
     //Player Interact
-    @EventHandler (priority = EventPriority.HIGHEST)
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onInteract(PlayerInteractEvent e) {
         interact.onInteract(e);
     }
 
-    @EventHandler (priority = EventPriority.NORMAL)
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.NORMAL)
     void onInteractCreateClaim(PlayerInteractEvent e) {
         interact.onInteractCreateClaim(e);
     }
 
-    @EventHandler (priority = EventPriority.NORMAL)
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.NORMAL)
     void onItemChange(PlayerItemHeldEvent e) {
         itemChange.onItemChange(e);
     }
@@ -85,47 +86,47 @@ public class EventListener implements Listener {
     }*/
 
     //Explosion
-    @EventHandler (priority = EventPriority.HIGHEST)
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onExplosion(EntityExplodeEvent e) {
         explosion.onExplosion(e);
     }
 
     //Pistons
-    @EventHandler (priority = EventPriority.HIGHEST)
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onPiston(BlockPistonExtendEvent e) {
         pistons.onPiston(e);
     }
 
-    @EventHandler (priority = EventPriority.HIGHEST)
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onPiston(BlockPistonRetractEvent e) {
         pistons.onPiston(e);
     }
 
     //PvP
-    @EventHandler (priority = EventPriority.HIGHEST)
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onDamage(EntityDamageByEntityEvent e) {
         damage.onDamage(e);
     }
 
     //Blocks
-    @EventHandler (priority = EventPriority.HIGHEST)
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onBreak(BlockBreakEvent e) {
         blocks.onBreak(e);
     }
 
-    @EventHandler (priority = EventPriority.HIGHEST)
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onPlace(BlockPlaceEvent e) {
         blocks.onPlace(e);
     }
 
     //Click Inventory
-    @EventHandler (priority = EventPriority.HIGH)
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGH)
     void onClick(InventoryClickEvent e) {
         click.click(e);
     }
 
     //Close Inventory
-    @EventHandler (priority = EventPriority.HIGH)
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGH)
     void onClose(InventoryCloseEvent e) {
         close.exit(e);
     }
@@ -141,20 +142,10 @@ public class EventListener implements Listener {
         joinLeave.leave(e);
     }
 
-    //Tools
-    boolean isProtected(Location loc) {
-        return getClaim(loc) != null;
-    }
+    //Falling Blocks
 
-    void sendNotAllowedMsg(Player p, Claim claim) {
-        p.sendMessage("You are not allowed to do this here! If you believe you should, send a request to join this claim!");
-    }
-
-    Claim getClaim(Location loc) {
-        for (Claim claim : Pueblos.getInstance().getSystems().getClaimHandler().getClaims()) {
-            if (claim.contains(loc))
-                return claim;
-        }
-        return null;
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    private void fallingBlock(EntityChangeBlockEvent e) {
+        fallingBlock.onEntityChangeBLock(e);
     }
 }

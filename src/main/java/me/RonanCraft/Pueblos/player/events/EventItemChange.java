@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
-public class EventItemChange {
+public class EventItemChange implements PueblosEvents {
 
     private final EventListener listener;
     private final HashMap<Player, Integer> claimShowing = new HashMap<>();
@@ -29,7 +29,7 @@ public class EventItemChange {
         ItemStack item = e.getPlayer().getInventory().getItem(e.getNewSlot());
         if (item != null && item.getType().equals(getClaimItem()) && !listener.claimInteraction.containsKey(e.getPlayer())) {
             //Messages.core.sms(e.getPlayer(), "Shovel!");
-            Claim claim = listener.getClaim(e.getPlayer().getLocation());
+            Claim claim = getClaim(e.getPlayer().getLocation());
             showClaimLater(claim, e.getPlayer());
         } else
             listener.claimInteraction.remove(e.getPlayer());

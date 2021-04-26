@@ -11,14 +11,9 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.HashMap;
 
-public class EventDamage {
+public class EventDamage implements PueblosEvents {
 
-    private final EventListener listener;
     private final HashMap<Entity, Integer> damageCooldown = new HashMap<>();
-
-    EventDamage(EventListener listener) {
-        this.listener = listener;
-    }
 
     //Damage Entity (Mobs and Players)
     void onDamage(EntityDamageByEntityEvent e) {
@@ -35,9 +30,9 @@ public class EventDamage {
             return;
         }
 
-        Claim claim = listener.getClaim(damager.getLocation());
+        Claim claim = getClaim(damager.getLocation());
         if (claim == null)
-            claim = listener.getClaim(damaged.getLocation());
+            claim = getClaim(damaged.getLocation());
         if (claim != null) {
             if (damaged instanceof Player && damager instanceof Player) { //Player vs Player
                 if (((Boolean) claim.getFlags().getFlag(CLAIM_FLAG.PVP))) //PvP is allowed

@@ -2,6 +2,7 @@ package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
+import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
@@ -9,7 +10,9 @@ import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.InventoryHolder;
 
 import javax.annotation.Nullable;
 import java.sql.ResultSet;
@@ -27,6 +30,43 @@ public class ClaimHandler {
         claim_maxSize = Pueblos.getInstance().getSystems().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE);
         if (claim_maxSize < 10)
             claim_maxSize = 10;
+    }
+
+    public Claim loadClaim(ResultSet result) throws SQLException {
+        UUID id;
+        try {
+            id = UUID.fromString(result.getString(DatabaseClaims.COLUMNS.OWNER_UUID.name));
+        } catch (IllegalArgumentException e) {
+            id = UUID.randomUUID();
+        }
+        String name = result.getString(DatabaseClaims.COLUMNS.OWNER_NAME.name);
+        try {
+            Claim claim = new Claim(id, name, JSONEncoding.getPosition(result.getString(DatabaseClaims.COLUMNS.POSITION.name)));
+            //Members Load
+            List<ClaimMember> members = JSONEncoding.getMember(result.getString(DatabaseClaims.COLUMNS.MEMBERS.name), claim);
+            if (members != null)
+                for (ClaimMember member : members)
+                    claim.addMember(member, false);
+
+            //Flags Load
+            HashMap<CLAIM_FLAG, Object> flags = JSONEncoding.getFlags(result.getString(DatabaseClaims.COLUMNS.FLAGS.name));
+            if (flags != null)
+                for (Map.Entry<CLAIM_FLAG, Object> flag : flags.entrySet())
+                    claim.getFlags().setFlag(flag.getKey(), flag.getValue(), false);
+
+            //Join Requests Load
+            List<ClaimRequest> requests = JSONEncoding.getRequests(result.getString(DatabaseClaims.COLUMNS.REQUESTS.name), claim);
+            if (requests != null)
+                for (ClaimRequest request : requests)
+                    claim.addRequest(request, false);
+
+            claim.claimId = result.getInt(DatabaseClaims.COLUMNS.CLAIM_ID.name);
+            claim.dateCreated = HelperDate.getDate(result.getString(DatabaseClaims.COLUMNS.DATE.name));
+            return claim;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public CLAIM_ERRORS uploadClaim(Claim claim, @Nullable Player p) {
@@ -103,47 +143,68 @@ public class ClaimHandler {
         return claims;
     }
 
-    public Claim loadClaim(ResultSet result) throws SQLException {
-        UUID id;
-        try {
-            id = UUID.fromString(result.getString(DatabaseClaims.COLUMNS.OWNER_UUID.name));
-        } catch (IllegalArgumentException e) {
-            id = UUID.randomUUID();
-        }
-        String name = result.getString(DatabaseClaims.COLUMNS.OWNER_NAME.name);
-        try {
-            Claim claim = new Claim(id, name, JSONEncoding.getPosition(result.getString(DatabaseClaims.COLUMNS.POSITION.name)));
-            //Members Load
-            List<ClaimMember> members = JSONEncoding.getMember(result.getString(DatabaseClaims.COLUMNS.MEMBERS.name), claim);
-            if (members != null)
-                for (ClaimMember member : members)
-                    claim.addMember(member, false);
-
-            //Flags Load
-            HashMap<CLAIM_FLAG, Object> flags = JSONEncoding.getFlags(result.getString(DatabaseClaims.COLUMNS.FLAGS.name));
-            if (flags != null)
-                for (Map.Entry<CLAIM_FLAG, Object> flag : flags.entrySet())
-                    claim.getFlags().setFlag(flag.getKey(), flag.getValue(), false);
-            
-            //Join Requests Load
-            List<ClaimRequest> requests = JSONEncoding.getRequests(result.getString(DatabaseClaims.COLUMNS.REQUESTS.name), claim);
-            if (requests != null)
-                for (ClaimRequest request : requests)
-                    claim.addRequest(request, false);
-
-            claim.claimId = result.getInt(DatabaseClaims.COLUMNS.CLAIM_ID.name);
-            claim.dateCreated = HelperDate.getDate(result.getString(DatabaseClaims.COLUMNS.DATE.name));
-            return claim;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     public Claim claimCreate(UUID owner, String name, ClaimPosition position, PlayerClaimInteraction.CLAIM_MODE mode) {
         if (owner == null || mode == PlayerClaimInteraction.CLAIM_MODE.ADMIN)
             return new Claim(position);
         else
             return new Claim(owner, name, position);
+    }
+
+    public boolean allowBreak(Player p, Location block_location, Block block) {
+        Claim claim = getClaim(block_location);
+        if (claim == null)
+            return true;
+        else if (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))
+            return true;
+        else if (Pueblos.getInstance().getSystems().getPlayerInfo().isOverriding(p))
+            return true;
+        else
+            return claim.canBuild(p);
+    }
+
+    public boolean allowInteract(Player p, Block block) {
+        Claim claim = getClaim(block.getLocation());
+        if (claim == null || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) { //No claim here or is an admin claim
+            return true;
+        } else if (claim.isAdminClaim()) {
+            return false;
+        } else if (claim.isOwner(p)) {
+            return true;
+        }
+        //There is a claim, and not the owner
+        CLAIM_FLAG flag = null;
+        if (block.getType().name().contains("LEVER")) {
+            flag = CLAIM_FLAG.ALLOW_LEVER;
+        } else if (block.getType().name().contains("DOOR")) {
+            flag = CLAIM_FLAG.ALLOW_DOOR;
+        } else if (block.getType().name().contains("BUTTON")) {
+            flag = CLAIM_FLAG.ALLOW_BUTTON;
+        } else if (block.getType().name().contains("BED")) {
+            flag = CLAIM_FLAG.ALLOW_BED;
+        }
+        ClaimMember member = claim.getMember(p);
+        if (member != null) { //Is this player a member of this claim?
+            if (flag != null) {
+                //Check member flag value (if it exists)
+                CLAIM_FLAG_MEMBER memberFlag = flag.getMemberEquivalent();
+                Object flagValue = claim.getFlags().getFlag(flag); //Get the claims flag value
+                if (memberFlag != null)
+                    flagValue = member.getFlags().getOrDefault(memberFlag, memberFlag.getDefault()); //Get the members flag value
+                return ((Boolean) flagValue); //Are they allowed to do this here?
+            } else { //Blocks with inventories specific to claim members
+                CLAIM_FLAG_MEMBER memberFlag = null;
+                if (block.getState() instanceof InventoryHolder)
+                    memberFlag = CLAIM_FLAG_MEMBER.ALLOW_CHEST;
+                Object flagValue = null;
+                if (memberFlag != null)
+                    flagValue = member.getFlags().getOrDefault(memberFlag, memberFlag.getDefault());
+                if (flagValue != null)
+                    return ((Boolean) flagValue); //Are they allowed to do this here?
+            }
+            return true;
+        } else { //Cancel interactions if the claim flag is enabled
+            Object flagValue = claim.getFlags().getFlag(flag); //Get the claims flag value
+            return ((Boolean) flagValue);
+        }
     }
 }
