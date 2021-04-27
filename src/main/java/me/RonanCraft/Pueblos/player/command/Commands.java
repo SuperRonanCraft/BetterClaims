@@ -5,6 +5,7 @@ import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Permissions;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
+import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -37,6 +38,7 @@ public class Commands {
                             Message.sms(sendi, "Console is not allowed to run this command!", null);
                         else if (cmd.permission(sendi)) {
                             cmd.execute(sendi, label, args);
+                            HelperEvent.command(cmd);
                         } else
                             noPerm(sendi);
                         return; 
