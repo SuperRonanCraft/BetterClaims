@@ -81,7 +81,7 @@ public class ClaimHandler {
             claim.dateCreated = Calendar.getInstance().getTime();
             if (getDatabase().createClaim(claim)) {
                 claims.add(claim);
-                HelperEvent.claimCreate(claim, null);
+                HelperEvent.claimCreate(p, claim, null);
                 return CLAIM_ERRORS.NONE;
             } else
                 return CLAIM_ERRORS.DATABASE_ERROR;
@@ -89,11 +89,11 @@ public class ClaimHandler {
         return error;
     }
 
-    public CLAIM_ERRORS deleteClaim(Claim claim) {
+    public CLAIM_ERRORS deleteClaim(Player deletor, Claim claim) {
         CLAIM_ERRORS error = CLAIM_ERRORS.NONE;
         if (getDatabase().deleteClaim(claim)) {
             claims.remove(claim);
-            HelperEvent.claimDelete(claim);
+            HelperEvent.claimDelete(deletor, claim);
         } else
             error = CLAIM_ERRORS.DATABASE_ERROR;
         return error;

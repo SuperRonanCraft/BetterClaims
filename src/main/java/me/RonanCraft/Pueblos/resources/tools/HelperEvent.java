@@ -1,59 +1,70 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
 import me.RonanCraft.Pueblos.customevents.*;
-import me.RonanCraft.Pueblos.player.command.Commands;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimInfo;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 
+import javax.annotation.Nullable;
+
 public class HelperEvent {
 
-    public static Cancellable claimAttemptCreate(Claim claim, Player creator) {
-        Event event = new PueblosEvent_ClaimAttemptCreate(claim, creator);
-        Bukkit.getPluginManager().callEvent(event);
-        return (Cancellable) event;
+    public static Cancellable claimAttemptCreate(CommandSender executor, Claim claim, Player creator) {
+        PueblosEvent_ClaimAttemptCreate event = new PueblosEvent_ClaimAttemptCreate(claim, creator);
+        callEvent(executor, event);
+        return event;
     }
 
-    public static void claimCreate(Claim claim, Player creator) {
-        Event event = new PueblosEvent_ClaimCreate(claim, creator);
-        callEvent(event);
+    public static void claimCreate(@Nullable CommandSender executor, Claim claim, Player creator) {
+        PueblosEvent_ClaimCreate event = new PueblosEvent_ClaimCreate(claim, creator);
+        callEvent(executor, event);
     }
 
-    public static void claimDelete(Claim claim) {
-        Event event = new PueblosEvent_ClaimDelete(claim);
-        callEvent(event);
+    public static void claimDelete(CommandSender executor, Claim claim) {
+        PueblosEvent_ClaimDelete event = new PueblosEvent_ClaimDelete(claim);
+        callEvent(executor, event);
     }
 
-    public static Cancellable claimResize(ClaimInfo claim, Player editor, Location loc_1, Location loc_2) {
-        Event event = new PueblosEvent_ClaimResize(claim, editor, loc_1, loc_2);
-        callEvent(event);
-        return (Cancellable) event;
+    public static Cancellable claimResize(CommandSender executor, ClaimInfo claim, Player editor, Location loc_1, Location loc_2) {
+        PueblosEvent_ClaimResize event = new PueblosEvent_ClaimResize(claim, editor, loc_1, loc_2);
+        callEvent(executor, event);
+        if (event.isCancelled() && event.sendCancelledMessage())
+            MessagesCore.EVENT_DENIED.send(editor);
+        return event;
     }
 
-    public static Cancellable memberLeave(ClaimMember member) {
+    public static Cancellable memberLeave(CommandSender executor, ClaimMember member) {
         Event event = new PueblosEvent_MemberLeave(member);
-        callEvent(event);
+        callEvent(executor, event);
         return (Cancellable) event;
     }
 
-    public static Cancellable teleportToClaim(Claim claim, Player player, Location from) {
+    public static Cancellable teleportToClaim(CommandSender executor, Claim claim, Player player, Location from) {
         Event event = new PueblosEvent_ClaimTeleportTo(claim, player, from);
-        callEvent(event);
+        callEvent(executor, event);
         return (Cancellable) event;
     }
 
-    public static void command(PueblosCommand cmd) {
+    public static void command(CommandSender executor, PueblosCommand cmd) {
         Event event = new PueblosEvent_CommandExecuted(cmd);
-        callEvent(event);
+        callEvent(executor, event);
     }
 
-    private static void callEvent(Event e) {
+    private static void callEvent(CommandSender executor, Event e) {
         Bukkit.getPluginManager().callEvent(e);
+        //Send event denied message if enabled
+        if (executor != null && e instanceof PueblosEventType_ClaimCancellable) {
+            PueblosEventType_ClaimCancellable ev = (PueblosEventType_ClaimCancellable) e;
+            if (ev.isCancelled() && ev.sendCancelledMessage())
+                MessagesCore.EVENT_DENIED.send(executor);
+        }
     }
 }

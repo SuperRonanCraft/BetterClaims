@@ -162,9 +162,10 @@ public class EventInteract implements PueblosEvents {
         CLAIM_ERRORS error = Pueblos.getInstance().getSystems().getClaimHandler().isLocationValid(greater, lower, p, claim /*Ignored claim*/);
         if (error == CLAIM_ERRORS.NONE) {
             //Save position
-            claim.editCorners(p, positionStiff, positionMovingCorner);
-            MessagesCore.CLAIM_RESIZED.send(p, claim);
-            Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
+            if (claim.editCorners(p, positionStiff, positionMovingCorner)) {
+                MessagesCore.CLAIM_RESIZED.send(p, claim);
+                Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
+            }
         } else
             error.sendMsg(p, claim);
         return error;

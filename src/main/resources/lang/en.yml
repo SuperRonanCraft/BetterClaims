@@ -55,6 +55,7 @@ Messages:
       Denied: '&cYour request to join &b%claim_name% &cwas denied!'
       Already: '&cYou already asked to join this claim! &8Please... calm down'
       Sent: '&fYour request to join &b%claim_name% &fhas been sent!'
+  EventDenied: '&cSome external force denied this action!'
 
 Help:
   Prefix: '&e&m-----&6&l Pueblos &8| Help &e&m-----'

@@ -62,7 +62,7 @@ public class HelperClaim {
     }
 
     public static void leaveClaim(Player p, ClaimMember member) {
-        if (!HelperEvent.memberLeave(member).isCancelled()) {
+        if (!HelperEvent.memberLeave(p, member).isCancelled()) {
             member.claim.removeMember(member, true);
             MessagesCore.CLAIM_MEMBER_LEAVE.send(p, member);
             if (member.claim.getOwner().isOnline())
@@ -71,7 +71,7 @@ public class HelperClaim {
     }
 
     public static void removeMember(Player p, ClaimMember member) {
-        if (!HelperEvent.memberLeave(member).isCancelled()) {
+        if (!HelperEvent.memberLeave(p, member).isCancelled()) {
             member.claim.removeMember(member, true);
             MessagesCore.CLAIM_MEMBER_REMOVED.send(p, member);
             if (member.getPlayer().isOnline())
@@ -83,7 +83,7 @@ public class HelperClaim {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
         Claim claim = handler.claimCreate(owner.getUniqueId(), owner.getName(), new ClaimPosition(owner.getWorld(), pos1, pos2), mode);
-        if (!HelperEvent.claimAttemptCreate(claim, owner).isCancelled()) {
+        if (!HelperEvent.claimAttemptCreate(owner, claim, owner).isCancelled()) {
             if (claim != null) {
                 error = handler.uploadClaim(claim, owner);
                 switch (error) {
@@ -114,7 +114,7 @@ public class HelperClaim {
     }
 
     public static void teleportTo(Player p, Claim claim) {
-        if (!HelperEvent.teleportToClaim(claim, p, p.getLocation()).isCancelled()) {
+        if (!HelperEvent.teleportToClaim(p, claim, p, p.getLocation()).isCancelled()) {
             p.teleport(claim.getPosition().getLocation());
             MessagesCore.CLAIM_TELEPORT.send(p, claim);
         }

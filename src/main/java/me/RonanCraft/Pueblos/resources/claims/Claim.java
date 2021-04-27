@@ -166,11 +166,13 @@ public class Claim implements ClaimInfo {
         return false;
     }
 
-    public void editCorners(Player editor, Location loc_1, Location loc_2) {
-        if (!HelperEvent.claimResize(this, editor, loc_1, loc_2).isCancelled()) {
+    public boolean editCorners(Player editor, Location loc_1, Location loc_2) {
+        if (!HelperEvent.claimResize(editor, this, editor, loc_1, loc_2).isCancelled()) {
             getPosition().editCorners(loc_1, loc_2);
             updated();
-        }
+            return true;
+        } else
+            return false;
     }
 
     public boolean isAdminClaim() {

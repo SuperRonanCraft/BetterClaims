@@ -42,6 +42,7 @@ public enum MessagesCore {
     REQUEST_REQUESTER_DENIED("Request.Requester.Denied"),
     REQUEST_REQUESTER_ALREADY("Request.Requester.Already"),
     REQUEST_REQUESTER_SENT("Request.Requester.Sent"),
+    EVENT_DENIED("EventDenied"),
     ;
 
     String section;
