@@ -11,7 +11,7 @@ The wiki is available [here](../../wiki)!
   <b>Have a Suggestion? Make an issue!</b><br/>
   <a href="../../issues"><img src="https://img.shields.io/github/issues-raw/SuperRonanCraft/AdvancedModreq.svg?longCache=true&style=flat-square&label=Issues" alt="GitHub issues" /></a><br/>
   <br/>
-  <a href="https://www.spigotmc.org/resources/40528/">Thank you for viewing the Wiki for AdvancedModreq!</a><br/>
+  <a href="https://www.spigotmc.org/resources/40528/">Thank you for viewing the Wiki for Pueblos!</a><br/>
   <i><a>Did this wiki help you out? Please give it a <b>Star</b> so I know it's getting use!</a></i><br/>
   <br/>
   <b><i><a href="https://www.spigotmc.org/resources/authors/superronancraft.13025/">Check out my other plugins!</a></i></b>
