@@ -60,6 +60,12 @@ Claim:
       Lore:
         - ''
         - '&7Click to teleport to claim home'
+    Delete:
+      Name: '&4Delete Claim'
+      Item: 'barrier'
+      Lore:
+        - ''
+        - '&7Permanently delete this claim (confirm)'
 ClaimSelect:
   Title: '&7Select Claim'
   Items:
@@ -144,7 +150,6 @@ Member:
       Lore:
         - ''
         - '&fClick to remove &7%member_name% &8(confirm)'
-
 Requesting:
   Title: '&7Request to Join'
   Items:

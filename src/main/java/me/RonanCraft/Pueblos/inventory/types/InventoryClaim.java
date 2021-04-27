@@ -2,6 +2,8 @@ package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
+import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -39,7 +41,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     @Override
     public void clickEvent(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (    !this.itemInfo.containsKey(p)
+        if (!this.itemInfo.containsKey(p)
                 || !this.claim.containsKey(p)
                 || checkItems(e, itemInfo.get(p))
                 || !itemInfo.get(p).containsKey(e.getSlot()))
@@ -49,6 +51,8 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         Claim claim = this.claim.get(p);
         if (setting == CLAIM_SETTINGS.TELEPORT) {
             HelperClaim.teleportTo(p, claim);
+        } else if (setting == CLAIM_SETTINGS.DELETE) {
+            PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_DELETE, p, claim), false);
         } else
             setting.inv.open(p, claim, false);
     }
@@ -75,7 +79,8 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         MEMBERS("Members", 20, PueblosInventory.MEMBERS, ITEMS.MEMBERS, null),
         FLAGS("Flags", 22, PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
         REQUESTS("Requests", 24, PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
-        TELEPORT("Teleport", 16, null, ITEMS.TELEPORT, null);
+        TELEPORT("Teleport", 16, null, ITEMS.TELEPORT, null),
+        DELETE("Delete", 11, null, ITEMS.DELETE, null);
 
         String section;
         int slot;
@@ -107,7 +112,8 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         FLAGS_DISALLOWED("Flags.Disallowed"),
         REQUESTS_ALLOWED("Requests.Allowed"),
         REQUESTS_DISALLOWED("Requests.Disallowed"),
-        TELEPORT("Teleport");
+        TELEPORT("Teleport"),
+        DELETE("Delete");
 
         String section;
 

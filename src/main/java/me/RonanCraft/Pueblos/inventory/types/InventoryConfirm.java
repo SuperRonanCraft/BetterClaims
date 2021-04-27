@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
@@ -69,10 +70,13 @@ public class InventoryConfirm extends PueblosInvLoader implements PueblosInv_Con
                     case REQUEST_DECLINE:
                         HelperClaim.requestAction(false, p, (ClaimRequest) confirmation.info);
                         break;
+                    case CLAIM_DELETE:
+                        HelperClaim.deleteClaim(p, (Claim) confirmation.info);
+                        break;
                 }
                 break;
             case CANCEL:
-                p.sendMessage("Declined?");
+                //p.sendMessage("Declined?");
                 goBack(p, this.itemInfo.get(p));
                 break;
         }

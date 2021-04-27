@@ -119,4 +119,13 @@ public class HelperClaim {
             MessagesCore.CLAIM_TELEPORT.send(p, claim);
         }
     }
+
+    public static void deleteClaim(Player p, Claim claim) {
+        ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
+        CLAIM_ERRORS error = handler.deleteClaim(p, claim);
+        if (error == CLAIM_ERRORS.NONE)
+            MessagesCore.CLAIM_DELETE.send(p, claim);
+        else
+            error.sendMsg(p, claim);
+    }
 }

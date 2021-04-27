@@ -74,12 +74,9 @@ public enum PueblosInventory {
     }
 
     public boolean isAllowed(Player p, Claim claim) {
-        if (!Pueblos.getInstance().getPermissions().checkPerm(permNode.node, p)
-                || !claim.checkPermLevel(p, claimLevel)) {
-            //p.sendMessage("Not allowed!");
-            return false;
-        }
-        return true;
+        //p.sendMessage("Not allowed!");
+        return Pueblos.getInstance().getPermissions().checkPerm(permNode.node, p)
+                && claim.checkPermLevel(p, claimLevel);
     }
 
     public void click(InventoryClickEvent e) {

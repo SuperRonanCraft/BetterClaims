@@ -30,6 +30,7 @@ public enum MessagesCore {
     CLAIM_MODE_DISABLED_ADMIN("Claim.Mode.Disabled.Admin"),
     CLAIM_MODE_FAILED_ITEM("Claim.Mode.Failed.Item"),
     CLAIM_MODE_FAILED_LOCATION("Claim.Mode.Failed.Location"),
+    CLAIM_DELETE("Claim.Deleted"),
     CONVERT_STARTED("Convert.Started"),
     CONVERT_FINISHED("Convert.Finished"),
     CONVERT_FAILED("Convert.Failed"),
