@@ -14,16 +14,20 @@ import org.bukkit.event.Event;
 
 public class HelperEvent {
 
-    public static Cancellable claimCreate(Claim claim, Player creator) {
-        Event event = new PueblosEvent_ClaimCreate(claim, creator);
+    public static Cancellable claimAttemptCreate(Claim claim, Player creator) {
+        Event event = new PueblosEvent_ClaimAttemptCreate(claim, creator);
         Bukkit.getPluginManager().callEvent(event);
         return (Cancellable) event;
     }
 
-    public static Cancellable claimDelete(Claim claim) {
+    public static void claimCreate(Claim claim, Player creator) {
+        Event event = new PueblosEvent_ClaimCreate(claim, creator);
+        callEvent(event);
+    }
+
+    public static void claimDelete(Claim claim) {
         Event event = new PueblosEvent_ClaimDelete(claim);
-        Bukkit.getPluginManager().callEvent(event);
-        return (Cancellable) event;
+        callEvent(event);
     }
 
     public static Cancellable claimResize(ClaimInfo claim, Player editor, Location loc_1, Location loc_2) {

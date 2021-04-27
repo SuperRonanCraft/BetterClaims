@@ -2,10 +2,9 @@ package me.RonanCraft.Pueblos.customevents;
 
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
-public class PueblosEvent_MemberLeave extends ClaimEvent implements Cancellable {
+//Called when a member leaves a claim
+public class PueblosEvent_MemberLeave extends PueblosEventType_ClaimCancellable implements Cancellable {
 
     private final ClaimMember member;
 

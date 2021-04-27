@@ -4,8 +4,10 @@ import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
-//Called when a claim has successfully uploaded to the database and is now being protected
-public class PueblosEvent_ClaimCreate extends PueblosEventType_Claim {
+//Called when a claim is about to be created (ie: uploaded and saved to the database)
+public class PueblosEvent_ClaimAttemptCreate extends PueblosEventType_ClaimCancellable {
+
+    private static final HandlerList handlers = new HandlerList();
 
     private final Player creator;
 
@@ -14,9 +16,14 @@ public class PueblosEvent_ClaimCreate extends PueblosEventType_Claim {
      * @param claim The claim that was just created
      * @param creator The player who created this claim
      */
-    public PueblosEvent_ClaimCreate(Claim claim, Player creator) {
+    public PueblosEvent_ClaimAttemptCreate(Claim claim, Player creator) {
         super(claim);
         this.creator = creator;
+    }
+
+    //Required
+    public static HandlerList getHandlerList() {
+        return handlers;
     }
 
     public Player getCreator() {

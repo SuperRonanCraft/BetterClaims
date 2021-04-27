@@ -3,11 +3,9 @@ package me.RonanCraft.Pueblos.customevents;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
-public class PueblosEvent_ClaimTeleportTo extends ClaimEvent implements Cancellable {
+//Called when a owner/member teleports to a claim
+public class PueblosEvent_ClaimTeleportTo extends PueblosEventType_ClaimCancellable {
 
     private final Player player;
     private final Location from_loc;

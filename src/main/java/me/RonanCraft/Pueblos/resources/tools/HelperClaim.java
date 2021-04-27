@@ -83,7 +83,7 @@ public class HelperClaim {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
         Claim claim = handler.claimCreate(owner.getUniqueId(), owner.getName(), new ClaimPosition(owner.getWorld(), pos1, pos2), mode);
-        if (!HelperEvent.claimCreate(claim, owner).isCancelled()) {
+        if (!HelperEvent.claimAttemptCreate(claim, owner).isCancelled()) {
             if (claim != null) {
                 error = handler.uploadClaim(claim, owner);
                 switch (error) {

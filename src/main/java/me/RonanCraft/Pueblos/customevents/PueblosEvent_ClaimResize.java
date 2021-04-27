@@ -3,11 +3,9 @@ package me.RonanCraft.Pueblos.customevents;
 import me.RonanCraft.Pueblos.resources.claims.ClaimInfo;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
-public class PueblosEvent_ClaimResize extends ClaimEvent implements Cancellable {
+//Called when a claim has successfully resized
+public class PueblosEvent_ClaimResize extends PueblosEventType_ClaimCancellable {
 
     private final Player editor;
     private final Location newLoc_1;
