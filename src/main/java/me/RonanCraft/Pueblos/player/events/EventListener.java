@@ -3,7 +3,6 @@ package me.RonanCraft.Pueblos.player.events;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -12,17 +11,15 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
 
 import java.util.*;
 
 public class EventListener implements Listener {
 
-    HashMap<Player, PlayerClaimInteraction> claimInteraction = new HashMap<>();
+    final HashMap<Player, PlayerClaimInteraction> claimInteraction = new HashMap<>();
+    final HashMap<Player, Claim> insideClaim = new HashMap<>();
 
     //Events
     EventBlocks blocks = new EventBlocks();
@@ -37,6 +34,7 @@ public class EventListener implements Listener {
     EventItems items = new EventItems();
     EventFallingBlock fallingBlock = new EventFallingBlock();
     EventPortal portal = new EventPortal();
+    EventMove move = new EventMove(this);
 
     public void load(boolean reload) {
         if (!reload)
@@ -49,8 +47,8 @@ public class EventListener implements Listener {
         if (claimInteraction.containsKey(p)) {
             PlayerClaimInteraction interaction = claimInteraction.get(p);
             if (interaction.locations.isEmpty()) {
-                if (interaction.mode != PlayerClaimInteraction.CLAIM_MODE.ADMIN) {
-                    interaction.mode = PlayerClaimInteraction.CLAIM_MODE.ADMIN;
+                if (interaction.mode != PlayerClaimInteraction.CLAIM_MODE.CREATE_ADMIN) {
+                    interaction.mode = PlayerClaimInteraction.CLAIM_MODE.CREATE_ADMIN;
                     MessagesCore.CLAIM_MODE_ENABLED_ADMIN.send(p);
                 } else {
                     interaction.mode = PlayerClaimInteraction.CLAIM_MODE.CREATE;
@@ -147,14 +145,20 @@ public class EventListener implements Listener {
     }
 
     //Falling Blocks
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     private void fallingBlock(EntityChangeBlockEvent e) {
         fallingBlock.onEntityChangeBLock(e);
     }
 
     //Nether Portal
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.LOWEST)
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     private void portal(PortalCreateEvent e) {
         portal.onPortal(e);
+    }
+
+    //Move
+    @EventHandler(priority = EventPriority.MONITOR)
+    private void onMove(PlayerMoveEvent e) {
+        //move.onMove(e);
     }
 }

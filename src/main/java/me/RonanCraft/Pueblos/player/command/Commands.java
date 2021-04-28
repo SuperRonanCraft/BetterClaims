@@ -38,7 +38,7 @@ public class Commands {
                             Message.sms(sendi, "Console is not allowed to run this command!", null);
                         else if (cmd.permission(sendi)) {
                             cmd.execute(sendi, label, args);
-                            HelperEvent.command(cmd);
+                            HelperEvent.command(sendi, cmd);
                         } else
                             noPerm(sendi);
                         return; 

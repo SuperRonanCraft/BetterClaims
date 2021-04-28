@@ -15,14 +15,14 @@ public class FileLanguage {
     public String getString(String path) {
         if (config.isString(path))
             return config.getString(path);
-        return "SOMETHING WENT WRONG";
+        return "Seems like the path " + path + " didn't load correctly!";
     }
 
     @SuppressWarnings("all")
     public List<String> getStringList(String path) {
         if (config.isList(path))
             return config.getStringList(path);
-        return Arrays.asList("SOMETHING WENT WRONG!");
+        return Arrays.asList(getString(path));
     }
 
     public boolean getBoolean(String path) {

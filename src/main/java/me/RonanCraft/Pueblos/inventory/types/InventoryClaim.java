@@ -80,7 +80,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         FLAGS("Flags", 22, PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
         REQUESTS("Requests", 24, PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
         TELEPORT("Teleport", 16, null, ITEMS.TELEPORT, null),
-        DELETE("Delete", 11, null, ITEMS.DELETE, null);
+        DELETE("Delete", 10, null, ITEMS.DELETE, null);
 
         String section;
         int slot;

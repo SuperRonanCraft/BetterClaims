@@ -37,6 +37,7 @@ public class EventItems implements Listener, PueblosEvents {
         remove(e.getEntity().getUniqueId());
     }
 
+    //(Added v1.1.0)
     //Stop picking up items from other claims
     @EventHandler
     private void onPickup(EntityPickupItemEvent e) {
@@ -53,6 +54,7 @@ public class EventItems implements Listener, PueblosEvents {
             e.setCancelled(true);
     }
 
+    //(Added v1.1.0)
     //Disallow other players from picking up dead players items
     @EventHandler
     private void onDrop(PlayerDeathEvent e) {

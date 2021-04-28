@@ -54,8 +54,13 @@ public class HelperEvent {
     }
 
     public static void command(CommandSender executor, PueblosCommand cmd) {
-        Event event = new PueblosEvent_CommandExecuted(cmd);
+        Event event = new PueblosEvent_CommandExecuted(executor, cmd);
         callEvent(executor, event);
+    }
+
+    public static void claimWalked(Player p, Claim claim, boolean walked_in) {
+        Event event = walked_in ? new PueblosEvent_ClaimWalkedIn(claim, p) : new PueblosEvent_ClaimWalkedOut(claim, p);
+        callEvent(p, event);
     }
 
     private static void callEvent(CommandSender executor, Event e) {

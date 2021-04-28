@@ -21,6 +21,8 @@ public class EventPistons implements PueblosEvents {
         pistonEvent(e, e.getBlocks(), e.getDirection());
     }
 
+    //(Added v1.0.0)
+    //Protects pistons from extending into claim, and pulling blocks from claims
     private void pistonEvent(BlockPistonEvent e, List<Block> blocks, BlockFace dir) {
         List<Location> locations = new ArrayList<>();
         locations.add(e.getBlock().getLocation());

@@ -22,20 +22,22 @@ public class EventItemChange implements PueblosEvents {
         this.listener = listener;
     }
 
+    //Show claiming message when claim item is equipped and start a `claimInteraction`
     void onItemChange(PlayerItemHeldEvent e) {
         listener.claimInteraction.remove(e.getPlayer());
         if (claimShowing.containsKey(e.getPlayer()))
             return;
         ItemStack item = e.getPlayer().getInventory().getItem(e.getNewSlot());
         if (item != null && item.getType().equals(getClaimItem()) && !listener.claimInteraction.containsKey(e.getPlayer())) {
-            //Messages.core.sms(e.getPlayer(), "Shovel!");
+            listener.claimInteraction.put(e.getPlayer(), new PlayerClaimInteraction(e.getPlayer(), PlayerClaimInteraction.CLAIM_MODE.CREATE));
             Claim claim = getClaim(e.getPlayer().getLocation());
             showClaimLater(claim, e.getPlayer());
         } else
             listener.claimInteraction.remove(e.getPlayer());
     }
 
-    void showClaimLater(Claim claim, Player p) {
+    //Delay showing the claim and message to not spam player scrolling through inventory
+    private void showClaimLater(Claim claim, Player p) {
         claimShowing.put(p,
             Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
                 ItemStack item = p.getInventory().getItemInMainHand();

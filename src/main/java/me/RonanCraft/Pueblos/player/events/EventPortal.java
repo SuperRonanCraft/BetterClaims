@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EventPortal implements PueblosEvents {
-
+    //(Added v1.2.0)
     //Stop portal creations when target is inside a claim
     void onPortal(PortalCreateEvent e) {
         if (e.getReason() != PortalCreateEvent.CreateReason.OBC_DESTINATION)

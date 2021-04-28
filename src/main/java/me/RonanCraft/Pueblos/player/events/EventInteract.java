@@ -45,51 +45,8 @@ public class EventInteract implements PueblosEvents {
     void onInteract(PlayerInteractEvent e) {
         if (e.getClickedBlock() == null || e.isCancelled())
             return;
-        //Block block = e.getClickedBlock();
-        //Claim claim = getClaim(block.getLocation());
         if (!allowInteract(e.getPlayer(), e.getClickedBlock()))
             e.setCancelled(true);
-        /*if (claim == null || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(e.getPlayer()))) //No claim here or is an admin claim
-            return;
-        else if (claim.isAdminClaim()) {
-            e.setCancelled(true);
-            return;
-        }
-        if (!claim.isOwner(e.getPlayer())) { //There is a claim, and not the owner (owners are ignored)
-            CLAIM_FLAG flag = null;
-            if (block.getType().name().contains("LEVER")) {
-                flag = CLAIM_FLAG.ALLOW_LEVER;
-            } else if (block.getType().name().contains("DOOR")) {
-                flag = CLAIM_FLAG.ALLOW_DOOR;
-            } else if (block.getType().name().contains("BUTTON")) {
-                flag = CLAIM_FLAG.ALLOW_BUTTON;
-            } else if (block.getType().name().contains("BED")) {
-                flag = CLAIM_FLAG.ALLOW_BED;
-            }
-            ClaimMember member = claim.getMember(e.getPlayer());
-            if (member != null) { //Is this player a member of this claim?
-                if (flag != null) {
-                    //Check member flag value (if it exists)
-                    CLAIM_FLAG_MEMBER memberFlag = flag.getMemberEquivalent();
-                    Object flagValue = claim.getFlags().getFlag(flag); //Get the claims flag value
-                    if (memberFlag != null)
-                        flagValue = member.getFlags().getOrDefault(memberFlag, memberFlag.getDefault()); //Get the members flag value
-                    e.setCancelled(!(Boolean) flagValue); //Are they allowed to do this here?
-                } else { //Blocks with inventories specific to claim members
-                    CLAIM_FLAG_MEMBER memberFlag = null;
-                    if (block.getState() instanceof InventoryHolder)
-                        memberFlag = CLAIM_FLAG_MEMBER.ALLOW_CHEST;
-                    Object flagValue = null;
-                    if (memberFlag != null)
-                        flagValue = member.getFlags().getOrDefault(memberFlag, memberFlag.getDefault());
-                    if (flagValue != null)
-                        e.setCancelled(!(Boolean) flagValue); //Are they allowed to do this here?
-                }
-            } else { //Cancel interactions if the claim flag is enabled
-                Object flagValue = claim.getFlags().getFlag(flag); //Get the claims flag value
-                e.setCancelled(!(Boolean) flagValue);
-            }
-        }*/
     }
 
     //Create a claim

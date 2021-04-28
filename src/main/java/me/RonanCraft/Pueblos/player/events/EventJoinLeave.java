@@ -20,7 +20,7 @@ public class EventJoinLeave {
         updater(p);
     }
 
-    //Updater
+    //Recieve an update message when admin joins
     private void updater(Player p) {
         if (!FileOther.FILETYPE.CONFIG.getBoolean("DisableUpdater") && PermissionNodes.UPDATE.check(p))
             if (!getPl().getDescription().getVersion().equals(Updater.updatedVersion))

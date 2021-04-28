@@ -8,6 +8,7 @@ Messages:
   InvalidFlag: '&cFlag is not valid! &7Please try again.'
   CannotEdit: '&cUnable to edit this while outside a claim!'
   Claim:
+    Deleted: '&cClaim deleted! &8This area will no longer be protected.'
     Resized: '&7Claim successfully resized to &f%claim_width% x %claim_length%'
     Teleport: '&7Teleported to &f%claim_name%''s &7home!'
     None: '&7You are not an owner or member of any claim!'

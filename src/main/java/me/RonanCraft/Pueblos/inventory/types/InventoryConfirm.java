@@ -58,7 +58,7 @@ public class InventoryConfirm extends PueblosInvLoader implements PueblosInv_Con
         ITEMS buttonPressed = (ITEMS) this.itemInfo.get(p).get(e.getSlot()).info;
         switch (buttonPressed) {
             case ACCEPT:
-                p.sendMessage("Accepted!");
+                //p.sendMessage("Accepted!");
                 goBack(p, this.itemInfo.get(p));
                 switch (confirmation.type) {
                     case CLAIM_LEAVE:

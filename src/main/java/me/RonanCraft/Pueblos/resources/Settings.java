@@ -39,7 +39,11 @@ public class Settings {
         CLAIM_MAXDEPTH("Claim.MaxDepth", TYPE.INT),
         CLAIM_MAXSIZE("Claim.MaxSize", TYPE.INT),
         CLAIM_ITEM("Claim.Item", TYPE.STRING),
-        PLAYER_PROTECTDEATHDROP("Player.ProtectDeathDrops", TYPE.BOOLEAN);
+        PLAYER_PROTECTDEATHDROP("Player.ProtectDeathDrops", TYPE.BOOLEAN),
+        GLOBAL_ENDERMEN_MOVEBLOCKS("Global.EndermenMoveBlocks", TYPE.BOOLEAN),
+        GLOBAL_SILVERFISH_BREAKBLOCKS("Global.SilverfishBreakBlocks", TYPE.BOOLEAN),
+        GLOBAL_RABBITS_EATCROPS("Global.RabbitsEatCrops", TYPE.BOOLEAN),
+        ;
 
         private final String path;
         private final TYPE type;

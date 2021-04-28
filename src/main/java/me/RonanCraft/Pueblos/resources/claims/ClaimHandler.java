@@ -5,7 +5,6 @@ import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
@@ -160,7 +159,7 @@ public class ClaimHandler {
     }
 
     public Claim claimCreate(UUID owner, String name, ClaimPosition position, PlayerClaimInteraction.CLAIM_MODE mode) {
-        if (owner == null || mode == PlayerClaimInteraction.CLAIM_MODE.ADMIN)
+        if (owner == null || mode == PlayerClaimInteraction.CLAIM_MODE.CREATE_ADMIN)
             return new Claim(position);
         else
             return new Claim(owner, name, position);

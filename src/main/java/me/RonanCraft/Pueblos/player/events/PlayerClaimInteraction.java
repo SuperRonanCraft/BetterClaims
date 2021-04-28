@@ -65,7 +65,7 @@ public class PlayerClaimInteraction {
     public enum CLAIM_MODE {
         EDIT,
         CREATE,
-        ADMIN,
+        CREATE_ADMIN,
         SUBCLAIM
     }
 }
