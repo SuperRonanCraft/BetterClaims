@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
+import me.RonanCraft.Pueblos.resources.claims.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
@@ -27,6 +28,8 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
         for (CLAIM_SETTINGS set : CLAIM_SETTINGS.values()) {
+            if (!claim.checkPermLevel(p, set.claim_permission_level))
+                continue;
             ItemStack item = getItem(set.getItem(p, claim).section, p, claim);
             inv.setItem(set.slot, item);
             itemInfo.put(set.slot, new PueblosItem(item, ITEM_TYPE.NORMAL, set));
@@ -76,21 +79,23 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     }
 
     private enum CLAIM_SETTINGS {
-        MEMBERS("Members", 20, PueblosInventory.MEMBERS, ITEMS.MEMBERS, null),
-        FLAGS("Flags", 22, PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
-        REQUESTS("Requests", 24, PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
-        TELEPORT("Teleport", 16, null, ITEMS.TELEPORT, null),
-        DELETE("Delete", 10, null, ITEMS.DELETE, null);
+        MEMBERS("Members", 20,      null,                           PueblosInventory.MEMBERS, ITEMS.MEMBERS, null),
+        FLAGS("Flags", 22,          null,                           PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
+        REQUESTS("Requests", 24,    null,                           PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
+        TELEPORT("Teleport", 16,    null,                           null, ITEMS.TELEPORT, null),
+        DELETE("Delete", 10,        CLAIM_PERMISSION_LEVEL.OWNER,   null, ITEMS.DELETE, null);
 
         String section;
         int slot;
+        CLAIM_PERMISSION_LEVEL claim_permission_level;
         PueblosInventory inv;
         ITEMS allowed;
         ITEMS disallowed;
 
-        CLAIM_SETTINGS(String section, int slot, PueblosInventory inv, ITEMS allowed, ITEMS disallowed) {
+        CLAIM_SETTINGS(String section, int slot, CLAIM_PERMISSION_LEVEL claim_permission_level, PueblosInventory inv, ITEMS allowed, ITEMS disallowed) {
             this.section = section;
             this.slot = slot;
+            this.claim_permission_level = claim_permission_level;
             this.inv = inv;
             this.allowed = allowed;
             this.disallowed = disallowed;

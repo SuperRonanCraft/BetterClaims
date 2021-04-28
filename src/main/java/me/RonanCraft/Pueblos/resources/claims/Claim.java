@@ -162,9 +162,8 @@ public class Claim implements ClaimInfo {
         switch (level) {
             case OWNER: return isOwner(p);
             case MEMBER: return isMember(p);
-            case NONE: return true;
+            default: return true;
         }
-        return false;
     }
 
     public boolean editCorners(Player editor, Location loc_1, Location loc_2) {
