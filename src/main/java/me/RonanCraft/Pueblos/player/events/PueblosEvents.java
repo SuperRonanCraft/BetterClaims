@@ -25,11 +25,7 @@ public interface PueblosEvents {
     }
 
     default boolean allowBreak(Player p, Location block_location) {
-        return allowBreak(p, block_location, null);
-    }
-
-    default boolean allowBreak(Player p, Location block_location, Block block) {
-        return getPl().getSystems().getClaimHandler().allowBreak(p, block_location, block);
+        return getPl().getSystems().getClaimHandler().allowBreak(p, block_location);
     }
 
     default boolean allowInteract(Player p, Block block) {

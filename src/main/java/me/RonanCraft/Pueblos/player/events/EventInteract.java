@@ -75,14 +75,21 @@ public class EventInteract implements PueblosEvents {
             if (error == CLAIM_ERRORS.NONE) {
                 List<Location> corners = claimInteraction.locations;
                 if (corners.size() >= 2) { //Create claim
-                    if (claimInteraction.mode == PlayerClaimInteraction.CLAIM_MODE.CREATE) {
-                        error = HelperClaim.createClaim(p, corners.get(0), corners.get(1), false, claimInteraction.mode);
-                    } else if (claimInteraction.mode == PlayerClaimInteraction.CLAIM_MODE.EDIT) { //Edit claim size mode
-                        error = resizeClaim(p, claimInteraction.editing, corners);
+                    switch (claimInteraction.mode) {
+                        //Normal user claim
+                        case CREATE: error = HelperClaim.createClaim(p, corners.get(0), corners.get(1), false, claimInteraction.mode); break;
+                        //Create a claim with no owner, making it an admin claim
+                        case CREATE_ADMIN:
+                            p.sendMessage("Admin Claim creation!");
+                            break;
+                        //Edit a claims size
+                        case EDIT: error = resizeClaim(p, claimInteraction.editing, corners); break;
+                        //Create a claim inside another claim
+                        case SUBCLAIM: break;
                     }
-                    if (error != CLAIM_ERRORS.SIZE_SMALL && error != CLAIM_ERRORS.SIZE_LARGE) //Let the player select another second location
+                    if (error != CLAIM_ERRORS.SIZE_SMALL && error != CLAIM_ERRORS.SIZE_LARGE) //Let the player select another second location if error
                         claimInteraction.lock(); //Lock us from using the same locations again
-                } else {
+                } else if (claimInteraction.mode != PlayerClaimInteraction.CLAIM_MODE.EDIT) { //If the player is editing the claim they have selected will visualize
                     Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
                 }
                 if (claimInteraction.locked)
@@ -118,7 +125,7 @@ public class EventInteract implements PueblosEvents {
         Location lower = new Location(position.getWorld(), min_x, 0, min_z);
         CLAIM_ERRORS error = Pueblos.getInstance().getSystems().getClaimHandler().isLocationValid(greater, lower, p, claim /*Ignored claim*/);
         if (error == CLAIM_ERRORS.NONE) {
-            //Save position
+            //Save new position
             if (claim.editCorners(p, positionStiff, positionMovingCorner)) {
                 MessagesCore.CLAIM_RESIZED.send(p, claim);
                 Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
@@ -128,7 +135,7 @@ public class EventInteract implements PueblosEvents {
         return error;
     }
 
-    //Reset all locations, but keep out edit mode (admin, normal, subclaim)
+    //Reset all locations and reset mode if editing
     private void resetInteraction(Player p, Long time) {
         if (cancelTimers.containsKey(p))
             Bukkit.getScheduler().cancelTask(cancelTimers.get(p));

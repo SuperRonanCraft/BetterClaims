@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -31,15 +32,17 @@ public class PlayerClaimInteraction {
             for (Claim claim : Pueblos.getInstance().getSystems().getClaimHandler().getClaims())
                 if (claim.contains(loc)) {
                     if (locations.size() == 0 && claim.getPosition().isCorner(loc)) { //Clicked a corner (first)
-                        if (claim.isOwner(p)) {
+                        if (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) {
                             mode = CLAIM_MODE.EDIT;
                             editing = claim;
+                            //Show the claim we are editing
+                            Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.EDIT, player.getLocation()).apply(player);
                             break;
-                        } else {
+                        } //else {
                             //Clicked a corner, but not allowed to resize this claim
-                        }
+                        //}
                     }
-                    if (!(mode == CLAIM_MODE.EDIT && editing == claim)) {
+                    if (!(mode == CLAIM_MODE.EDIT && editing == claim)) { //Not editting the current overlapping claim area
                         Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
                         return CLAIM_ERRORS.OVERLAPPING;
                     }
@@ -58,14 +61,14 @@ public class PlayerClaimInteraction {
     public void reset() {
         locked = false;
         locations.clear();
-        if (mode == CLAIM_MODE.EDIT)
+        if (mode != CLAIM_MODE.CREATE_ADMIN)
             mode = CLAIM_MODE.CREATE;
     }
 
     public enum CLAIM_MODE {
-        EDIT,
         CREATE,
         CREATE_ADMIN,
+        EDIT,
         SUBCLAIM
     }
 }

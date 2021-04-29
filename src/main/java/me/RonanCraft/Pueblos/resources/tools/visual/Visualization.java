@@ -120,20 +120,21 @@ public class Visualization {
         BlockData cornerBlockData = Material.GLOWSTONE.createBlockData();
         BlockData accentBlockData;
 
-        if (visualizationType == VisualizationType.CLAIM) {
-            accentBlockData = Material.EMERALD_BLOCK.createBlockData();
-        } else if (visualizationType == VisualizationType.ADMIN_CLAIM) {
-            accentBlockData = Material.COAL_BLOCK.createBlockData();
-        } else if (visualizationType == VisualizationType.SUB) {
-            accentBlockData = Material.WHITE_WOOL.createBlockData();
-        } else {
-            //((Lightable) cornerBlockData).setLit(true); //For redstone
-            accentBlockData = Material.NETHERRACK.createBlockData();
+        switch (visualizationType) {
+            case CLAIM: accentBlockData = Material.EMERALD_BLOCK.createBlockData(); break;
+            case ADMIN_CLAIM: accentBlockData = Material.COAL_BLOCK.createBlockData(); break;
+            case CLAIM_SUB: accentBlockData = Material.WHITE_WOOL.createBlockData(); break;
+            case EDIT: accentBlockData = Material.BONE_BLOCK.createBlockData(); break;
+            default: //Errors
+                //((Lightable) cornerBlockData).setLit(true); //For redstone
+                accentBlockData = Material.NETHERRACK.createBlockData();
+                break;
         }
         int step;
         switch (visualizationType) {
             case ERROR_LARGE:
             case ERROR_SMALL: step = 1; break;
+            case EDIT: step = 5; break;
             default: step = 10;
         }
         addSides(min, max, locality, height, cornerBlockData, accentBlockData, step);
