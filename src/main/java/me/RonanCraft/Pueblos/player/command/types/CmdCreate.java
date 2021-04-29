@@ -19,7 +19,7 @@ public class CmdCreate implements PueblosCommand, PueblosCommandHelpable {
         Player p = (Player) sendi;
 
         HelperClaim.createClaim(p,
-                p.getLocation().clone().add(-8, 0, -8),
+                p.getWorld(), p.getLocation().clone().add(-8, 0, -8),
                 p.getLocation().clone().add(8, 0, 8), true, PlayerClaimInteraction.CLAIM_MODE.CREATE);
     }
 

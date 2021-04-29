@@ -17,9 +17,9 @@ import javax.annotation.Nullable;
 
 public class HelperEvent {
 
-    public static Cancellable claimAttemptCreate(CommandSender executor, Claim claim, Player creator) {
+    public static Cancellable claimAttemptCreate(Claim claim, Player creator) {
         PueblosEvent_ClaimAttemptCreate event = new PueblosEvent_ClaimAttemptCreate(claim, creator);
-        callEvent(executor, event);
+        callEvent(creator, event);
         return event;
     }
 

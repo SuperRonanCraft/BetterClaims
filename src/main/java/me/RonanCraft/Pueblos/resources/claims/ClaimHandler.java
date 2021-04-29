@@ -15,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -38,15 +39,20 @@ public class ClaimHandler {
     }
 
     public Claim loadClaim(ResultSet result) throws SQLException {
-        UUID id;
+        UUID id = null;
         try {
             id = UUID.fromString(result.getString(DatabaseClaims.COLUMNS.OWNER_UUID.name));
         } catch (IllegalArgumentException e) {
-            id = UUID.randomUUID();
+            //id = UUID.randomUUID();
         }
         String name = result.getString(DatabaseClaims.COLUMNS.OWNER_NAME.name);
         try {
-            Claim claim = new Claim(id, name, JSONEncoding.getPosition(result.getString(DatabaseClaims.COLUMNS.POSITION.name)));
+            Claim claim;
+            ClaimPosition position = JSONEncoding.getPosition(result.getString(DatabaseClaims.COLUMNS.POSITION.name));
+            if (result.getBoolean(DatabaseClaims.COLUMNS.ADMIN_CLAIM.name) || id == null)
+                claim = new Claim(position);
+            else
+                claim = new Claim(id, name, position);
             //Members Load
             List<ClaimMember> members = JSONEncoding.getMember(result.getString(DatabaseClaims.COLUMNS.MEMBERS.name), claim);
             if (members != null)
@@ -64,7 +70,6 @@ public class ClaimHandler {
             if (requests != null)
                 for (ClaimRequest request : requests)
                     claim.addRequest(request, false);
-
             claim.claimId = result.getInt(DatabaseClaims.COLUMNS.CLAIM_ID.name);
             claim.dateCreated = HelperDate.getDate(result.getString(DatabaseClaims.COLUMNS.DATE.name));
             return claim;
@@ -74,13 +79,14 @@ public class ClaimHandler {
         }
     }
 
-    public CLAIM_ERRORS uploadClaim(Claim claim, @Nullable Player p) {
-        CLAIM_ERRORS error = isLocationValid(claim, p);
+    public CLAIM_ERRORS uploadClaim(Claim claim, @Nullable Player creator) {
+        CLAIM_ERRORS error = isLocationValid(claim, creator);
         if (error == CLAIM_ERRORS.NONE) {
             claim.dateCreated = Calendar.getInstance().getTime();
             if (getDatabase().createClaim(claim)) {
                 claims.add(claim);
-                HelperEvent.claimCreate(p, claim, null);
+                if (creator != null)
+                    HelperEvent.claimCreate(creator, claim, null);
                 return CLAIM_ERRORS.NONE;
             } else
                 return CLAIM_ERRORS.DATABASE_ERROR;
@@ -139,10 +145,10 @@ public class ClaimHandler {
         return CLAIM_ERRORS.NONE;
     }
 
-    public List<Claim> getClaims(UUID uuid) {
+    public List<Claim> getClaims(@Nonnull UUID uuid) {
         List<Claim> claims = new ArrayList<>();
         for (Claim claim : this.claims)
-            if (claim.getOwnerID().equals(uuid))
+            if (claim.getOwnerID() != null && claim.getOwnerID().equals(uuid))
                 claims.add(claim);
         return claims;
     }
@@ -158,7 +164,7 @@ public class ClaimHandler {
         return claims;
     }
 
-    public Claim claimCreate(UUID owner, String name, ClaimPosition position, PlayerClaimInteraction.CLAIM_MODE mode) {
+    public Claim claimCreate(@Nullable UUID owner, @Nullable String name, ClaimPosition position, PlayerClaimInteraction.CLAIM_MODE mode) {
         if (owner == null || mode == PlayerClaimInteraction.CLAIM_MODE.CREATE_ADMIN)
             return new Claim(position);
         else

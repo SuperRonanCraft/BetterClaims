@@ -159,11 +159,13 @@ public class Claim implements ClaimInfo {
     }
 
     public boolean checkPermLevel(Player p, CLAIM_PERMISSION_LEVEL level) {
-        switch (level) {
-            case OWNER: return isOwner(p);
-            case MEMBER: return isMember(p);
-            default: return true;
-        }
+        if (level != null)
+            switch (level) {
+                case OWNER: return isOwner(p);
+                case MEMBER: return isMember(p);
+                default: return true;
+            }
+        return true;
     }
 
     public boolean editCorners(Player editor, Location loc_1, Location loc_2) {

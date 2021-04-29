@@ -8,8 +8,11 @@ import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Calendar;
 
 public class HelperClaim {
@@ -79,30 +82,30 @@ public class HelperClaim {
         }
     }
 
-    public static CLAIM_ERRORS createClaim(Player owner, Location pos1, Location pos2, boolean sendMsg, PlayerClaimInteraction.CLAIM_MODE mode) {
+    public static CLAIM_ERRORS createClaim(@Nonnull Player creator, @Nonnull World world, @Nonnull Location pos1, @Nonnull Location pos2, boolean sendMsg, @Nonnull PlayerClaimInteraction.CLAIM_MODE mode) {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
-        Claim claim = handler.claimCreate(owner.getUniqueId(), owner.getName(), new ClaimPosition(owner.getWorld(), pos1, pos2), mode);
-        if (!HelperEvent.claimAttemptCreate(owner, claim, owner).isCancelled()) {
+        Claim claim = handler.claimCreate(creator.getUniqueId(), creator.getName(), new ClaimPosition(world, pos1, pos2), mode);
+        if (!HelperEvent.claimAttemptCreate(claim, creator).isCancelled()) {
             if (claim != null) {
-                error = handler.uploadClaim(claim, owner);
+                error = handler.uploadClaim(claim, creator);
                 switch (error) {
                     case NONE:
-                        MessagesCore.CLAIM_CREATE_SUCCESS.send(owner, claim);
-                        Visualization.fromClaim(claim, owner.getLocation().getBlockY(), VisualizationType.CLAIM, owner.getLocation()).apply(owner);
+                        MessagesCore.CLAIM_CREATE_SUCCESS.send(creator, claim);
+                        Visualization.fromClaim(claim, creator.getLocation().getBlockY(), VisualizationType.CLAIM, creator.getLocation()).apply(creator);
                     case SIZE_SMALL:
                     case SIZE_LARGE:
                     case OVERLAPPING:
                         break;
                     default:
-                        Message.sms(owner, "An Error Happened!", null);
+                        Message.sms(creator, "An Error Happened!", null);
                 }
             } else { //Overlapping
                 //MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
                 error = CLAIM_ERRORS.OVERLAPPING;
             }
             if (sendMsg)
-                error.sendMsg(owner, claim);
+                error.sendMsg(creator, claim);
         } else
             error = CLAIM_ERRORS.CANCELLED;
         return error;

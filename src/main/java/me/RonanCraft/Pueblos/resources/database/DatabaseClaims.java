@@ -22,6 +22,7 @@ public class DatabaseClaims extends SQLite {
         OWNER_UUID("uuid", "varchar(32) NOT NULL"),
         OWNER_NAME("name", "varchar(32) NOT NULL"),
         POSITION("position", "text NOT NULL"),
+        ADMIN_CLAIM("admin_claim", "boolean DEFAULT false"),
         MEMBERS("members", "text"),
         FLAGS("flags", "text"),
         REQUESTS("requests", "text"),
@@ -62,19 +63,18 @@ public class DatabaseClaims extends SQLite {
 
     //Create a claim
     public boolean createClaim(Claim claim) {
-        String pre;
-        if (sqlEnabled) pre = "INSERT IGNORE INTO ";
-        else pre = "INSERT OR IGNORE INTO ";
+        String pre = "INSERT INTO ";
         String sql = pre + table + " ("
                 + COLUMNS.OWNER_UUID.name + ", "
                 + COLUMNS.OWNER_NAME.name + ", "
+                + COLUMNS.ADMIN_CLAIM.name + ", "
                 + COLUMNS.DATE.name + ", "
                 + COLUMNS.POSITION.name + ""
                 + ") VALUES(?, ?, ?, ?)";
         List<Object> params = new ArrayList<>() {{
-                //add(claim.ownerId != null ? claim.ownerId : "null");
-                add(claim.getOwnerID() != null ? claim.getOwnerID() : "null");
-                add(claim.getOwnerName());
+                add(claim.getOwnerID() != null ? claim.getOwnerID() : "Admin Claim");
+                add(claim.getOwnerName() != null ? claim.getOwnerName() : "Admin Claim");
+                add(claim.isAdminClaim());
                 add(HelperDate.getDate(claim.dateCreated));
                 add(claim.getPositionJSON());
         }};

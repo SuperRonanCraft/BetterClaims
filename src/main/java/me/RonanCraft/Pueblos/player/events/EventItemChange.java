@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -43,11 +44,13 @@ public class EventItemChange implements PueblosEvents {
                 ItemStack item = p.getInventory().getItemInMainHand();
                 if (item.getType().equals(getClaimItem())) {
                     if (claim != null) {
-                        if (claim.isMember(p))
+                        VisualizationType vis = VisualizationType.ERROR;
+                        if (claim.isMember(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) {
                             MessagesCore.CLAIM_ITEM_INCLAIM.send(p);
-                        else
+                            vis = VisualizationType.CLAIM;
+                        } else
                             MessagesCore.CLAIM_ITEM_NOTOWNER.send(p);
-                        Visualization.fromClaim(claim, p.getLocation().getBlockY(), claim.isMember(p) ? VisualizationType.CLAIM : VisualizationType.ERROR, p.getLocation()).apply(p);
+                        Visualization.fromClaim(claim, p.getLocation().getBlockY(), vis, p.getLocation()).apply(p);
                     } else {
                         MessagesCore.CLAIM_ITEM_NOCLAIM.send(p);
                     }

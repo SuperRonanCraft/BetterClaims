@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class PlayerClaimInteraction {
 
@@ -42,11 +43,15 @@ public class PlayerClaimInteraction {
                             //Clicked a corner, but not allowed to resize this claim
                         //}
                     }
-                    if (!(mode == CLAIM_MODE.EDIT && editing == claim)) { //Not editting the current overlapping claim area
+                    if (!(mode == CLAIM_MODE.EDIT && editing == claim)) { //Not editing the current overlapping claim area
                         Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
                         return CLAIM_ERRORS.OVERLAPPING;
                     }
                 }
+            if (locations.size() > 1 && !Objects.equals(locations.get(0).getWorld(), loc.getWorld())) {
+                lock();
+                return CLAIM_ERRORS.CANCELLED; //Another world was selected?
+            }
             locations.add(loc);
         }
         if (locations.size() > 2)

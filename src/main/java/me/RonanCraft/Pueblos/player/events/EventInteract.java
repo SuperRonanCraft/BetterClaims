@@ -77,11 +77,10 @@ public class EventInteract implements PueblosEvents {
                 if (corners.size() >= 2) { //Create claim
                     switch (claimInteraction.mode) {
                         //Normal user claim
-                        case CREATE: error = HelperClaim.createClaim(p, corners.get(0), corners.get(1), false, claimInteraction.mode); break;
+                        case CREATE:
                         //Create a claim with no owner, making it an admin claim
                         case CREATE_ADMIN:
-                            p.sendMessage("Admin Claim creation!");
-                            break;
+                            error = HelperClaim.createClaim(p, p.getWorld(), corners.get(0), corners.get(1), false, claimInteraction.mode); break; //MODE will handle the rest
                         //Edit a claims size
                         case EDIT: error = resizeClaim(p, claimInteraction.editing, corners); break;
                         //Create a claim inside another claim
@@ -140,7 +139,8 @@ public class EventInteract implements PueblosEvents {
         if (cancelTimers.containsKey(p))
             Bukkit.getScheduler().cancelTask(cancelTimers.get(p));
         cancelTimers.put(p, Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
-            listener.claimInteraction.get(p).reset();
+            if (listener.claimInteraction.containsKey(p))
+                listener.claimInteraction.get(p).reset();
         }, time * 20L));
     }
 }
