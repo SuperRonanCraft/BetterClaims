@@ -79,6 +79,15 @@ public class ClaimHandler {
         }
     }
 
+    public CLAIM_ERRORS changeOwner(Claim claim, boolean save_oldOwner, @Nullable UUID id, boolean adminClaim) {
+        claim.changeOwner(adminClaim ? null : id, save_oldOwner);
+        if (getDatabase().saveClaim(claim))
+            return CLAIM_ERRORS.NONE;
+        else //Something bad happened, reload all claims just in-case something broke
+            load();
+        return CLAIM_ERRORS.DATABASE_ERROR;
+    }
+
     public CLAIM_ERRORS uploadClaim(Claim claim, @Nullable Player creator) {
         CLAIM_ERRORS error = isLocationValid(claim, creator);
         if (error == CLAIM_ERRORS.NONE) {

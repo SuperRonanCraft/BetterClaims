@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.resources.database;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.claims.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
@@ -72,8 +73,8 @@ public class DatabaseClaims extends SQLite {
                 + COLUMNS.POSITION.name + ""
                 + ") VALUES(?, ?, ?, ?, ?)";
         List<Object> params = new ArrayList<>() {{
-                add(claim.getOwnerID() != null ? claim.getOwnerID() : "Admin Claim");
-                add(claim.getOwnerName() != null ? claim.getOwnerName() : "Admin Claim");
+                add(getClaimOwnerID(claim));
+                add(getClaimOwnerName(claim));
                 add(claim.isAdminClaim());
                 add(HelperDate.getDate(claim.dateCreated));
                 add(claim.getPositionJSON());
@@ -104,14 +105,18 @@ public class DatabaseClaims extends SQLite {
     }*/
 
     //Claim Saving
-    void saveClaim(Claim claim) {
+    public boolean saveClaim(Claim claim) {
         String sql = "UPDATE " + table + " SET "
+                + COLUMNS.OWNER_UUID.name + " = ?,"
+                + COLUMNS.OWNER_NAME.name + " = ?,"
                 + COLUMNS.POSITION.name + " = ?, "
                 + COLUMNS.MEMBERS.name + " = ?, "
                 + COLUMNS.REQUESTS.name + " = ?, "
                 + COLUMNS.FLAGS.name + " = ? "
                 + " WHERE " + COLUMNS.CLAIM_ID.name + " = ?";
         List<Object> params = new ArrayList<>() {{
+            add(getClaimOwnerID(claim));
+            add(getClaimOwnerName(claim));
             add(claim.getPositionJSON());
             add(JSONEncoding.getJsonFromMembers(claim.getMembers()));
             add(JSONEncoding.getJsonFromRequests(claim.getRequests()));
@@ -119,7 +124,7 @@ public class DatabaseClaims extends SQLite {
             add(claim.claimId);
         }};
         claim.uploaded();
-        sqlUpdate(sql, params);
+        return sqlUpdate(sql, params);
     }
 
     public void saveChanges() {
@@ -158,5 +163,13 @@ public class DatabaseClaims extends SQLite {
             close(ps, null, conn);
         }
         return success;
+    }
+
+    private String getClaimOwnerID(Claim claim) {
+        return claim.getOwnerID() != null ? claim.getOwnerID().toString() : "Admin Claim";
+    }
+
+    private String getClaimOwnerName(Claim claim) {
+        return claim.getOwnerName() != null ? claim.getOwnerName() : "Admin Claim";
     }
 }

@@ -9,16 +9,14 @@ public class ClaimMember {
 
     public final UUID uuid;
     public final String name;
-    public final boolean owner;
     public final Date date;
     private final HashMap<CLAIM_FLAG_MEMBER, Object> flags = new HashMap<>();
     public final Claim claim;
 
-    public ClaimMember(UUID uuid, String name, Date date, boolean owner, Claim claim) {
+    public ClaimMember(UUID uuid, String name, Date date, Claim claim) {
         this.uuid = uuid;
         this.name = name;
         this.date = date;
-        this.owner = owner;
         this.claim = claim;
     }
 

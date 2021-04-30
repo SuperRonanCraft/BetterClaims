@@ -14,11 +14,11 @@ import javax.annotation.Nullable;
 import java.util.*;
 
 public class Claim implements ClaimInfo {
-    private final UUID ownerId;
-    private final String ownerName;
+    private UUID ownerId;
+    private String ownerName;
     public long claimId; //ID given by the database
     //Claim Information
-    private final boolean adminClaim;
+    private boolean adminClaim;
     private final ClaimPosition position;
     private final ClaimFlags flags = new ClaimFlags(this);
     private final ClaimMembers members = new ClaimMembers(this);
@@ -62,7 +62,7 @@ public class Claim implements ClaimInfo {
     }
 
     public boolean isMember(Player p) {
-        return members.isMember(p);
+        return members.isMember(p.getUniqueId());
     }
 
     //Add
@@ -105,7 +105,7 @@ public class Claim implements ClaimInfo {
     }
 
     public ClaimMember getMember(Player p) {
-        return members.getMember(p);
+        return members.getMember(p.getUniqueId());
     }
 
     public boolean canBuild(Player p) {
@@ -181,5 +181,23 @@ public class Claim implements ClaimInfo {
 
     public boolean isAdminClaim() {
         return adminClaim;
+    }
+
+    void changeOwner(UUID newOwnerId, boolean save_oldOwner_as_Member) {
+        UUID oldOwnerId = this.ownerId;
+        this.ownerId = newOwnerId;
+        this.ownerName = getOwner() == null ? "Admin Claim" : getOwner().getName();
+        this.adminClaim = this.ownerId == null;
+        if (save_oldOwner_as_Member && oldOwnerId != null) { //Make old owner a member
+            OfflinePlayer oldOwner = Bukkit.getPlayer(oldOwnerId);
+            if (oldOwner != null) {
+                members.addMember(new ClaimMember(oldOwnerId, oldOwner.getName(), Calendar.getInstance().getTime(), this), true);
+            }
+        }
+        if (this.ownerId != null && oldOwnerId != null) { //Remove the new owner as a member, if they were a member
+            if (members.isMember(oldOwnerId))
+                members.remove(members.getMember(oldOwnerId), true);
+        }
+        updated();
     }
 }

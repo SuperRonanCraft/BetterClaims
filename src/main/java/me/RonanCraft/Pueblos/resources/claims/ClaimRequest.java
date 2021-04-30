@@ -22,7 +22,7 @@ public class ClaimRequest {
 
 
     public void accepted() {
-        claim.addMember(new ClaimMember(id, name, HelperDate.getDate(), false, claim), true);
+        claim.addMember(new ClaimMember(id, name, HelperDate.getDate(), claim), true);
         claim.removeRequest(this, true);
     }
 

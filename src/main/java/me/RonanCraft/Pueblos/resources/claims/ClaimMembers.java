@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ClaimMembers {
     private final List<ClaimMember> members = new ArrayList<>();
@@ -20,10 +21,10 @@ public class ClaimMembers {
             claim.updated();
     }
 
-    public ClaimMember getMember(Player p) {
+    public ClaimMember getMember(UUID id) {
         ClaimMember member = null;
         for (ClaimMember _member : members)
-            if (_member.uuid.equals(p.getUniqueId()))
+            if (_member.uuid.equals(id))
                 member = _member;
         return member;
     }
@@ -32,11 +33,11 @@ public class ClaimMembers {
         return members;
     }
 
-    public boolean isMember(Player p) {
-        if (p.getUniqueId().equals(claim.getOwnerID()))
+    public boolean isMember(UUID id) {
+        if (id.equals(claim.getOwnerID()))
             return true;
         for (ClaimMember member : members)
-            if (member.uuid.equals(p.getUniqueId()))
+            if (member.uuid.equals(id))
                 return true;
         return false;
     }

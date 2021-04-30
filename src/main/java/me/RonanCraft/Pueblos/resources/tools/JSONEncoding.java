@@ -56,8 +56,6 @@ public class JSONEncoding {
             return null;
         List<Map> array = new ArrayList<>();
         for (ClaimMember member : members) {
-            if (member.owner)
-                continue;
             HashMap<String, Object> obj = new HashMap();
             obj.put("uuid", member.uuid.toString());
             obj.put("name", member.name);
@@ -161,7 +159,7 @@ public class JSONEncoding {
                     Object _value = flag.getValue();
                     flags.put(_flag, _value);
                 }
-                ClaimMember member = new ClaimMember(UUID.fromString(uuid), name, HelperDate.getDate(date), false, claim);
+                ClaimMember member = new ClaimMember(UUID.fromString(uuid), name, HelperDate.getDate(date), claim);
                 member.setFlag(flags, false);
                 members.add(member);
             }
