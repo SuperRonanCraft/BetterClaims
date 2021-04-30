@@ -177,7 +177,7 @@ public class ClaimHandler {
             return true;
         else if (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p)) //Is an admin CLAIM, and player is an admin
             return true;
-        else if (Pueblos.getInstance().getSystems().getPlayerInfo().isOverriding(p)) //Is an admin and wants to override claims
+        else if (Pueblos.getInstance().getSystems().getPlayerData(p).isOverriding()) //Is an admin and wants to override claims
             return true;
         else
             return claim.canBuild(p);

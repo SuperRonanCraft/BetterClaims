@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.player.data.PlayerData;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
@@ -25,16 +26,17 @@ public class EventItemChange implements PueblosEvents {
 
     //Show claiming message when claim item is equipped and start a `claimInteraction`
     void onItemChange(PlayerItemHeldEvent e) {
-        listener.claimInteraction.remove(e.getPlayer());
+        PlayerData data = listener.getPlayerData(e.getPlayer());
+        data.removeClaimInteraction();
         if (claimShowing.containsKey(e.getPlayer()))
             return;
         ItemStack item = e.getPlayer().getInventory().getItem(e.getNewSlot());
-        if (item != null && item.getType().equals(getClaimItem()) && !listener.claimInteraction.containsKey(e.getPlayer())) {
-            listener.claimInteraction.put(e.getPlayer(), new PlayerClaimInteraction(e.getPlayer(), PlayerClaimInteraction.CLAIM_MODE.CREATE));
+        if (item != null && item.getType().equals(getClaimItem()) && data.getClaimInteraction() == null) {
+            data.setClaimInteraction(new PlayerClaimInteraction(e.getPlayer(), PlayerClaimInteraction.CLAIM_MODE.CREATE));
             Claim claim = getClaim(e.getPlayer().getLocation());
             showClaimLater(claim, e.getPlayer());
         } else
-            listener.claimInteraction.remove(e.getPlayer());
+            data.removeClaimInteraction();
     }
 
     //Delay showing the claim and message to not spam player scrolling through inventory

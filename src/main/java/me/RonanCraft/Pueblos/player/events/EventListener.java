@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.player.data.PlayerData;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.entity.Player;
@@ -17,9 +18,6 @@ import org.bukkit.event.world.PortalCreateEvent;
 import java.util.*;
 
 public class EventListener implements Listener {
-
-    final HashMap<Player, PlayerClaimInteraction> claimInteraction = new HashMap<>();
-    final HashMap<Player, Claim> insideClaim = new HashMap<>();
 
     //Events
     EventBlocks blocks = new EventBlocks();
@@ -44,8 +42,8 @@ public class EventListener implements Listener {
     }
 
     public void toggleAdminClaim(Player p) { //Can fail if not having the claim item equipped and has no locations
-        if (claimInteraction.containsKey(p)) {
-            PlayerClaimInteraction interaction = claimInteraction.get(p);
+        if (getPlayerData(p).getClaimInteraction() != null) {
+            PlayerClaimInteraction interaction = getPlayerData(p).getClaimInteraction();
             if (interaction.locations.isEmpty()) {
                 if (interaction.mode != PlayerClaimInteraction.CLAIM_MODE.CREATE_ADMIN) {
                     interaction.mode = PlayerClaimInteraction.CLAIM_MODE.CREATE_ADMIN;
@@ -159,6 +157,10 @@ public class EventListener implements Listener {
     //Move
     @EventHandler(priority = EventPriority.MONITOR)
     private void onMove(PlayerMoveEvent e) {
-        //move.onMove(e);
+        move.onMove(e);
+    }
+
+    PlayerData getPlayerData(Player p) {
+        return Pueblos.getInstance().getSystems().getPlayerData(p);
     }
 }

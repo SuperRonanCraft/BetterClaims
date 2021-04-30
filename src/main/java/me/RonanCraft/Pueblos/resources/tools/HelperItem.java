@@ -35,7 +35,7 @@ public class HelperItem {
                 SkullMeta meta = (SkullMeta) item.getItemMeta();
                 if (info instanceof ClaimMember)
                     meta.setOwningPlayer(((ClaimMember) info).getPlayer());
-                else if (info instanceof Claim)
+                else if (info instanceof Claim && !((Claim) info).isAdminClaim())
                     meta.setOwningPlayer(((Claim) info).getOwner());
                 else if (info instanceof ClaimRequest)
                     meta.setOwningPlayer(Bukkit.getOfflinePlayer(((ClaimRequest) info).id));

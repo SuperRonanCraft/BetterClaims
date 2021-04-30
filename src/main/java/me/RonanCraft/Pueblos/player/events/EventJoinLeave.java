@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class EventJoinLeave {
 
     void leave(PlayerQuitEvent e) {
-        Pueblos.getInstance().getSystems().getPlayerInfo().clear(e.getPlayer());
+        Pueblos.getInstance().getSystems().getPlayerData(e.getPlayer()).clear();
     }
 
     void join(PlayerJoinEvent e) {

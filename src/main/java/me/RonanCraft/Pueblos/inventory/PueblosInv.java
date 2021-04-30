@@ -46,7 +46,7 @@ public interface PueblosInv {
     }
 
     default void addButtonBack(Inventory inv, Player p, HashMap<Integer, PueblosItem> itemInfo, PueblosInventory currentinv, Object info) {
-        PueblosInventory pinv = getPl().getSystems().getPlayerInfo().getPrevious(p, currentinv);
+        PueblosInventory pinv = getPl().getSystems().getPlayerData(p).getPrevious(currentinv);
         if (pinv != null) {
             int slot = inv.firstEmpty();
             ItemStack item = Pueblos.getInstance().getSystems().getGlobalItems().getItem(GlobalItems.GLOBAL_ITEM.BACK, p, info);
@@ -67,7 +67,7 @@ public interface PueblosInv {
                     case BACK:
                     case NEXT:
                         PueblosInventory inv = (PueblosInventory) item.info;
-                        Pueblos.getInstance().getSystems().getPlayerInfo().removePrevious(p);
+                        Pueblos.getInstance().getSystems().getPlayerData(p).removePrevious();
                         inv.openCasted(p, item.info2);
                 }
                 clear(p);

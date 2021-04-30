@@ -16,8 +16,8 @@ public class EventBlocks implements PueblosEvents {
 
     //Player Block Place
     void onPlace(BlockPlaceEvent e) {
-        if (!e.isCancelled())
-            e.setCancelled(!allowBreak(e.getPlayer(), e.getBlock().getLocation()));
+        if (!e.isCancelled() && !allowBreak(e.getPlayer(), e.getBlock().getLocation()))
+            e.setCancelled(true);
     }
 
 }

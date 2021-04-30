@@ -8,6 +8,9 @@ Messages:
   InvalidFlag: '&cFlag is not valid! &7Please try again.'
   CannotEdit: '&cUnable to edit this while outside a claim!'
   Claim:
+    Override:
+      Enabled: '&7Override &aEnabled&7, you are now able to edit any claim! &8Watch it, with great power comes great responsibility!'
+      Disabled: '&7Override &cDisabled&7, you will no longer be able to edit other players claims!'
     Deleted: '&cClaim deleted! &8This area will no longer be protected.'
     Resized: '&7Claim successfully resized to &f%claim_width% x %claim_length%'
     Teleport: '&7Teleported to &f%claim_name%''s &7home!'

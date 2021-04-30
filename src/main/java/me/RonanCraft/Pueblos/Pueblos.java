@@ -69,7 +69,7 @@ public class Pueblos extends JavaPlugin {
 
     private void closeMenus() {
         for (Player plr : Bukkit.getOnlinePlayers())
-            if (systems.getPlayerInfo().getInventory(plr) != null)
+            if (systems.getPlayerData(plr).getInventory() != null)
                 plr.closeInventory();
     }
 

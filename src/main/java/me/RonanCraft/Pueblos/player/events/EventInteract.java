@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.player.data.PlayerData;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.*;
@@ -66,9 +67,10 @@ public class EventInteract implements PueblosEvents {
 
         e.setCancelled(true);
         Player p = e.getPlayer();
-        if (!listener.claimInteraction.containsKey(p))
-            listener.claimInteraction.put(p, new PlayerClaimInteraction(p, PlayerClaimInteraction.CLAIM_MODE.CREATE));
-        PlayerClaimInteraction claimInteraction = listener.claimInteraction.get(p);
+        PlayerData data = listener.getPlayerData(p);
+        if (data.getClaimInteraction() == null)
+            data.setClaimInteraction(new PlayerClaimInteraction(p, PlayerClaimInteraction.CLAIM_MODE.CREATE));
+        PlayerClaimInteraction claimInteraction = data.getClaimInteraction();
         if (!claimInteraction.locked) { //Are we NOT locked from doing anything?
             Object errorInfo = null;
             resetInteraction(p, 60L);
@@ -140,8 +142,8 @@ public class EventInteract implements PueblosEvents {
         if (cancelTimers.containsKey(p))
             Bukkit.getScheduler().cancelTask(cancelTimers.get(p));
         cancelTimers.put(p, Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
-            if (listener.claimInteraction.containsKey(p))
-                listener.claimInteraction.get(p).reset();
+            if (listener.getPlayerData(p).getClaimInteraction() != null)
+                listener.getPlayerData(p).getClaimInteraction().reset();
         }, time * 20L));
     }
 }

@@ -35,7 +35,11 @@ public class CmdRequest implements PueblosCommand, PueblosCommandHelpable, Puebl
         List<Claim> claims = new ArrayList<>();
         for (Claim claim : Pueblos.getInstance().getSystems().getClaimHandler().getClaims())
             //Not the owner or member and claim is accepting requests
-            if (!claim.isOwner(p) && !claim.isMember(p) && (Boolean) claim.getFlags().getFlag(CLAIM_FLAG.ALLOW_REQUESTS)) {
+            if (    !claim.isAdminClaim() //Not an admin Claim
+                    && claim.getOwnerID() != null //Owners UUID isnt trash
+                    && !claim.isOwner(p) //Not an owner of this claim
+                    && !claim.isMember(p) //Is not already a member
+                    && (Boolean) claim.getFlags().getFlag(CLAIM_FLAG.ALLOW_REQUESTS)) { //Claim is accepting requests
                 claims.add(claim);
             }
         return claims;

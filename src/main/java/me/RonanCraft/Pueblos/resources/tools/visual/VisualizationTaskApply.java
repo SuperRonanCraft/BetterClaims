@@ -26,7 +26,7 @@ class VisualizationTaskApply implements Runnable
         }
 
         //remember the visualization applied to this player for later (so it can be inexpensively reverted)
-        Pueblos.getInstance().getSystems().getPlayerInfo().addVisualization(player, visualization);
+        Pueblos.getInstance().getSystems().getPlayerData(player).setVisualization(visualization);
 
         //schedule automatic visualization reversion in 60 seconds.
         Pueblos.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(

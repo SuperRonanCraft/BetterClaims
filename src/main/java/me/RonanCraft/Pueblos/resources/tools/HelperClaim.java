@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Calendar;
+import java.util.Objects;
 
 public class HelperClaim {
 
@@ -34,7 +35,7 @@ public class HelperClaim {
             ClaimRequest request = new ClaimRequest(p.getUniqueId(), p.getName(), Calendar.getInstance().getTime(), claim);
             claim.addRequest(request, true);
             MessagesCore.REQUEST_REQUESTER_SENT.send(p, request);
-            if (claim.getOwner().isOnline())
+            if (Objects.requireNonNull(claim.getOwner()).isOnline())
                 MessagesCore.REQUEST_NEW.send((Player) claim.getOwner(), request);
         }
         return true;
@@ -68,7 +69,7 @@ public class HelperClaim {
         if (!HelperEvent.memberLeave(p, member).isCancelled()) {
             member.claim.removeMember(member, true);
             MessagesCore.CLAIM_MEMBER_LEAVE.send(p, member);
-            if (member.claim.getOwner().isOnline())
+            if (Objects.requireNonNull(member.claim.getOwner()).isOnline())
                 MessagesCore.CLAIM_MEMBER_NOTIFICATION_LEAVE.send(member.claim.getOwner().getPlayer(), member);
         }
     }

@@ -1,5 +1,5 @@
 main: me.RonanCraft.Pueblos.Pueblos
-version: '1.2.0'
+version: '1.2.1'
 website: "https://ronancraft.net"
 description: "Create protected regions of land quickly"
 name: Pueblos
@@ -11,25 +11,28 @@ api-version: '1.13'
 
 commands:
     pueblos:
-        aliases: [pueblo, claim, claims, town, towns]
-        description: Main pueblos command
+        aliases: [pueblo, claim, claims]
+        description: 'Main pueblos command'
 
 permissions:
     pueblos.use:
-        description: Use the plugin
+        description: 'Use the plugin'
         default: true
     pueblos.reload:
-        description: Reload the plugin
+        description: 'Reload the plugin'
         default: op
     pueblos.request:
-        description: Request to join a claim
+        description: 'Request to join a claim'
         default: true
     pueblos.item:
-        description: Grab a copy of the claim creation item
+        description: 'Grab a copy of the claim creation item'
         default: op
     pueblos.admin.claim:
-        description: Create & Edit admin claims, toggled with "/pueblos adminclaim"
+        description: 'Create & Edit admin claims, toggled with "/pueblos adminclaim"'
+        default: op
+    pueblos.admin.convert:
+        description: 'Convert claims from other plugins using "/pueblos convert <plugin>"'
         default: op
     pueblos.admin.override:
-        description: Override all claims when executing "/peublos override"
+        description: 'Override all claims when executing "/peublos override"'
         default: op

@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
@@ -9,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class Claim implements ClaimInfo {
@@ -81,8 +83,9 @@ public class Claim implements ClaimInfo {
     }
 
     //Get
+    @Nullable
     public OfflinePlayer getOwner() {
-        return Bukkit.getOfflinePlayer(ownerId);
+        return ownerId == null ? null : Bukkit.getOfflinePlayer(ownerId);
     }
 
     public ClaimFlags getFlags() {
@@ -106,8 +109,7 @@ public class Claim implements ClaimInfo {
     }
 
     public boolean canBuild(Player p) {
-        ClaimMember member = getMember(p);
-        return member != null;
+        return isOwner(p) || isMember(p);
     }
 
     public List<ClaimRequest> getRequests() {
@@ -161,7 +163,7 @@ public class Claim implements ClaimInfo {
     public boolean checkPermLevel(Player p, CLAIM_PERMISSION_LEVEL level) {
         if (level != null)
             switch (level) {
-                case OWNER: return isOwner(p);
+                case OWNER: return isOwner(p) || (isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p));
                 case MEMBER: return isMember(p);
                 default: return true;
             }
