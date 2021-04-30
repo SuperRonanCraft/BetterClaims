@@ -66,7 +66,7 @@ public class EventListener implements Listener {
         interact.onInteract(e);
     }
 
-    @EventHandler (ignoreCancelled = true, priority = EventPriority.NORMAL)
+    @EventHandler (priority = EventPriority.LOWEST)
     void onInteractCreateClaim(PlayerInteractEvent e) {
         interact.onInteractCreateClaim(e);
     }

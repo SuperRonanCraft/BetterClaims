@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.resources.files.msgs;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.FileLanguage;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
@@ -104,6 +105,8 @@ public class Message {
             if (str.contains("%claim_flag_value%"))
                 str = str.replace("%claim_flag_value%", claim.getFlags().getFlag(flag).toString());
         }
+        if (str.contains("%max%"))
+            str = str.replace("%max%", String.valueOf(Pueblos.getInstance().getSystems().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE)));
         return str;
     }
 

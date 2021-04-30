@@ -12,7 +12,9 @@ Messages:
     Resized: '&7Claim successfully resized to &f%claim_width% x %claim_length%'
     Teleport: '&7Teleported to &f%claim_name%''s &7home!'
     None: '&7You are not an owner or member of any claim!'
-    NoPermission: '&7You are not a member of &f%claim_owner%&7''s pueblo!'
+    Permission:
+      Claim: '&7You are not a member of &f%claim_owner%&7''s pueblo!'
+      AdminClaim: '&7You are unable to do this here!'
     Flag: '&7Claim flag &f%claim_flag% &7changed to &f%claim_flag_value%'
     Mode:
       Enabled:

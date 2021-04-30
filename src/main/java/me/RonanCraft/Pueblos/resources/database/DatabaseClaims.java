@@ -70,7 +70,7 @@ public class DatabaseClaims extends SQLite {
                 + COLUMNS.ADMIN_CLAIM.name + ", "
                 + COLUMNS.DATE.name + ", "
                 + COLUMNS.POSITION.name + ""
-                + ") VALUES(?, ?, ?, ?)";
+                + ") VALUES(?, ?, ?, ?, ?)";
         List<Object> params = new ArrayList<>() {{
                 add(claim.getOwnerID() != null ? claim.getOwnerID() : "Admin Claim");
                 add(claim.getOwnerName() != null ? claim.getOwnerName() : "Admin Claim");

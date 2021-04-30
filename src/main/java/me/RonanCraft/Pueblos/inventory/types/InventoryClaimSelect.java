@@ -29,7 +29,8 @@ public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv
             slot = getNextSlot(slot, inv);
             if (slot == -1)
                 break;
-            ItemStack item = getItem(ITEMS.SELECT.section, p, claim);
+            ITEMS _i = claim.isOwner(p) ? ITEMS.OWNER : ITEMS.MEMBER;
+            ItemStack item = getItem(_i.section, p, claim);
             //if (claim.contains(p.getLocation()))
             //    HelperItem.enchantItem(item, Enchantment.values()[0]);
             inv.setItem(slot, item);
@@ -73,7 +74,8 @@ public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv
     }
 
     private enum ITEMS {
-        SELECT("Select");
+        OWNER("Owner"),
+        MEMBER("Member");
 
         String section;
 

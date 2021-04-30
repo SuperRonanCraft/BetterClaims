@@ -35,7 +35,10 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
                 //----
                 PueblosInventory.CLAIM.open(p, claim, true);
             } else {
-                MessagesCore.CLAIM_NOPERMISSION.send(sendi, claim);
+                if (claim.isAdminClaim())
+                    MessagesCore.CLAIM_PERMISSION_ADMINCLAIM.send(sendi, claim);
+                else
+                    MessagesCore.CLAIM_PERMISSION_CLAIM.send(sendi, claim);
             }
         } else {
             List<Claim> claims = handler.getClaims(p.getUniqueId());

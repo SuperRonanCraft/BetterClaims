@@ -59,7 +59,7 @@ public class EventInteract implements PueblosEvents {
 
         Block block = e.getClickedBlock();
         if (block == null || block.getType() == Material.AIR) //Block aiming at distance
-            block = e.getPlayer().getTargetBlock(null, 32);
+            block = e.getPlayer().getTargetBlock(null, 64);
         if (block.getType() == Material.AIR)
             return;
         Location loc = block.getLocation();
@@ -70,6 +70,7 @@ public class EventInteract implements PueblosEvents {
             listener.claimInteraction.put(p, new PlayerClaimInteraction(p, PlayerClaimInteraction.CLAIM_MODE.CREATE));
         PlayerClaimInteraction claimInteraction = listener.claimInteraction.get(p);
         if (!claimInteraction.locked) { //Are we NOT locked from doing anything?
+            Object errorInfo = null;
             resetInteraction(p, 60L);
             CLAIM_ERRORS error = claimInteraction.addLocation(p, loc);
             if (error == CLAIM_ERRORS.NONE) {
@@ -82,7 +83,7 @@ public class EventInteract implements PueblosEvents {
                         case CREATE_ADMIN:
                             error = HelperClaim.createClaim(p, p.getWorld(), corners.get(0), corners.get(1), false, claimInteraction.mode); break; //MODE will handle the rest
                         //Edit a claims size
-                        case EDIT: error = resizeClaim(p, claimInteraction.editing, corners); break;
+                        case EDIT: error = resizeClaim(p, claimInteraction.editing, corners); errorInfo = claimInteraction.editing; break;
                         //Create a claim inside another claim
                         case SUBCLAIM: break;
                     }
@@ -99,7 +100,7 @@ public class EventInteract implements PueblosEvents {
                 claimInteraction.lock();
                 resetInteraction(p, 2L);
             }
-            error.sendMsg(p, null);
+            error.sendMsg(p, errorInfo);
         }
     }
 
@@ -129,8 +130,8 @@ public class EventInteract implements PueblosEvents {
                 MessagesCore.CLAIM_RESIZED.send(p, claim);
                 Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
             }
-        } else
-            error.sendMsg(p, claim);
+        }// else
+         //   error.sendMsg(p, claim);
         return error;
     }
 

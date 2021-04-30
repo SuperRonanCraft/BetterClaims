@@ -69,7 +69,18 @@ Claim:
 ClaimSelect:
   Title: '&7Select Claim'
   Items:
-    Select:
+    Owner:
+      Name: '&d%claim_name%'
+      Item: 'player_head'
+      Lore:
+        - ''
+        - '&7Members: &f%claim_members%'
+        - '&7Size: &f%claim_width% x %claim_length%'
+        - '&7Location: &f%claim_location%'
+        - '&7World: &f%claim_location_world%'
+        - ''
+        - '&fClick to view your claim!'
+    Member:
       Name: '&e%claim_name%'
       Item: 'player_head'
       Lore:
@@ -79,7 +90,7 @@ ClaimSelect:
         - '&7Location: &f%claim_location%'
         - '&7World: &f%claim_location_world%'
         - ''
-        - '&fClick to view claim!'
+        - '&fClick to view this claim!'
 Members:
   Title: '&7Members | %claim_name%'
   Items:

@@ -59,7 +59,6 @@ public class InventoryConfirm extends PueblosInvLoader implements PueblosInv_Con
         switch (buttonPressed) {
             case ACCEPT:
                 //p.sendMessage("Accepted!");
-                goBack(p, this.itemInfo.get(p));
                 switch (confirmation.type) {
                     case CLAIM_LEAVE:
                         HelperClaim.leaveClaim(p, (ClaimMember) confirmation.info);
@@ -72,8 +71,10 @@ public class InventoryConfirm extends PueblosInvLoader implements PueblosInv_Con
                         break;
                     case CLAIM_DELETE:
                         HelperClaim.deleteClaim(p, (Claim) confirmation.info);
-                        break;
+                        p.closeInventory();
+                        return;
                 }
+                goBack(p, this.itemInfo.get(p));
                 break;
             case CANCEL:
                 //p.sendMessage("Declined?");
