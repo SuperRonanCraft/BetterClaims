@@ -17,7 +17,7 @@ public class CmdAdminOverride implements PueblosCommand, PueblosCommandHelpable 
 
     public void execute(CommandSender sendi, String label, String[] args) {
         Player p = (Player) sendi;
-        PlayerData data = getPl().getSystems().getPlayerData(p);
+        PlayerData data = getPl().getPlayerData(p);
         data.toggleOverride();
         if (data.isOverriding()) { //Send message override is enabled
             MessagesCore.CLAIM_OVERRIDE_ENABLED.send(sendi);

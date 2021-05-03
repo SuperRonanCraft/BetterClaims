@@ -32,7 +32,7 @@ public class EventInteract implements PueblosEvents {
     }
 
     void load() {
-        String item = Pueblos.getInstance().getSystems().getSettings().getString(Settings.SETTING.CLAIM_ITEM);
+        String item = Pueblos.getInstance().getSettings().getString(Settings.SETTING.CLAIM_ITEM);
         try {
             claim_item = Material.valueOf(item.toUpperCase());
         } catch (IllegalArgumentException e) {
@@ -125,7 +125,7 @@ public class EventInteract implements PueblosEvents {
         int min_z = Math.min(positionStiff.getBlockZ(), positionMovingCorner.getBlockZ());
         Location greater = new Location(position.getWorld(), max_x, 0, max_z);
         Location lower = new Location(position.getWorld(), min_x, 0, min_z);
-        CLAIM_ERRORS error = Pueblos.getInstance().getSystems().getClaimHandler().isLocationValid(greater, lower, p, claim /*Ignored claim*/);
+        CLAIM_ERRORS error = Pueblos.getInstance().getClaimHandler().isLocationValid(greater, lower, p, claim /*Ignored claim*/);
         if (error == CLAIM_ERRORS.NONE) {
             //Save new position
             if (claim.editCorners(p, positionStiff, positionMovingCorner)) {

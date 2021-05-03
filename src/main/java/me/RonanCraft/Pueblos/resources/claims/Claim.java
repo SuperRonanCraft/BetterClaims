@@ -128,7 +128,7 @@ public class Claim implements ClaimInfo {
 
     //Checks
     public boolean contains(Location loc) {
-        return (loc.getBlockY() >= Pueblos.getInstance().getSystems().getSettings().getInt(Settings.SETTING.CLAIM_MAXDEPTH)
+        return (loc.getBlockY() >= Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXDEPTH)
                 && (position.getLeft() <= loc.getBlockX() && position.getTop() >= loc.getBlockZ()) && //Top Left
                 (position.getRight() >= loc.getBlockX() && position.getBottom() <= loc.getBlockZ())); //Bottom Right
     }

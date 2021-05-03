@@ -37,7 +37,7 @@ public interface PueblosInv {
 
     default void addBorder(Inventory inv) {
         //Decoration
-        ItemStack item = Pueblos.getInstance().getSystems().getGlobalItems().getItem(GlobalItems.GLOBAL_ITEM.BORDER, null, null);
+        ItemStack item = Pueblos.getInstance().getGlobalItems().getItem(GlobalItems.GLOBAL_ITEM.BORDER, null, null);
         if (item != null)
             for (int i = 0; i < inv.getSize(); i++) {
                 if (i < 9 || i > inv.getSize() - 9 || i % 9 == 0 || i % 9 - 8 == 0)
@@ -46,10 +46,10 @@ public interface PueblosInv {
     }
 
     default void addButtonBack(Inventory inv, Player p, HashMap<Integer, PueblosItem> itemInfo, PueblosInventory currentinv, Object info) {
-        PueblosInventory pinv = getPl().getSystems().getPlayerData(p).getPrevious(currentinv);
+        PueblosInventory pinv = getPl().getPlayerData(p).getPrevious(currentinv);
         if (pinv != null) {
             int slot = inv.firstEmpty();
-            ItemStack item = Pueblos.getInstance().getSystems().getGlobalItems().getItem(GlobalItems.GLOBAL_ITEM.BACK, p, info);
+            ItemStack item = Pueblos.getInstance().getGlobalItems().getItem(GlobalItems.GLOBAL_ITEM.BACK, p, info);
             inv.setItem(slot, item);
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.BACK, pinv, info));
         }
@@ -67,7 +67,7 @@ public interface PueblosInv {
                     case BACK:
                     case NEXT:
                         PueblosInventory inv = (PueblosInventory) item.info;
-                        Pueblos.getInstance().getSystems().getPlayerData(p).removePrevious();
+                        Pueblos.getInstance().getPlayerData(p).removePrevious();
                         inv.openCasted(p, item.info2);
                 }
                 clear(p);

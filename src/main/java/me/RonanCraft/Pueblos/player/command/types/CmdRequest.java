@@ -33,7 +33,7 @@ public class CmdRequest implements PueblosCommand, PueblosCommandHelpable, Puebl
 
     public static List<Claim> getRequestable(Player p) { //Get all claims a player can request to be in
         List<Claim> claims = new ArrayList<>();
-        for (Claim claim : Pueblos.getInstance().getSystems().getClaimHandler().getClaims())
+        for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaims())
             //Not the owner or member and claim is accepting requests
             if (    !claim.isAdminClaim() //Not an admin Claim
                     && claim.getOwnerID() != null //Owners UUID isnt trash

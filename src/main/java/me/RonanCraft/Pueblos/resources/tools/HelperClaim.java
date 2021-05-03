@@ -85,7 +85,7 @@ public class HelperClaim {
 
     public static CLAIM_ERRORS createClaim(@Nonnull Player creator, @Nonnull World world, @Nonnull Location pos1, @Nonnull Location pos2, boolean sendMsg, @Nonnull PlayerClaimInteraction.CLAIM_MODE mode) {
         CLAIM_ERRORS error;
-        ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
+        ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         Claim claim = handler.claimCreate(creator.getUniqueId(), creator.getName(), new ClaimPosition(world, pos1, pos2), mode);
         if (!HelperEvent.claimAttemptCreate(claim, creator).isCancelled()) {
             if (claim != null) {
@@ -125,7 +125,7 @@ public class HelperClaim {
     }
 
     public static void deleteClaim(Player p, Claim claim) {
-        ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
+        ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         CLAIM_ERRORS error = handler.deleteClaim(p, claim);
         if (error == CLAIM_ERRORS.NONE)
             MessagesCore.CLAIM_DELETE.send(p, claim);

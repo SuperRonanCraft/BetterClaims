@@ -49,7 +49,7 @@ public class DatabaseClaims extends SQLite {
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                Claim claim = Pueblos.getInstance().getSystems().getClaimHandler().loadClaim(rs);
+                Claim claim = Pueblos.getInstance().getClaimHandler().loadClaim(rs);
                 if (claim != null && claim.getPosition() != null)
                     list.add(claim);
             }
@@ -85,14 +85,12 @@ public class DatabaseClaims extends SQLite {
     //Create a claim
     public boolean deleteClaim(Claim claim) {
         String pre = "DELETE FROM ";
-        //if (sqlEnabled) pre = "INSERT IGNORE INTO ";
-        //else pre = "INSERT OR IGNORE INTO ";
         String sql = pre + table + " WHERE "
                 + COLUMNS.CLAIM_ID.name + " = ?";
         List<Object> params = new ArrayList<>() {{
             add(claim.claimId);
         }};
-        return sqlCreateClaim(sql, params, claim);
+        return sqlUpdate(sql, params);
     }
 
     //Update Members
@@ -128,7 +126,7 @@ public class DatabaseClaims extends SQLite {
     }
 
     public void saveChanges() {
-        for (Claim claim : Pueblos.getInstance().getSystems().getClaimHandler().getClaims())
+        for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaims())
             if (claim.wasUpdated())
                 saveClaim(claim);
     }

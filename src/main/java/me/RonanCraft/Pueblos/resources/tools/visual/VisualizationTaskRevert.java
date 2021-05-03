@@ -17,7 +17,7 @@ class VisualizationTaskRevert implements Runnable {
     public void run()
     {
         //don't do anything if the player's current visualization is different from the one scheduled to revert
-        if (Pueblos.getInstance().getSystems().getPlayerData(player).getVisualization() != visualization) return;
+        if (Pueblos.getInstance().getPlayerData(player).getVisualization() != visualization) return;
 
         // alert plugins of a visualization
         //Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, null, Collections.<Claim>emptySet()));

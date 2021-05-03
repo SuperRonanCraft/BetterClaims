@@ -4,6 +4,7 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
+import me.RonanCraft.Pueblos.resources.claims.selling.ClaimAuctionManager;
 import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
@@ -22,20 +23,22 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class ClaimHandler {
+    private final ClaimAuctionManager auctionManager = new ClaimAuctionManager(this);
     private final List<Claim> claims = new ArrayList<>();
     private int claim_maxSize = 256;
 
     private DatabaseClaims getDatabase() {
-        return Pueblos.getInstance().getSystems().getClaimDatabase();
+        return Pueblos.getInstance().getDatabaseClaims();
     }
 
     public void load() {
         claims.clear();
-        List<Claim> claims = Pueblos.getInstance().getSystems().getClaimDatabase().getClaims();
+        List<Claim> claims = getDatabase().getClaims();
         this.claims.addAll(claims);
-        claim_maxSize = Pueblos.getInstance().getSystems().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE);
+        claim_maxSize = Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE);
         if (claim_maxSize < 10)
             claim_maxSize = 10;
+        auctionManager.load();
     }
 
     public Claim loadClaim(ResultSet result) throws SQLException {
@@ -169,6 +172,13 @@ public class ClaimHandler {
         return null;
     }
 
+    public Claim getClaim(int claimId) {
+        for (Claim claim : this.claims)
+            if (claim.claimId == claimId)
+                return claim;
+        return null;
+    }
+
     public List<Claim> getClaims() {
         return claims;
     }
@@ -180,13 +190,13 @@ public class ClaimHandler {
             return new Claim(owner, name, position);
     }
 
-    public boolean allowBreak(Player p, Location block_location) {
+    public boolean allowBreak(@Nonnull Player p, @Nonnull Location block_location) {
         Claim claim = getClaim(block_location);
         if (claim == null)
             return true;
         else if (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p)) //Is an admin CLAIM, and player is an admin
             return true;
-        else if (Pueblos.getInstance().getSystems().getPlayerData(p).isOverriding()) //Is an admin and wants to override claims
+        else if (Pueblos.getInstance().getPlayerData(p).isOverriding()) //Is an admin and wants to override claims
             return true;
         else
             return claim.canBuild(p);
@@ -237,4 +247,9 @@ public class ClaimHandler {
             return ((Boolean) flagValue);
         }
     }
+
+    public ClaimAuctionManager getAuctionManager() {
+        return auctionManager;
+    }
+
 }

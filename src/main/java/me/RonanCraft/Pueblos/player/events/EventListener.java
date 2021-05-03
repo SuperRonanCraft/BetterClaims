@@ -119,6 +119,11 @@ public class EventListener implements Listener {
         blocks.onPlace(e);
     }
 
+    @EventHandler
+    void onSignChange(SignChangeEvent e) {
+        blocks.onSignChange(e);
+    }
+
     //Click Inventory
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGH)
     void onClick(InventoryClickEvent e) {
@@ -161,6 +166,6 @@ public class EventListener implements Listener {
     }
 
     PlayerData getPlayerData(Player p) {
-        return Pueblos.getInstance().getSystems().getPlayerData(p);
+        return Pueblos.getInstance().getPlayerData(p);
     }
 }

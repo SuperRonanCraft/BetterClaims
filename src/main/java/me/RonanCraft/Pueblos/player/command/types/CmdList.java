@@ -21,7 +21,7 @@ public class CmdList implements PueblosCommand, PueblosCommandHelpable {
     }
 
     public void execute(CommandSender sendi, String label, String[] args) {
-        ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
+        ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         Player p = (Player) sendi;
         List<Claim> claims = handler.getClaims(p.getUniqueId());
         if (!claims.isEmpty()) {

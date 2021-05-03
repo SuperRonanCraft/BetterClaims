@@ -26,7 +26,7 @@ public class EventItems implements Listener, PueblosEvents {
     private final HashMap<UUID, Integer> schedule = new HashMap<>();
 
     void load() {
-        if (Pueblos.getInstance().getSystems().getSettings().getBoolean(Settings.SETTING.PLAYER_PROTECTDEATHDROP))
+        if (Pueblos.getInstance().getSettings().getBoolean(Settings.SETTING.PLAYER_PROTECTDEATHDROP))
             Bukkit.getPluginManager().registerEvents(this, Pueblos.getInstance());
         else
             HandlerList.unregisterAll(this);

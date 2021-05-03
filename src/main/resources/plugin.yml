@@ -1,5 +1,5 @@
 main: me.RonanCraft.Pueblos.Pueblos
-version: '1.2.1'
+version: ${project.version}
 website: "https://ronancraft.net"
 description: "Create protected regions of land quickly"
 name: Pueblos

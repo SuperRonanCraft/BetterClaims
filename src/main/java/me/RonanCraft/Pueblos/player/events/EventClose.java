@@ -11,7 +11,7 @@ public class EventClose {
     void exit(InventoryCloseEvent e) {
         Player p = (Player) e.getPlayer();
         Pueblos pl = Pueblos.getInstance();
-        PlayerData data = pl.getSystems().getPlayerData(p);
+        PlayerData data = pl.getPlayerData(p);
         if (data.getInventory() != null && e.getInventory().equals(data.getInventory())) {
             if (data.getCurrent() != null) {
                 data.getCurrent().closeEvent(p); //Close Inventory event

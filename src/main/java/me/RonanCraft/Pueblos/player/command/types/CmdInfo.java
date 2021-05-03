@@ -20,7 +20,7 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
     }
 
     public void execute(CommandSender sendi, String label, String[] args) {
-        ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
+        ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         Player p = (Player) sendi;
         Claim claim = handler.getClaim(p.getLocation());
         if (claim != null) {

@@ -106,7 +106,7 @@ public class Message {
                 str = str.replace("%claim_flag_value%", claim.getFlags().getFlag(flag).toString());
         }
         if (str.contains("%max%"))
-            str = str.replace("%max%", String.valueOf(Pueblos.getInstance().getSystems().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE)));
+            str = str.replace("%max%", String.valueOf(Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE)));
         return str;
     }
 

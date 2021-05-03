@@ -13,7 +13,7 @@ public class EventClick {
         if (!validClick(e))
             return;
         e.setCancelled(true);
-        PueblosInventory inventory = Pueblos.getInstance().getSystems().getPlayerData((Player) e.getWhoClicked()).getCurrent();
+        PueblosInventory inventory = Pueblos.getInstance().getPlayerData((Player) e.getWhoClicked()).getCurrent();
         if (inventory != null)
             inventory.click(e);
     }
@@ -23,7 +23,7 @@ public class EventClick {
             return false;
 
         // Clicks the inventory
-        if (!e.getInventory().equals(Pueblos.getInstance().getSystems().getPlayerData((Player) e.getWhoClicked()).getInventory()))
+        if (!e.getInventory().equals(Pueblos.getInstance().getPlayerData((Player) e.getWhoClicked()).getInventory()))
             return false;
 
         // Clicks number key
@@ -38,7 +38,7 @@ public class EventClick {
             return false;
 
         // Clicks their own inventory
-        if (!e.getClickedInventory().equals(Pueblos.getInstance().getSystems().getPlayerData((Player) e.getWhoClicked()).getInventory())) {
+        if (!e.getClickedInventory().equals(Pueblos.getInstance().getPlayerData((Player) e.getWhoClicked()).getInventory())) {
             e.setCancelled(true);
             return false;
         }

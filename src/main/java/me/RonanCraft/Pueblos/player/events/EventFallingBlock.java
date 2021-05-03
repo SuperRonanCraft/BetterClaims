@@ -17,7 +17,7 @@ import java.util.List;
 public class EventFallingBlock implements PueblosEvents {
 
     private boolean getSetting(Settings.SETTING set) {
-        return getPl().getSystems().getSettings().getBoolean(set);
+        return getPl().getSettings().getBoolean(set);
     }
 
     //Totally not taken from GriefPrevention O_O

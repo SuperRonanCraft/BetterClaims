@@ -35,7 +35,7 @@ public enum PueblosInventory {
     public void open(Player p, Claim claim, boolean from_command) {
         if (isAllowed(p, claim))
             if (inv instanceof PueblosInv_Claim)
-                Pueblos.getInstance().getSystems().getPlayerData(p).setInventory(((PueblosInv_Claim) inv).open(p, claim), this, from_command);
+                Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_Claim) inv).open(p, claim), this, from_command);
             else
                 Pueblos.getInstance().getLogger().severe(this.name() + " is not a claim type!");
     }
@@ -43,21 +43,21 @@ public enum PueblosInventory {
     public void open(Player p, ClaimMember member, boolean from_command) {
         if (isAllowed(p, member.claim))
             if (inv instanceof PueblosInv_Member)
-                Pueblos.getInstance().getSystems().getPlayerData(p).setInventory(((PueblosInv_Member) inv).open(p, member), this, from_command);
+                Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_Member) inv).open(p, member), this, from_command);
             else
                 Pueblos.getInstance().getLogger().severe(this.name() + " is not a member type!");
     }
 
     public void open(Player p, List<Claim> claims, boolean from_command) {
         if (inv instanceof PueblosInv_MultiClaim)
-            Pueblos.getInstance().getSystems().getPlayerData(p).setInventory(((PueblosInv_MultiClaim) inv).open(p, claims), this, from_command);
+            Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_MultiClaim) inv).open(p, claims), this, from_command);
         else
             Pueblos.getInstance().getLogger().severe(this.name() + " is not a request type!");
     }
 
     public void open(Player p, Confirmation confirmation, boolean from_command) {
         if (inv instanceof PueblosInv_Confirming)
-            Pueblos.getInstance().getSystems().getPlayerData(p).setInventory(((PueblosInv_Confirming) inv).open(p, confirmation), this, from_command);
+            Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_Confirming) inv).open(p, confirmation), this, from_command);
         else
             Pueblos.getInstance().getLogger().severe(this.name() + " is not a confirm type!");
     }

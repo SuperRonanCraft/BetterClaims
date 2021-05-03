@@ -21,15 +21,15 @@ public interface PueblosEvents {
     }
 
     default Claim getClaim(Location loc) {
-        return getPl().getSystems().getClaimHandler().getClaim(loc);
+        return getPl().getClaimHandler().getClaim(loc);
     }
 
     default boolean allowBreak(Player p, Location block_location) {
-        return getPl().getSystems().getClaimHandler().allowBreak(p, block_location);
+        return getPl().getClaimHandler().allowBreak(p, block_location);
     }
 
     default boolean allowInteract(Player p, Block block) {
-        return getPl().getSystems().getClaimHandler().allowInteract(p, block);
+        return getPl().getClaimHandler().allowInteract(p, block);
     }
 
 }

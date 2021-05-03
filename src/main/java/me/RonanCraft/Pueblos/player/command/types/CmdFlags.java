@@ -25,7 +25,7 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
 
     public void execute(CommandSender sendi, String label, String[] args) {
         Player p = (Player) sendi;
-        ClaimHandler handler = Pueblos.getInstance().getSystems().getClaimHandler();
+        ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
 
         //Event
         if (args.length == 3) {

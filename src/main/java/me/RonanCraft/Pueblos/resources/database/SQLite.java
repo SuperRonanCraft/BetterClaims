@@ -87,13 +87,13 @@ public class SQLite {
         password = sql.getString(pre + "password");
         connection = getSQLConnection();
         if (!sqlEnabled) { //Update table names back to default if online database fails
-            if (type == DATABASE_TYPE.USERS)
-                table = "Pueblos_Users";
+            if (type == DATABASE_TYPE.AUCTION)
+                table = "Pueblos_Auction";
             else
                 table = "Pueblos_Data";
         } else {
-            if (type == DATABASE_TYPE.USERS)
-                table = sql.getString(pre + "tablePrefix") + "users";
+            if (type == DATABASE_TYPE.AUCTION)
+                table = sql.getString(pre + "tablePrefix") + "auction";
             else
                 table = sql.getString(pre + "tablePrefix") + "data";
         }
@@ -143,20 +143,20 @@ public class SQLite {
     }
 
     private Enum<?>[] getColumns(DATABASE_TYPE type) {
-        if (type == DATABASE_TYPE.USERS)
-            return DatabaseUsers.COLUMNS.values();
+        if (type == DATABASE_TYPE.AUCTION)
+            return DatabaseAuctions.COLUMNS.values();
         return DatabaseClaims.COLUMNS.values();
     }
 
     private String getColumnName(DATABASE_TYPE type, Enum<?> column) {
-        if (type == DATABASE_TYPE.USERS)
-            return ((DatabaseUsers.COLUMNS) column).name;
+        if (type == DATABASE_TYPE.AUCTION)
+            return ((DatabaseAuctions.COLUMNS) column).name;
         return ((DatabaseClaims.COLUMNS) column).name;
     }
 
     private String getColumnType(DATABASE_TYPE type, Enum<?> column) {
-        if (type == DATABASE_TYPE.USERS)
-            return ((DatabaseUsers.COLUMNS) column).type;
+        if (type == DATABASE_TYPE.AUCTION)
+            return ((DatabaseAuctions.COLUMNS) column).type;
         return ((DatabaseClaims.COLUMNS) column).type;
     }
 
@@ -243,6 +243,6 @@ public class SQLite {
     }
 
     public enum DATABASE_TYPE {
-        CLAIMS, USERS
+        CLAIMS, AUCTION
     }
 }

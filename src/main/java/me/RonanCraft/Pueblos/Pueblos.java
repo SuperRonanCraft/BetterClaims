@@ -1,10 +1,18 @@
 package me.RonanCraft.Pueblos;
 
+import me.RonanCraft.Pueblos.inventory.GlobalItems;
 import me.RonanCraft.Pueblos.inventory.PueblosInvLoader;
 import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.command.Commands;
+import me.RonanCraft.Pueblos.player.data.PlayerData;
+import me.RonanCraft.Pueblos.player.data.PlayerInfoHandler;
+import me.RonanCraft.Pueblos.player.events.EventListener;
 import me.RonanCraft.Pueblos.resources.Permissions;
+import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.Systems;
+import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
+import me.RonanCraft.Pueblos.resources.database.DatabaseAuctions;
+import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
 import me.RonanCraft.Pueblos.resources.files.Files;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.Bukkit;
@@ -33,7 +41,7 @@ public class Pueblos extends JavaPlugin {
     @Override
     public void onDisable() {
         closeMenus();
-        systems.getClaimDatabase().saveChanges();
+        systems.getDatabaseClaims().saveChanges();
     }
 
     @Override
@@ -48,7 +56,7 @@ public class Pueblos extends JavaPlugin {
     }
 
     public void reload(CommandSender sendi) {
-        systems.getClaimDatabase().saveChanges();
+        systems.getDatabaseClaims().saveChanges();
         closeMenus();
         loadAll(true);
         MessagesCore.RELOAD.send(sendi);
@@ -93,8 +101,32 @@ public class Pueblos extends JavaPlugin {
         return commands;
     }
 
-    public Systems getSystems() {
-        return systems;
+    public Settings getSettings() {
+        return systems.getSettings();
+    }
+
+    public DatabaseClaims getDatabaseClaims() {
+        return systems.getDatabaseClaims();
+    }
+
+    public DatabaseAuctions getDatabaseAuctions() {
+        return systems.getDatabaseAuctions();
+    }
+
+    public ClaimHandler getClaimHandler() {
+        return systems.getClaimHandler();
+    }
+
+    public EventListener getEvents() {
+        return systems.getEvents();
+    }
+
+    public PlayerData getPlayerData(Player p) {
+        return systems.getPlayerData(p);
+    }
+
+    public GlobalItems getGlobalItems() {
+        return systems.getGlobalItems();
     }
 
     public boolean papiEnabled() {

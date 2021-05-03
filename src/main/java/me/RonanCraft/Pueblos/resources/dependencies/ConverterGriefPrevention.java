@@ -31,7 +31,7 @@ public class ConverterGriefPrevention {
         File file = getFile();
         if (!file.exists() || file.listFiles() == null)
             return;
-        ClaimHandler claimHandler = Pueblos.getInstance().getSystems().getClaimHandler();
+        ClaimHandler claimHandler = Pueblos.getInstance().getClaimHandler();
         for (File f : Objects.requireNonNull(file.listFiles(filter()))) {
             try {
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(f);

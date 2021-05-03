@@ -22,7 +22,7 @@ public class Visualization {
 
     public void apply(Player player) {
         //if he has any current visualization, clear it first
-        if (Pueblos.getInstance().getSystems().getPlayerData(player).getVisualization() != null) {
+        if (Pueblos.getInstance().getPlayerData(player).getVisualization() != null) {
             revert(player);
         }
 
@@ -35,7 +35,7 @@ public class Visualization {
     public void revert(Player player) {
         if (!player.isOnline()) return;
 
-        Visualization visualization = Pueblos.getInstance().getSystems().getPlayerData(player).getVisualization();
+        Visualization visualization = Pueblos.getInstance().getPlayerData(player).getVisualization();
 
         if (visualization != null) {
             //locality
@@ -58,7 +58,7 @@ public class Visualization {
                 player.sendBlockChange(element.location, element.realBlock);
             }
 
-            Pueblos.getInstance().getSystems().getPlayerData(player).removeVisualization();
+            Pueblos.getInstance().getPlayerData(player).removeVisualization();
         }
     }
 
