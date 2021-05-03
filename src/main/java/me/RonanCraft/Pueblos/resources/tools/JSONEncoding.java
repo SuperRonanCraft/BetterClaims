@@ -22,20 +22,20 @@ public class JSONEncoding {
         return obj.toString();
     }
 
-    public static String getJsonFromClaim(ClaimPosition position) {
+    public static String getJsonFromBoundingBox(BoundingBox position) {
         if (position == null)
             return null;
         Map obj = new LinkedHashMap();
         obj.put("world", position.getWorld().getName());
-        obj.put("x_1", position.getX_1());
-        obj.put("z_1", position.getZ_1());
-        obj.put("x_2", position.getX_2());
-        obj.put("z_2", position.getZ_2());
+        obj.put("x_1", position.getMaxX());
+        obj.put("z_1", position.getMaxZ());
+        obj.put("x_2", position.getMinX());
+        obj.put("z_2", position.getMinZ());
         String json = JSONObject.toJSONString(obj);
         return json.toString();
     }
 
-    public static ClaimPosition getPosition(String json) {
+    public static BoundingBox getPosition(String json) {
         try {
             JSONObject obj = (JSONObject) JSONValue.parse(json);
             Map chunk_info = (Map) obj;
@@ -44,7 +44,7 @@ public class JSONEncoding {
             int z_1 = Integer.valueOf(chunk_info.get("z_1").toString());
             int x_2 = Integer.valueOf(chunk_info.get("x_2").toString());
             int z_2 = Integer.valueOf(chunk_info.get("z_2").toString());
-            return new ClaimPosition(Bukkit.getWorld(world), x_1, z_1, x_2, z_2);
+            return new BoundingBox(Bukkit.getWorld(world), x_1, z_1, x_2, z_2);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return null;

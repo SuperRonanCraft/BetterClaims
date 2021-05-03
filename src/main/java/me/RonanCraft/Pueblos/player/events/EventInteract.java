@@ -2,7 +2,6 @@ package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.data.PlayerData;
-import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
@@ -16,7 +15,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.InventoryHolder;
 
 import java.util.HashMap;
 import java.util.List;
@@ -108,10 +106,10 @@ public class EventInteract implements PueblosEvents {
 
     private CLAIM_ERRORS resizeClaim(Player p, Claim claim, List<Location> corners) {
 
-        ClaimPosition position = claim.getPosition();
+        BoundingBox position = claim.getBoundingBox();
         Location start_location = corners.get(0);
 
-        ClaimPosition.CLAIM_CORNER edittedCorner = position.getCorner(start_location);
+        BoundingBox.CLAIM_CORNER edittedCorner = position.getCorner(start_location);
         if (edittedCorner == null) {
             p.sendMessage("We could not find the stiff corner!");
             return CLAIM_ERRORS.DATABASE_ERROR;

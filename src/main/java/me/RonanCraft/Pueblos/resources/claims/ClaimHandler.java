@@ -11,7 +11,6 @@ import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
-import me.ryanhamshire.GriefPrevention.util.BoundingBox;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -52,7 +51,7 @@ public class ClaimHandler {
         String name = result.getString(DatabaseClaims.COLUMNS.OWNER_NAME.name);
         try {
             Claim claim;
-            ClaimPosition position = JSONEncoding.getPosition(result.getString(DatabaseClaims.COLUMNS.POSITION.name));
+            BoundingBox position = JSONEncoding.getPosition(result.getString(DatabaseClaims.COLUMNS.POSITION.name));
             if (result.getBoolean(DatabaseClaims.COLUMNS.ADMIN_CLAIM.name) || id == null)
                 claim = new Claim(position);
             else
@@ -118,8 +117,8 @@ public class ClaimHandler {
     }
 
     private CLAIM_ERRORS isLocationValid(Claim claim, @Nullable Player p) {
-        Location greater = claim.getPosition().getGreaterBoundaryCorner();
-        Location lower = claim.getPosition().getLesserBoundaryCorner();
+        Location greater = claim.getBoundingBox().getGreaterBoundaryCorner();
+        Location lower = claim.getBoundingBox().getLesserBoundaryCorner();
         //Size
         return isLocationValid(greater, lower, p, null);
     }
@@ -143,8 +142,8 @@ public class ClaimHandler {
         for (Claim _claim : claims) {
             if (claimIgnored != null && _claim == claimIgnored) //Ignore this claim
                 continue;
-            Location greater_2 = _claim.getPosition().getGreaterBoundaryCorner();
-            Location lower_2 = _claim.getPosition().getLesserBoundaryCorner();
+            Location greater_2 = _claim.getBoundingBox().getGreaterBoundaryCorner();
+            Location lower_2 = _claim.getBoundingBox().getLesserBoundaryCorner();
             int x3 = lower_2.getBlockX();
             int x4 = greater_2.getBlockX();
             int y3 = lower_2.getBlockZ();
@@ -184,7 +183,7 @@ public class ClaimHandler {
         return claims;
     }
 
-    public Claim claimCreate(@Nullable UUID owner, @Nullable String name, ClaimPosition position, PlayerClaimInteraction.CLAIM_MODE mode) {
+    public Claim claimCreate(@Nullable UUID owner, @Nullable String name, BoundingBox position, PlayerClaimInteraction.CLAIM_MODE mode) {
         if (owner == null || mode == PlayerClaimInteraction.CLAIM_MODE.CREATE_ADMIN)
             return new Claim(position);
         else

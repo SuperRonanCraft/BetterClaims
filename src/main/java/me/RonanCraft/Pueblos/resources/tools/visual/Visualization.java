@@ -85,7 +85,7 @@ public class Visualization {
         //}
 
         //add top level last so that it takes precedence (it shows on top when the child claim boundaries overlap with its boundaries)
-        visualization.addElements(claim.getPosition().getLesserBoundaryCorner(), claim.getPosition().getGreaterBoundaryCorner(), height, visualizationType, locality);
+        visualization.addElements(claim.getBoundingBox().getLesserBoundaryCorner(), claim.getBoundingBox().getGreaterBoundaryCorner(), height, visualizationType, locality);
 
         return visualization;
     }

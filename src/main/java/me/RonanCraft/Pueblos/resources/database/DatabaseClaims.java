@@ -1,7 +1,6 @@
 package me.RonanCraft.Pueblos.resources.database;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
@@ -50,7 +49,7 @@ public class DatabaseClaims extends SQLite {
             rs = ps.executeQuery();
             while (rs.next()) {
                 Claim claim = Pueblos.getInstance().getClaimHandler().loadClaim(rs);
-                if (claim != null && claim.getPosition() != null)
+                if (claim != null && claim.getBoundingBox() != null)
                     list.add(claim);
             }
             return list;
@@ -77,7 +76,7 @@ public class DatabaseClaims extends SQLite {
                 add(getClaimOwnerName(claim));
                 add(claim.isAdminClaim());
                 add(HelperDate.getDate(claim.dateCreated));
-                add(claim.getPositionJSON());
+                add(claim.getBoundingBoxJSON());
         }};
         return sqlCreateClaim(sql, params, claim);
     }
@@ -115,7 +114,7 @@ public class DatabaseClaims extends SQLite {
         List<Object> params = new ArrayList<>() {{
             add(getClaimOwnerID(claim));
             add(getClaimOwnerName(claim));
-            add(claim.getPositionJSON());
+            add(claim.getBoundingBoxJSON());
             add(JSONEncoding.getJsonFromMembers(claim.getMembers()));
             add(JSONEncoding.getJsonFromRequests(claim.getRequests()));
             add(JSONEncoding.getJsonFromFlags(claim.getFlags().getFlags()));

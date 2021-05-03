@@ -19,7 +19,7 @@ public class Claim implements ClaimInfo {
     public long claimId; //ID given by the database
     //Claim Information
     private boolean adminClaim;
-    private final ClaimPosition position;
+    private final BoundingBox boundingBox;
     private final ClaimFlags flags = new ClaimFlags(this);
     private final ClaimMembers members = new ClaimMembers(this);
     private final List<ClaimRequest> requests = new ArrayList<>();
@@ -29,15 +29,15 @@ public class Claim implements ClaimInfo {
     //Database stuff
     private boolean updated = false;
 
-    Claim(UUID ownerId, String ownerName, ClaimPosition position) {
+    Claim(UUID ownerId, String ownerName, BoundingBox boundingBox) {
         this.ownerId = ownerId;
         this.ownerName = ownerName;
-        this.position = position;
+        this.boundingBox = boundingBox;
         this.adminClaim = this.ownerId == null;
     }
 
-    Claim(ClaimPosition position) {
-        this(null, null, position);
+    Claim(BoundingBox boundingBox) {
+        this(null, null, boundingBox);
     }
 
     //Get
@@ -92,12 +92,12 @@ public class Claim implements ClaimInfo {
         return flags;
     }
 
-    public ClaimPosition getPosition() {
-        return position;
+    public BoundingBox getBoundingBox() {
+        return boundingBox;
     }
 
-    public String getPositionJSON() {
-        return JSONEncoding.getJsonFromClaim(position);
+    public String getBoundingBoxJSON() {
+        return JSONEncoding.getJsonFromBoundingBox(boundingBox);
     }
 
     public List<ClaimMember> getMembers() {
@@ -128,9 +128,10 @@ public class Claim implements ClaimInfo {
 
     //Checks
     public boolean contains(Location loc) {
-        return (loc.getBlockY() >= Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXDEPTH)
-                && (position.getLeft() <= loc.getBlockX() && position.getTop() >= loc.getBlockZ()) && //Top Left
-                (position.getRight() >= loc.getBlockX() && position.getBottom() <= loc.getBlockZ())); //Bottom Right
+        return boundingBox.contains(loc);
+        /*(loc.getBlockY() >= Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXDEPTH)
+                && (boundingBox.getLeft() <= loc.getBlockX() && boundingBox.getTop() >= loc.getBlockZ()) && //Top Left
+                (boundingBox.getRight() >= loc.getBlockX() && boundingBox.getBottom() <= loc.getBlockZ())); //Bottom Right*/
     }
 
     public boolean hasRequestFrom(Player p) {
@@ -172,7 +173,7 @@ public class Claim implements ClaimInfo {
 
     public boolean editCorners(Player editor, Location loc_1, Location loc_2) {
         if (!HelperEvent.claimResize(editor, this, editor, loc_1, loc_2).isCancelled()) {
-            getPosition().editCorners(loc_1, loc_2);
+            getBoundingBox().editCorners(loc_1, loc_2);
             updated();
             return true;
         } else

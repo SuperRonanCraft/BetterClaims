@@ -32,7 +32,7 @@ public class PlayerClaimInteraction {
         } else {
             for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaims())
                 if (claim.contains(loc)) {
-                    if (locations.size() == 0 && claim.getPosition().isCorner(loc)) { //Clicked a corner (first)
+                    if (locations.size() == 0 && claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
                         if (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) {
                             mode = CLAIM_MODE.EDIT;
                             editing = claim;

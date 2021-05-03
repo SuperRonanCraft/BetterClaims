@@ -12,7 +12,6 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.Objects;
 
@@ -86,7 +85,7 @@ public class HelperClaim {
     public static CLAIM_ERRORS createClaim(@Nonnull Player creator, @Nonnull World world, @Nonnull Location pos1, @Nonnull Location pos2, boolean sendMsg, @Nonnull PlayerClaimInteraction.CLAIM_MODE mode) {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
-        Claim claim = handler.claimCreate(creator.getUniqueId(), creator.getName(), new ClaimPosition(world, pos1, pos2), mode);
+        Claim claim = handler.claimCreate(creator.getUniqueId(), creator.getName(), new BoundingBox(world, pos1, pos2), mode);
         if (!HelperEvent.claimAttemptCreate(claim, creator).isCancelled()) {
             if (claim != null) {
                 error = handler.uploadClaim(claim, creator);
@@ -113,13 +112,13 @@ public class HelperClaim {
     }
 
     public static String getLocationString(Claim claim) {
-        ClaimPosition pos = claim.getPosition();
+        BoundingBox pos = claim.getBoundingBox();
         return pos.getLeft() + "x, " + pos.getTop() + "z";
     }
 
     public static void teleportTo(Player p, Claim claim) {
         if (!HelperEvent.teleportToClaim(p, claim, p, p.getLocation()).isCancelled()) {
-            p.teleport(claim.getPosition().getLocation());
+            p.teleport(claim.getBoundingBox().getLocation());
             MessagesCore.CLAIM_TELEPORT.send(p, claim);
         }
     }
