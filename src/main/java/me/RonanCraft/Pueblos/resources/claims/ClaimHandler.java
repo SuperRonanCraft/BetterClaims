@@ -11,6 +11,7 @@ import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
+import me.ryanhamshire.GriefPrevention.util.BoundingBox;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
