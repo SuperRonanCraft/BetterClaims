@@ -91,8 +91,6 @@ public class Message {
             str = str.replace("%claim_owner%", String.valueOf(claim.getOwnerName()));
         if (str.contains("%claim_requests%"))
             str = str.replace("%claim_requests%", String.valueOf(claim.getRequests().size()));
-        if (str.contains("%claim_requests%"))
-            str = str.replace("%claim_requests%", String.valueOf(claim.getRequests().size()));
         if (str.contains("%claim_width%"))
             str = str.replace("%claim_width%", String.valueOf(claim.getBoundingBox().getGreaterBoundaryCorner().getBlockX()
                     - claim.getBoundingBox().getLesserBoundaryCorner().getBlockX()));

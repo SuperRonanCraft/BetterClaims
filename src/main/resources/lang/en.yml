@@ -70,7 +70,7 @@ Help:
   Reload: ' &7- &e/%command% reload &7- Reload the plugin'
   Create: ' &7- &e/%command% create &7- Create a claim'
   Info: ' &7- &e/%command% info &7- View claim information'
-  List: ' &7- &e/%command% list &7- List all claims you are allowed in'
+  List: ' &7- &e/%command% list &7- List all claims you are allowed to edit in'
   Request: ' &7- &e/%command% request &7- Request to join a claim'
   Flags: ' &7- &e/%command% flags &7- Change claim flags'
   Convert: ' &7- &e/%command% convert <plugin_name> &7- Convert the plugins claims into Pueblos claims'
@@ -80,3 +80,14 @@ Help:
 
 Usage:
   Convert: '&cUsage&7: /%command% convert <plugin_name>'
+
+ClaimInfo:
+  - '&e&m------&6&l Pueblos &8| Claim Info &e&m------'
+  - ''
+  - '&fClaim Name&7: &r%claim_name%'
+  - '&fOwner&7: %claim_owner%'
+  - '&fID&7: %claim_id%'
+  - '&fMembers&7: %claim_members%'
+  - '&fSize&7: %claim_width% x %claim_length%'
+  - '&7Location&7: %claim_location%'
+  - '&7World&7: %claim_location_world%'

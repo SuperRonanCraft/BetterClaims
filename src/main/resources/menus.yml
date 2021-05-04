@@ -17,13 +17,21 @@ Claim:
       Name: '&eMembers'
       Item: 'player_head'
       Lore:
-      - ''
-      - '&7Members: &f%claim_members%'
-      - '&7Size: &f%claim_width% x %claim_length%'
-      - '&7Location: &f%claim_location%'
-      - '&7World: &f%claim_location_world%'
-      - ''
-      - '&fClick to view all members'
+        - ''
+        - '&7Members: &f%claim_members%'
+        - ''
+        - '&fClick to view all members'
+    Statistics:
+      Name: '&aClaim Stats'
+      Item: 'paper'
+      Lore:
+        - ''
+        - '&7Members: &f%claim_members%'
+        - '&7Size: &f%claim_width% x %claim_length%'
+        - '&7Location: &f%claim_location%'
+        - '&7World: &f%claim_location_world%'
+        - ''
+        - '&7Click to receive more information in chat'
     Flags:
       Allowed:
         Name: '&eFlags'
@@ -65,7 +73,7 @@ Claim:
       Item: 'barrier'
       Lore:
         - ''
-        - '&7Permanently delete this claim (confirm)'
+        - '&7Permanently delete this claim &8(confirm)'
 ClaimSelect:
   Title: '&7Select Claim'
   Items:

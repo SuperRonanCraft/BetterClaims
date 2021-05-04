@@ -3,6 +3,7 @@ package me.RonanCraft.Pueblos.resources.tools;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_MODE;
 import me.RonanCraft.Pueblos.resources.claims.*;
+import me.RonanCraft.Pueblos.resources.files.FileLanguage;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 public class HelperClaim {
@@ -130,5 +132,10 @@ public class HelperClaim {
             MessagesCore.CLAIM_DELETE.send(p, claim);
         else
             error.sendMsg(p, claim);
+    }
+
+    public static void sendClaimInfo(Player p, Claim claim) {
+        List<String> msg = Pueblos.getInstance().getFiles().getLang().getStringList("ClaimInfo");
+        Message.sms(p, msg, claim);
     }
 }

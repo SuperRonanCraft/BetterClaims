@@ -6,7 +6,7 @@ public enum PueblosCommandType {
     CREATE(new          CmdCreate()),
     RELOAD(new          CmdReload()),
     HELP(new            CmdHelp()),
-    INFO(new            CmdInfo()),
+    INFO(new CmdInfo()),
     LIST(new            CmdList()),
     FLAG(new            CmdFlags()),
     REQUEST(new         CmdRequest()),

@@ -15,6 +15,8 @@ import java.util.*;
 
 public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
 
+    //Opens a GUI to view claim information
+
     public String getName() {
         return "info";
     }

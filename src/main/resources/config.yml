@@ -3,13 +3,14 @@
 
 Language-File: 'en.yml'
 DisableUpdater: false
-Claim: #Forced claim options
+DateFormat: 'EEE MMM dd, yyyy hh:mm:ss a' # More formatting here https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+Claim: # Forced claim options
   Item: 'golden_shovel'
   MaxSize: 256
   MaxDepth: 32
-Global: #Settings that affect the whole server, not just claims
+Global: # Settings that affect the whole server, not just claims
   EndermenMoveBlocks: false
   SilverfishBreakBlocks: false
   RabbitsEatCrops: false
 Player:
-  ProtectDeathDrops: true #If a player dies, their items will not be able to be picked up by others
+  ProtectDeathDrops: true # If a player dies, their items will not be able to be picked up by others

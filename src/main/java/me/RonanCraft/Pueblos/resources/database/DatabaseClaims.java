@@ -14,7 +14,7 @@ import java.util.logging.Level;
 public class DatabaseClaims extends SQLite {
 
     public DatabaseClaims() {
-        super(SQLite.DATABASE_TYPE.CLAIMS);
+        super(DATABASE_TYPE.CLAIMS);
     }
 
     public enum COLUMNS {
@@ -26,7 +26,8 @@ public class DatabaseClaims extends SQLite {
         MEMBERS("members", "text"),
         FLAGS("flags", "text"),
         REQUESTS("requests", "text"),
-        DATE("date_created", "text");
+        DATE("date_created", "text"),
+        PARENT("parent", "integer DEFAULT NULL");
 
         public String name;
         public String type;
@@ -42,17 +43,45 @@ public class DatabaseClaims extends SQLite {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            List<Claim> list = new ArrayList<>();
+            List<Claim> claims = new ArrayList<>();
             conn = getSQLConnection();
             ps = conn.prepareStatement("SELECT * FROM " + table + ";");
 
             rs = ps.executeQuery();
+            //Load all Claims
             while (rs.next()) {
                 Claim claim = Pueblos.getInstance().getClaimHandler().loadClaim(rs);
                 if (claim != null && claim.getBoundingBox() != null)
-                    list.add(claim);
+                    claims.add(claim);
             }
-            return list;
+            //Give child claims a parent to sleep with
+            rs.beforeFirst();
+            while (rs.next()) {
+                int parent_id = rs.getInt(COLUMNS.PARENT.name);
+                if (!rs.wasNull()) { //Check if the parent column was not null
+                    int claim_id = rs.getInt(COLUMNS.CLAIM_ID.name);
+                    Claim claim_child = null;
+                    for (Claim claim : claims)
+                        if (claim.claimId == claim_id) {
+                            claim_child = claim;
+                            break;
+                        }
+                    if (claim_child != null) {
+                        for (Claim claim : claims) {
+                            if (claim.claimId == parent_id) {
+                                claim_child.parent = claim;
+                                break;
+                            }
+                        }
+                        if (claim_child.parent == null)
+                            Pueblos.getInstance().getLogger().severe("Something went wrong with claim #" + claim_id
+                                    + ". It's a child claim, but a parent claim was not found for it!");
+                    } else {
+                        Pueblos.getInstance().getLogger().severe("Something went wrong with claim #" + claim_id + ", its a child claim but it wasn't loaded?");
+                    }
+                }
+            }
+            return claims;
         } catch (SQLException ex) {
             Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
         } finally {

@@ -15,7 +15,7 @@ import java.util.*;
 public class Claim {
     private UUID ownerId;
     private String ownerName;
-    private Claim parent;
+    public Claim parent;
     public long claimId; //ID given by the database
     //Claim Information
     private boolean adminClaim;

@@ -128,7 +128,7 @@ public class SQLite {
 
     private String getCreateTable() {
         String str = "CREATE TABLE IF NOT EXISTS " + table + " (";
-        Enum<?>[] columns = getColumns(DATABASE_TYPE.CLAIMS);
+        Enum<?>[] columns = getColumns(type);
         for (Enum<?> c : columns) {
             String _name = getColumnName(type, c);
             String _type = getColumnType(type, c);

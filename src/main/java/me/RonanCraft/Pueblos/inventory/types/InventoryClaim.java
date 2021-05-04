@@ -52,12 +52,12 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
 
         CLAIM_SETTINGS setting = (CLAIM_SETTINGS) itemInfo.get(p).get(e.getSlot()).info;
         Claim claim = this.claim.get(p);
-        if (setting == CLAIM_SETTINGS.TELEPORT) {
-            HelperClaim.teleportTo(p, claim);
-        } else if (setting == CLAIM_SETTINGS.DELETE) {
-            PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_DELETE, p, claim), false);
-        } else
-            setting.inv.open(p, claim, false);
+        switch (setting) {
+            case TELEPORT: HelperClaim.teleportTo(p, claim); p.closeInventory(); break;
+            case DELETE: PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_DELETE, p, claim), false); break;
+            case STATS: HelperClaim.sendClaimInfo(p, claim); p.closeInventory(); break;
+            default: setting.inv.open(p, claim, false);
+        }
     }
 
     @Override
@@ -79,21 +79,20 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     }
 
     private enum CLAIM_SETTINGS {
-        MEMBERS("Members", 20,      null,                           PueblosInventory.MEMBERS, ITEMS.MEMBERS, null),
-        FLAGS("Flags", 22,          null,                           PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
-        REQUESTS("Requests", 24,    null,                           PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
-        TELEPORT("Teleport", 16,    null,                           null, ITEMS.TELEPORT, null),
-        DELETE("Delete", 10,        CLAIM_PERMISSION_LEVEL.OWNER,   null, ITEMS.DELETE, null);
+        MEMBERS(20,     null,                           PueblosInventory.MEMBERS, ITEMS.MEMBERS, null),
+        FLAGS(22,       null,                           PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
+        REQUESTS(24,    null,                           PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
+        TELEPORT(16,    null,                           null, ITEMS.TELEPORT, null),
+        DELETE(10,      CLAIM_PERMISSION_LEVEL.OWNER,   null, ITEMS.DELETE, null),
+        STATS(28,       null,                           null, ITEMS.STATS, null);
 
-        String section;
         int slot;
         CLAIM_PERMISSION_LEVEL claim_permission_level;
         PueblosInventory inv;
         ITEMS allowed;
         ITEMS disallowed;
 
-        CLAIM_SETTINGS(String section, int slot, CLAIM_PERMISSION_LEVEL claim_permission_level, PueblosInventory inv, ITEMS allowed, ITEMS disallowed) {
-            this.section = section;
+        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_permission_level, PueblosInventory inv, ITEMS allowed, ITEMS disallowed) {
             this.slot = slot;
             this.claim_permission_level = claim_permission_level;
             this.inv = inv;
@@ -112,6 +111,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     }
 
     private enum ITEMS {
+        STATS("Statistics"),
         MEMBERS("Members"),
         FLAGS_ALLOWED("Flags.Allowed"),
         FLAGS_DISALLOWED("Flags.Disallowed"),
