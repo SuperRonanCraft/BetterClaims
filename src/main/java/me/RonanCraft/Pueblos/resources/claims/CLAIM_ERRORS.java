@@ -2,7 +2,6 @@ package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public enum CLAIM_ERRORS {
     NONE(null),

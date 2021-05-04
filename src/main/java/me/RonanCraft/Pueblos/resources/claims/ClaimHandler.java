@@ -1,7 +1,6 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.selling.ClaimAuctionManager;
@@ -179,12 +178,20 @@ public class ClaimHandler {
         return null;
     }
 
-    public List<Claim> getClaims() {
-        return claims;
+    public List<Claim> getClaims(boolean include_subClaims) {
+        if (include_subClaims)
+            return claims;
+        else {
+            List<Claim> claims = new ArrayList<>();
+            for (Claim claim : this.claims)
+                if (claim.getParent() == null)
+                    claims.add(claim);
+            return claims;
+        }
     }
 
-    public Claim claimCreate(@Nullable UUID owner, @Nullable String name, BoundingBox position, PlayerClaimInteraction.CLAIM_MODE mode) {
-        if (owner == null || mode == PlayerClaimInteraction.CLAIM_MODE.CREATE_ADMIN)
+    public Claim claimCreate(@Nullable UUID owner, @Nullable String name, BoundingBox position, CLAIM_MODE mode) {
+        if (owner == null || mode == CLAIM_MODE.CREATE_ADMIN)
             return new Claim(position);
         else
             return new Claim(owner, name, position);

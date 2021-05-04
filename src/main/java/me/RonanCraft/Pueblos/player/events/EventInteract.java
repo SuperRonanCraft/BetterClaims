@@ -67,7 +67,7 @@ public class EventInteract implements PueblosEvents {
         Player p = e.getPlayer();
         PlayerData data = listener.getPlayerData(p);
         if (data.getClaimInteraction() == null)
-            data.setClaimInteraction(new PlayerClaimInteraction(p, PlayerClaimInteraction.CLAIM_MODE.CREATE));
+            data.setClaimInteraction(new PlayerClaimInteraction(p, CLAIM_MODE.CREATE));
         PlayerClaimInteraction claimInteraction = data.getClaimInteraction();
         if (!claimInteraction.locked) { //Are we NOT locked from doing anything?
             Object errorInfo = null;
@@ -89,7 +89,7 @@ public class EventInteract implements PueblosEvents {
                     }
                     if (error != CLAIM_ERRORS.SIZE_SMALL && error != CLAIM_ERRORS.SIZE_LARGE) //Let the player select another second location if error
                         claimInteraction.lock(); //Lock us from using the same locations again
-                } else if (claimInteraction.mode != PlayerClaimInteraction.CLAIM_MODE.EDIT) { //If the player is editing the claim they have selected will visualize
+                } else if (claimInteraction.mode != CLAIM_MODE.EDIT) { //If the player is editing the claim they have selected will visualize
                     Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
                 }
                 if (claimInteraction.locked)
@@ -109,7 +109,7 @@ public class EventInteract implements PueblosEvents {
         BoundingBox position = claim.getBoundingBox();
         Location start_location = corners.get(0);
 
-        BoundingBox.CLAIM_CORNER edittedCorner = position.getCorner(start_location);
+        CLAIM_CORNER edittedCorner = position.getCorner(start_location);
         if (edittedCorner == null) {
             p.sendMessage("We could not find the stiff corner!");
             return CLAIM_ERRORS.DATABASE_ERROR;

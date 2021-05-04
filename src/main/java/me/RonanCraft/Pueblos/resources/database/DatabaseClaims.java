@@ -125,7 +125,7 @@ public class DatabaseClaims extends SQLite {
     }
 
     public void saveChanges() {
-        for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaims())
+        for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaims(true))
             if (claim.wasUpdated())
                 saveClaim(claim);
     }

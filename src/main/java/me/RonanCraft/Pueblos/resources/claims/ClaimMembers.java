@@ -9,9 +9,9 @@ import java.util.UUID;
 public class ClaimMembers {
     private final List<ClaimMember> members = new ArrayList<>();
 
-    private final ClaimInfo claim;
+    private final Claim claim;
 
-    ClaimMembers(ClaimInfo claim) {
+    ClaimMembers(Claim claim) {
         this.claim = claim;
     }
 

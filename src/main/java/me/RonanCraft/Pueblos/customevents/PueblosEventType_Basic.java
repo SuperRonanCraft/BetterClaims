@@ -1,6 +1,5 @@
 package me.RonanCraft.Pueblos.customevents;
 
-import me.RonanCraft.Pueblos.resources.claims.ClaimInfo;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 

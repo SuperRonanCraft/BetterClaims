@@ -5,9 +5,9 @@ import java.util.HashMap;
 public class ClaimFlags {
     HashMap<CLAIM_FLAG, Object> flags = new HashMap<>();
 
-    private final ClaimInfo claim;
+    private final Claim claim;
 
-    ClaimFlags(ClaimInfo claim) {
+    ClaimFlags(Claim claim) {
         this.claim = claim;
     }
 

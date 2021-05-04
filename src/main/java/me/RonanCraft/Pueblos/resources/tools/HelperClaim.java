@@ -1,7 +1,7 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
+import me.RonanCraft.Pueblos.resources.claims.CLAIM_MODE;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
@@ -82,7 +82,7 @@ public class HelperClaim {
         }
     }
 
-    public static CLAIM_ERRORS createClaim(@Nonnull Player creator, @Nonnull World world, @Nonnull Location pos1, @Nonnull Location pos2, boolean sendMsg, @Nonnull PlayerClaimInteraction.CLAIM_MODE mode) {
+    public static CLAIM_ERRORS createClaim(@Nonnull Player creator, @Nonnull World world, @Nonnull Location pos1, @Nonnull Location pos2, boolean sendMsg, @Nonnull CLAIM_MODE mode) {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         Claim claim = handler.claimCreate(creator.getUniqueId(), creator.getName(), new BoundingBox(world, pos1, pos2), mode);

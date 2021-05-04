@@ -1,7 +1,6 @@
 package me.RonanCraft.Pueblos.customevents;
 
-import me.RonanCraft.Pueblos.resources.claims.ClaimInfo;
-import org.bukkit.event.Cancellable;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -9,13 +8,13 @@ abstract class PueblosEventType_Claim extends Event {
 
     private static final HandlerList handler = new HandlerList();
 
-    ClaimInfo claim;
+    Claim claim;
 
-    PueblosEventType_Claim(ClaimInfo claim) {
+    PueblosEventType_Claim(Claim claim) {
         this.claim = claim;
     }
 
-    public ClaimInfo getClaim() {
+    public Claim getClaim() {
         return claim;
     }
 

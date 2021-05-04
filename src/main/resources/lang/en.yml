@@ -7,6 +7,7 @@ Messages:
   InvalidFlagValue: '&cFlag value is not valid! &7Please try again.'
   InvalidFlag: '&cFlag is not valid! &7Please try again.'
   CannotEdit: '&cUnable to edit this while outside a claim!'
+  UnknownID: '&cClaim id is not a valid. &7Please use `/pueblos list` to view claims you are allowed to edit!'
   Claim:
     Override:
       Enabled: '&7Override &aEnabled&7, you are now able to edit any claim! &8Watch it, with great power comes great responsibility!'
@@ -26,7 +27,7 @@ Messages:
         Admin: '&fAdmin Mode &cdisabled&f, any new claim you make will now be a user claim'
       Failed:
         Item: '&fChanging your claim mode is disallowed! &7Please equip the claim item!'
-        Location: '&fChanging your claim mode is disallowed! &7Please !'
+        Location: '&fChanging your claim mode is disallowed! &8Reset your claim wand!'
     Item:
       InClaim: '&7Right-Click a corner of this claim to change size!'
       NoClaim: '&7Right-Click two corners to make a claim!'

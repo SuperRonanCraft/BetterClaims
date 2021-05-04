@@ -78,6 +78,7 @@ ClaimSelect:
         - '&7Size: &f%claim_width% x %claim_length%'
         - '&7Location: &f%claim_location%'
         - '&7World: &f%claim_location_world%'
+        - '&7ID: %claim_id%'
         - ''
         - '&fClick to view your claim!'
     Member:

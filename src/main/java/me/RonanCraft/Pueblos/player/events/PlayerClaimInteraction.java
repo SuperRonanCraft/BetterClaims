@@ -3,6 +3,7 @@ package me.RonanCraft.Pueblos.player.events;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_ERRORS;
+import me.RonanCraft.Pueblos.resources.claims.CLAIM_MODE;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
@@ -30,7 +31,7 @@ public class PlayerClaimInteraction {
         if (locations.contains(loc)) {
             return CLAIM_ERRORS.LOCATION_ALREADY_EXISTS;
         } else {
-            for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaims())
+            for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaims(false))
                 if (claim.contains(loc)) {
                     if (locations.size() == 0 && claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
                         if (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) {
@@ -70,10 +71,4 @@ public class PlayerClaimInteraction {
             mode = CLAIM_MODE.CREATE;
     }
 
-    public enum CLAIM_MODE {
-        CREATE,
-        CREATE_ADMIN,
-        EDIT,
-        SUBCLAIM
-    }
 }

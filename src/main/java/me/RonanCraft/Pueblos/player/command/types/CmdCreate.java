@@ -2,7 +2,7 @@ package me.RonanCraft.Pueblos.player.command.types;
 
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
-import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
+import me.RonanCraft.Pueblos.resources.claims.CLAIM_MODE;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
@@ -20,7 +20,7 @@ public class CmdCreate implements PueblosCommand, PueblosCommandHelpable {
 
         HelperClaim.createClaim(p,
                 p.getWorld(), p.getLocation().clone().add(-8, 0, -8),
-                p.getLocation().clone().add(8, 0, 8), true, PlayerClaimInteraction.CLAIM_MODE.CREATE);
+                p.getLocation().clone().add(8, 0, 8), true, CLAIM_MODE.CREATE);
     }
 
     public boolean permission(CommandSender sendi) {

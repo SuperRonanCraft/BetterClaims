@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2021 RonanCraft Network
+ * All rights reserved.
+ */
+
 package me.RonanCraft.Pueblos;
 
 import me.RonanCraft.Pueblos.inventory.GlobalItems;

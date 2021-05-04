@@ -3,7 +3,6 @@ package me.RonanCraft.Pueblos.resources.tools;
 import me.RonanCraft.Pueblos.customevents.*;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimInfo;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.Bukkit;
@@ -33,7 +32,7 @@ public class HelperEvent {
         callEvent(executor, event);
     }
 
-    public static Cancellable claimResize(CommandSender executor, ClaimInfo claim, Player editor, Location loc_1, Location loc_2) {
+    public static Cancellable claimResize(CommandSender executor, Claim claim, Player editor, Location loc_1, Location loc_2) {
         PueblosEvent_ClaimResize event = new PueblosEvent_ClaimResize(claim, editor, loc_1, loc_2);
         callEvent(executor, event);
         if (event.isCancelled() && event.sendCancelledMessage())

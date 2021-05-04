@@ -1,8 +1,6 @@
 package me.RonanCraft.Pueblos.customevents;
 
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimInfo;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 //Called when a player walks IN to a claim

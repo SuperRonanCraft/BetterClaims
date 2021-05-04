@@ -2,7 +2,7 @@ package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.data.PlayerData;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.CLAIM_MODE;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,8 +14,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.world.PortalCreateEvent;
-
-import java.util.*;
 
 public class EventListener implements Listener {
 
@@ -45,11 +43,11 @@ public class EventListener implements Listener {
         if (getPlayerData(p).getClaimInteraction() != null) {
             PlayerClaimInteraction interaction = getPlayerData(p).getClaimInteraction();
             if (interaction.locations.isEmpty()) {
-                if (interaction.mode != PlayerClaimInteraction.CLAIM_MODE.CREATE_ADMIN) {
-                    interaction.mode = PlayerClaimInteraction.CLAIM_MODE.CREATE_ADMIN;
+                if (interaction.mode != CLAIM_MODE.CREATE_ADMIN) {
+                    interaction.mode = CLAIM_MODE.CREATE_ADMIN;
                     MessagesCore.CLAIM_MODE_ENABLED_ADMIN.send(p);
                 } else {
-                    interaction.mode = PlayerClaimInteraction.CLAIM_MODE.CREATE;
+                    interaction.mode = CLAIM_MODE.CREATE;
                     MessagesCore.CLAIM_MODE_DISABLED_ADMIN.send(p);
                 }
             } else

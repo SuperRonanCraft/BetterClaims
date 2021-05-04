@@ -1,8 +1,6 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
-import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import org.bukkit.Bukkit;
@@ -10,12 +8,14 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class Claim implements ClaimInfo {
+public class Claim {
     private UUID ownerId;
     private String ownerName;
+    private Claim parent;
     public long claimId; //ID given by the database
     //Claim Information
     private boolean adminClaim;
@@ -41,17 +41,14 @@ public class Claim implements ClaimInfo {
     }
 
     //Get
-    @Override
     public UUID getOwnerID() {
         return ownerId;
     }
 
-    @Override
     public String getOwnerName() {
         return ownerName;
     }
 
-    @Override
     public String getClaimName() {
         return name != null ? name : (ownerName != null ? ownerName : (!isAdminClaim() ? getOwner().getName() : "Admin Claim"));
     }
@@ -146,22 +143,19 @@ public class Claim implements ClaimInfo {
     }
 
     //Database
-    @Override
     public void updated() {
         updated = true;
     }
 
-    @Override
     public boolean wasUpdated() {
         return updated;
     }
 
-    @Override
     public void uploaded() {
         updated = false;
     }
 
-    public boolean checkPermLevel(Player p, CLAIM_PERMISSION_LEVEL level) {
+    public boolean checkPermLevel(@Nonnull Player p, CLAIM_PERMISSION_LEVEL level) {
         if (level != null)
             switch (level) {
                 case OWNER: return isOwner(p) || (isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p));
@@ -171,7 +165,7 @@ public class Claim implements ClaimInfo {
         return true;
     }
 
-    public boolean editCorners(Player editor, Location loc_1, Location loc_2) {
+    public boolean editCorners(@Nonnull Player editor, Location loc_1, Location loc_2) {
         if (!HelperEvent.claimResize(editor, this, editor, loc_1, loc_2).isCancelled()) {
             getBoundingBox().editCorners(loc_1, loc_2);
             updated();
@@ -184,7 +178,7 @@ public class Claim implements ClaimInfo {
         return adminClaim;
     }
 
-    void changeOwner(UUID newOwnerId, boolean save_oldOwner_as_Member) {
+    void changeOwner(@Nullable UUID newOwnerId, boolean save_oldOwner_as_Member) {
         UUID oldOwnerId = this.ownerId;
         this.ownerId = newOwnerId;
         this.ownerName = getOwner() == null ? "Admin Claim" : getOwner().getName();
@@ -200,5 +194,10 @@ public class Claim implements ClaimInfo {
                 members.remove(members.getMember(oldOwnerId), true);
         }
         updated();
+    }
+
+    @Nullable
+    public Claim getParent() {
+        return this.parent;
     }
 }

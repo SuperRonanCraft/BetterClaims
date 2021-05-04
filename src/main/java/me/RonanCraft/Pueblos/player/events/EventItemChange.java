@@ -3,6 +3,7 @@ package me.RonanCraft.Pueblos.player.events;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.data.PlayerData;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
+import me.RonanCraft.Pueblos.resources.claims.CLAIM_MODE;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -32,7 +33,7 @@ public class EventItemChange implements PueblosEvents {
             return;
         ItemStack item = e.getPlayer().getInventory().getItem(e.getNewSlot());
         if (item != null && item.getType().equals(getClaimItem()) && data.getClaimInteraction() == null) {
-            data.setClaimInteraction(new PlayerClaimInteraction(e.getPlayer(), PlayerClaimInteraction.CLAIM_MODE.CREATE));
+            data.setClaimInteraction(new PlayerClaimInteraction(e.getPlayer(), CLAIM_MODE.CREATE));
             Claim claim = getClaim(e.getPlayer().getLocation());
             showClaimLater(claim, e.getPlayer());
         } else

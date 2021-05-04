@@ -4,6 +4,7 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.*;
 
@@ -38,6 +39,7 @@ public class EventBlocks implements PueblosEvents {
                     p.sendMessage("Claim id " + e.getLine(1) + " is not a valid Claim id!");
                 }
             } else {
+                MessagesCore.CLAIM_UNKNOWNID.send(p);
                 p.sendMessage("Claim id " + e.getLine(1) + " is not a valid Claim id!");
             }
         }

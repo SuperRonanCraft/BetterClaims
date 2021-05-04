@@ -1,6 +1,6 @@
 package me.RonanCraft.Pueblos.customevents;
 
-import me.RonanCraft.Pueblos.resources.claims.ClaimInfo;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import org.bukkit.event.Cancellable;
 
 public abstract class PueblosEventType_ClaimCancellable extends PueblosEventType_Claim implements Cancellable {
@@ -8,7 +8,7 @@ public abstract class PueblosEventType_ClaimCancellable extends PueblosEventType
     boolean cancelled;
     boolean sendCancelledMessage = true;
 
-    PueblosEventType_ClaimCancellable(ClaimInfo claim) {
+    PueblosEventType_ClaimCancellable(Claim claim) {
         super(claim);
     }
 
