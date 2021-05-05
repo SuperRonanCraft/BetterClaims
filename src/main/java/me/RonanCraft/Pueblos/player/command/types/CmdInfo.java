@@ -6,6 +6,7 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.*;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
 import org.bukkit.command.CommandSender;
@@ -24,7 +25,7 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
     public void execute(CommandSender sendi, String label, String[] args) {
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         Player p = (Player) sendi;
-        Claim claim = handler.getClaim(p.getLocation());
+        ClaimMain claim = handler.getClaim(p.getLocation());
         if (claim != null) {
             if (claim.isMember(p)) {
                 //---- JUNK CLAIM MEMBER
@@ -46,7 +47,7 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
                     MessagesCore.CLAIM_PERMISSION_CLAIM.send(sendi, claim);
             }
         } else {
-            List<Claim> claims = handler.getClaims(p.getUniqueId());
+            List<ClaimMain> claims = handler.getClaims(p.getUniqueId());
             if (!claims.isEmpty()) {
                 if (claims.size() == 1)
                     PueblosInventory.CLAIM.open(p, claims.get(0), true);

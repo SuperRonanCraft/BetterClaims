@@ -3,8 +3,9 @@ package me.RonanCraft.Pueblos.inventory;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.inventory.types.*;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import org.bukkit.entity.Player;
@@ -32,7 +33,7 @@ public enum PueblosInventory {
         this.claimLevel = claimLevel;
     }
 
-    public void open(Player p, Claim claim, boolean from_command) {
+    public void open(Player p, ClaimMain claim, boolean from_command) {
         if (isAllowed(p, claim))
             if (inv instanceof PueblosInv_Claim)
                 Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_Claim) inv).open(p, claim), this, from_command);
@@ -48,7 +49,7 @@ public enum PueblosInventory {
                 Pueblos.getInstance().getLogger().severe(this.name() + " is not a member type!");
     }
 
-    public void open(Player p, List<Claim> claims, boolean from_command) {
+    public void open(Player p, List<ClaimMain> claims, boolean from_command) {
         if (inv instanceof PueblosInv_MultiClaim)
             Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_MultiClaim) inv).open(p, claims), this, from_command);
         else
@@ -65,8 +66,8 @@ public enum PueblosInventory {
     public void openCasted(Player p, Object obj) {
         if (obj instanceof ClaimMember)
             open(p, (ClaimMember) obj, false);
-        else if (obj instanceof Claim)
-            open(p, (Claim) obj, false);
+        else if (obj instanceof ClaimMain)
+            open(p, (ClaimMain) obj, false);
         else if (obj instanceof Confirmation)
             open(p, (Confirmation) obj, false);
         else

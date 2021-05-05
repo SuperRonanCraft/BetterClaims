@@ -2,6 +2,7 @@ package me.RonanCraft.Pueblos.resources.tools;
 
 import me.RonanCraft.Pueblos.customevents.*;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
@@ -16,18 +17,18 @@ import javax.annotation.Nullable;
 
 public class HelperEvent {
 
-    public static Cancellable claimAttemptCreate(Claim claim, Player creator) {
+    public static Cancellable claimAttemptCreate(ClaimMain claim, Player creator) {
         PueblosEvent_ClaimAttemptCreate event = new PueblosEvent_ClaimAttemptCreate(claim, creator);
         callEvent(creator, event);
         return event;
     }
 
-    public static void claimCreate(@Nullable CommandSender executor, Claim claim, Player creator) {
+    public static void claimCreate(@Nullable CommandSender executor, ClaimMain claim, Player creator) {
         PueblosEvent_ClaimCreate event = new PueblosEvent_ClaimCreate(claim, creator);
         callEvent(executor, event);
     }
 
-    public static void claimDelete(CommandSender executor, Claim claim) {
+    public static void claimDelete(CommandSender executor, ClaimMain claim) {
         PueblosEvent_ClaimDelete event = new PueblosEvent_ClaimDelete(claim);
         callEvent(executor, event);
     }
@@ -46,7 +47,7 @@ public class HelperEvent {
         return (Cancellable) event;
     }
 
-    public static Cancellable teleportToClaim(CommandSender executor, Claim claim, Player player, Location from) {
+    public static Cancellable teleportToClaim(CommandSender executor, ClaimMain claim, Player player, Location from) {
         Event event = new PueblosEvent_ClaimTeleportTo(claim, player, from);
         callEvent(executor, event);
         return (Cancellable) event;
@@ -57,7 +58,7 @@ public class HelperEvent {
         callEvent(executor, event);
     }
 
-    public static void claimWalked(Player p, Claim claim, boolean walked_in) {
+    public static void claimWalked(Player p, ClaimMain claim, boolean walked_in) {
         Event event = walked_in ? new PueblosEvent_ClaimWalkedIn(claim, p) : new PueblosEvent_ClaimWalkedOut(claim, p);
         callEvent(p, event);
     }

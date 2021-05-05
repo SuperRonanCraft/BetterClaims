@@ -1,5 +1,6 @@
 package me.RonanCraft.Pueblos.resources.claims;
 
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG_MEMBER;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 

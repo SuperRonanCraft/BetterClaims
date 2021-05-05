@@ -1,4 +1,9 @@
-package me.RonanCraft.Pueblos.resources.claims;
+/*
+ * Copyright (c) 2021 RonanCraft Network
+ * All rights reserved.
+ */
+
+package me.RonanCraft.Pueblos.resources.claims.enums;
 
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.command.CommandSender;

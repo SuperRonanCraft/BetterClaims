@@ -1,7 +1,7 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
 import me.RonanCraft.Pueblos.inventory.PueblosInv;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
 import me.RonanCraft.Pueblos.resources.files.FileOther;
@@ -35,8 +35,8 @@ public class HelperItem {
                 SkullMeta meta = (SkullMeta) item.getItemMeta();
                 if (info instanceof ClaimMember)
                     meta.setOwningPlayer(((ClaimMember) info).getPlayer());
-                else if (info instanceof Claim && !((Claim) info).isAdminClaim())
-                    meta.setOwningPlayer(((Claim) info).getOwner());
+                else if (info instanceof ClaimMain && !((ClaimMain) info).isAdminClaim())
+                    meta.setOwningPlayer(((ClaimMain) info).getOwner());
                 else if (info instanceof ClaimRequest)
                     meta.setOwningPlayer(Bukkit.getOfflinePlayer(((ClaimRequest) info).id));
                 //else //Laggy code

@@ -1,8 +1,8 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,10 +17,10 @@ import java.util.List;
 public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_Claim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, Claim> claim = new HashMap<>();
+    private final HashMap<Player, ClaimMain> claim = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, Claim claim) {
+    public Inventory open(Player p, ClaimMain claim) {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claim));
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
@@ -58,7 +58,7 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
             return;
 
         CLAIM_FLAG flag = (CLAIM_FLAG) itemInfo.get(p).get(e.getSlot()).info;
-        Claim claim = this.claim.get(p);
+        ClaimMain claim = this.claim.get(p);
         HelperClaim.toggleFlag(p, claim, flag);
         PueblosInventory.FLAGS.open(p, claim, false);
         //this.itemInfo.remove(p);

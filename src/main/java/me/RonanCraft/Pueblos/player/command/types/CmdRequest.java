@@ -6,8 +6,8 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
 import org.bukkit.command.CommandSender;
@@ -24,16 +24,16 @@ public class CmdRequest implements PueblosCommand, PueblosCommandHelpable, Puebl
 
     public void execute(CommandSender sendi, String label, String[] args) {
         Player p = (Player) sendi;
-        List<Claim> requestable = getRequestable(p);
+        List<ClaimMain> requestable = getRequestable(p);
         if (!requestable.isEmpty()) {
             PueblosInventory.REQUESTING.open(p, requestable, true);
         } else
             Message.sms(p, "No claims to join!", null);
     }
 
-    public static List<Claim> getRequestable(Player p) { //Get all claims a player can request to be in
-        List<Claim> claims = new ArrayList<>();
-        for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaims(false))
+    public static List<ClaimMain> getRequestable(Player p) { //Get all claims a player can request to be in
+        List<ClaimMain> claims = new ArrayList<>();
+        for (ClaimMain claim : Pueblos.getInstance().getClaimHandler().getClaims())
             //Not the owner or member and claim is accepting requests
             if (    !claim.isAdminClaim() //Not an admin Claim
                     && claim.getOwnerID() != null //Owners UUID isnt trash

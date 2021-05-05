@@ -1,8 +1,8 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_PERMISSION_LEVEL;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
@@ -18,10 +18,10 @@ import java.util.List;
 public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, Claim> claim = new HashMap<>();
+    private final HashMap<Player, ClaimMain> claim = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, Claim claim) {
+    public Inventory open(Player p, ClaimMain claim) {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claim));
 
         addBorder(inv);
@@ -51,7 +51,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
             return;
 
         CLAIM_SETTINGS setting = (CLAIM_SETTINGS) itemInfo.get(p).get(e.getSlot()).info;
-        Claim claim = this.claim.get(p);
+        ClaimMain claim = this.claim.get(p);
         switch (setting) {
             case TELEPORT: HelperClaim.teleportTo(p, claim); p.closeInventory(); break;
             case DELETE: PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_DELETE, p, claim), false); break;
@@ -100,7 +100,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
             this.disallowed = disallowed;
         }
 
-        ITEMS getItem(Player p, Claim claim) {
+        ITEMS getItem(Player p, ClaimMain claim) {
             if (disallowed != null) {
                 if (inv.isAllowed(p, claim))
                     return allowed;

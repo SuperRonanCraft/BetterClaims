@@ -1,7 +1,7 @@
 package me.RonanCraft.Pueblos.resources.tools.visual;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -64,7 +64,7 @@ public class Visualization {
 
     //convenience method to build a visualization from a claim
     //visualizationType determines the style (gold blocks, silver, red, diamond, etc)
-    public static Visualization fromClaim(Claim claim, int height, VisualizationType visualizationType, Location locality) {
+    public static Visualization fromClaim(ClaimMain claim, int height, VisualizationType visualizationType, Location locality) {
         //visualize only top level claims
         /*if (claim.parent != null) {
             return FromClaim(claim.parent, height, visualizationType, locality);

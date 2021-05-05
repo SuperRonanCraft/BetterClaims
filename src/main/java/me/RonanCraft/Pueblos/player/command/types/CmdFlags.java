@@ -6,6 +6,8 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.*;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
@@ -47,7 +49,7 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
                 MessagesCore.INVALIDFLAG.send(sendi);
                 return;
             }
-            Claim claim = handler.getClaim(p.getLocation());
+            ClaimMain claim = handler.getClaim(p.getLocation());
             if (claim != null) {
                 if (claim.isOwner(p)) {
                     HelperClaim.setFlag(p, claim, flag, value);

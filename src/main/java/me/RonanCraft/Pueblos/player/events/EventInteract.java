@@ -4,6 +4,10 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.data.PlayerData;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.*;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_CORNER;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -77,15 +81,15 @@ public class EventInteract implements PueblosEvents {
                 List<Location> corners = claimInteraction.locations;
                 if (corners.size() >= 2) { //Create claim
                     switch (claimInteraction.mode) {
+                        //Create a claim inside another claim
+                        case SUBCLAIM:
                         //Normal user claim
                         case CREATE:
                         //Create a claim with no owner, making it an admin claim
                         case CREATE_ADMIN:
-                            error = HelperClaim.createClaim(p, p.getWorld(), corners.get(0), corners.get(1), false, claimInteraction.mode); break; //MODE will handle the rest
+                            error = HelperClaim.createClaim(p, p.getWorld(), corners.get(0), corners.get(1), false, claimInteraction); break; //MODE will handle the rest
                         //Edit a claims size
                         case EDIT: error = resizeClaim(p, claimInteraction.editing, corners); errorInfo = claimInteraction.editing; break;
-                        //Create a claim inside another claim
-                        case SUBCLAIM: break;
                     }
                     if (error != CLAIM_ERRORS.SIZE_SMALL && error != CLAIM_ERRORS.SIZE_LARGE) //Let the player select another second location if error
                         claimInteraction.lock(); //Lock us from using the same locations again
@@ -104,7 +108,7 @@ public class EventInteract implements PueblosEvents {
         }
     }
 
-    private CLAIM_ERRORS resizeClaim(Player p, Claim claim, List<Location> corners) {
+    private CLAIM_ERRORS resizeClaim(Player p, ClaimMain claim, List<Location> corners) {
 
         BoundingBox position = claim.getBoundingBox();
         Location start_location = corners.get(0);
@@ -123,7 +127,7 @@ public class EventInteract implements PueblosEvents {
         int min_z = Math.min(positionStiff.getBlockZ(), positionMovingCorner.getBlockZ());
         Location greater = new Location(position.getWorld(), max_x, 0, max_z);
         Location lower = new Location(position.getWorld(), min_x, 0, min_z);
-        CLAIM_ERRORS error = Pueblos.getInstance().getClaimHandler().isLocationValid(greater, lower, p, claim /*Ignored claim*/);
+        CLAIM_ERRORS error = Pueblos.getInstance().getClaimHandler().isLocationValid(greater, lower, p, claim /*Ignored claim*/, null);
         if (error == CLAIM_ERRORS.NONE) {
             //Save new position
             if (claim.editCorners(p, positionStiff, positionMovingCorner)) {

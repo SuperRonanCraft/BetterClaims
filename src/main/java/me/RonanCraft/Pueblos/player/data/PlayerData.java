@@ -2,15 +2,13 @@ package me.RonanCraft.Pueblos.player.data;
 
 import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class PlayerData {
     private Visualization visualization;
@@ -19,7 +17,7 @@ public class PlayerData {
     private List<PueblosInventory> previous = new ArrayList<>();
     private PueblosInventory pueblosInventory;
     private PlayerClaimInteraction claimInteraction;
-    private Claim insideClaim;
+    private ClaimMain insideClaim;
 
     //Visualization
     @Nullable
@@ -117,11 +115,11 @@ public class PlayerData {
 
     //inside Claim
     @Nullable
-    public Claim getInsideClaim() {
+    public ClaimMain getInsideClaim() {
         return insideClaim;
     }
 
-    public void setInsideClaim(Claim claim) {
+    public void setInsideClaim(ClaimMain claim) {
         insideClaim = claim;
     }
 

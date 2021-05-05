@@ -32,6 +32,11 @@ Messages:
       InClaim: '&7Right-Click a corner of this claim to change size!'
       NoClaim: '&7Right-Click two corners to make a claim!'
       NotOwner: '&7You are inside a claim which you cannot edit!'
+      Wand:
+        Normal: '&7Creating a new claim, right-click another corner to confirm creation'
+        SubClaim: '&7Creating a &fsub-claim&7! Right-click another corner within the parent to confirm'
+        Admin: '&7Creating an &fAdmin &7claim, right-click another corner to confirm creation'
+        Edit: '&cEditing claim! &7Right-click another corner to change claim size!'
     Create:
       Success: '&aSuccess! &7This &f%claim_width% x %claim_length% &7claim is now yours!'
       Failed:

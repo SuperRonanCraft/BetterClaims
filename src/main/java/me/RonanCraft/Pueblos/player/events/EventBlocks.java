@@ -1,9 +1,6 @@
 package me.RonanCraft.Pueblos.player.events;
 
-import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_ERRORS;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.*;
@@ -31,7 +28,7 @@ public class EventBlocks implements PueblosEvents {
             p.sendMessage("Auction Sign!");
             int _claim_id = getInt(e.getLine(1));
             if (_claim_id >= 0) {
-                Claim claim = getPl().getClaimHandler().getClaim(_claim_id);
+                ClaimMain claim = getPl().getClaimHandler().getClaim(_claim_id);
                 if (claim != null) {
                     if (!claim.contains(e.getBlock().getLocation()))
                         p.sendMessage("Auction sign is too far from this claim!");

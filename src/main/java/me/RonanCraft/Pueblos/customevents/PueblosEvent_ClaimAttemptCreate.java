@@ -1,6 +1,6 @@
 package me.RonanCraft.Pueblos.customevents;
 
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 
@@ -16,7 +16,7 @@ public class PueblosEvent_ClaimAttemptCreate extends PueblosEventType_ClaimCance
      * @param claim The claim that was just created
      * @param creator The player who created this claim
      */
-    public PueblosEvent_ClaimAttemptCreate(Claim claim, Player creator) {
+    public PueblosEvent_ClaimAttemptCreate(ClaimMain claim, Player creator) {
         super(claim);
         this.creator = creator;
     }

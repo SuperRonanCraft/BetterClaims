@@ -1,7 +1,7 @@
 package me.RonanCraft.Pueblos.resources.database;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 
@@ -38,19 +38,19 @@ public class DatabaseClaims extends SQLite {
         }
     }
 
-    public List<Claim> getClaims() {
+    public List<ClaimMain> getClaims() {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            List<Claim> claims = new ArrayList<>();
+            List<ClaimMain> claims = new ArrayList<>();
             conn = getSQLConnection();
             ps = conn.prepareStatement("SELECT * FROM " + table + ";");
 
             rs = ps.executeQuery();
             //Load all Claims
             while (rs.next()) {
-                Claim claim = Pueblos.getInstance().getClaimHandler().loadClaim(rs);
+                ClaimMain claim = Pueblos.getInstance().getClaimHandler().loadClaim(rs);
                 if (claim != null && claim.getBoundingBox() != null)
                     claims.add(claim);
             }
@@ -60,14 +60,14 @@ public class DatabaseClaims extends SQLite {
                 int parent_id = rs.getInt(COLUMNS.PARENT.name);
                 if (!rs.wasNull()) { //Check if the parent column was not null
                     int claim_id = rs.getInt(COLUMNS.CLAIM_ID.name);
-                    Claim claim_child = null;
-                    for (Claim claim : claims)
+                    ClaimMain claim_child = null;
+                    for (ClaimMain claim : claims)
                         if (claim.claimId == claim_id) {
                             claim_child = claim;
                             break;
                         }
                     if (claim_child != null) {
-                        for (Claim claim : claims) {
+                        for (ClaimMain claim : claims) {
                             if (claim.claimId == parent_id) {
                                 claim_child.parent = claim;
                                 break;
@@ -91,7 +91,7 @@ public class DatabaseClaims extends SQLite {
     }
 
     //Create a claim
-    public boolean createClaim(Claim claim) {
+    public boolean createClaim(ClaimMain claim) {
         String pre = "INSERT INTO ";
         String sql = pre + table + " ("
                 + COLUMNS.OWNER_UUID.name + ", "
@@ -111,7 +111,7 @@ public class DatabaseClaims extends SQLite {
     }
 
     //Create a claim
-    public boolean deleteClaim(Claim claim) {
+    public boolean deleteClaim(ClaimMain claim) {
         String pre = "DELETE FROM ";
         String sql = pre + table + " WHERE "
                 + COLUMNS.CLAIM_ID.name + " = ?";
@@ -131,7 +131,7 @@ public class DatabaseClaims extends SQLite {
     }*/
 
     //Claim Saving
-    public boolean saveClaim(Claim claim) {
+    public boolean saveClaim(ClaimMain claim) {
         String sql = "UPDATE " + table + " SET "
                 + COLUMNS.OWNER_UUID.name + " = ?,"
                 + COLUMNS.OWNER_NAME.name + " = ?,"
@@ -154,14 +154,14 @@ public class DatabaseClaims extends SQLite {
     }
 
     public void saveChanges() {
-        for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaims(true))
+        for (ClaimMain claim : Pueblos.getInstance().getClaimHandler().getClaims())
             if (claim.wasUpdated())
                 saveClaim(claim);
     }
 
     //Tools
 
-    private boolean sqlCreateClaim(String statement, List<Object> params, Claim claim) {
+    private boolean sqlCreateClaim(String statement, List<Object> params, ClaimMain claim) {
         Connection conn = null;
         PreparedStatement ps = null;
         boolean success = true;
@@ -191,11 +191,11 @@ public class DatabaseClaims extends SQLite {
         return success;
     }
 
-    private String getClaimOwnerID(Claim claim) {
+    private String getClaimOwnerID(ClaimMain claim) {
         return claim.getOwnerID() != null ? claim.getOwnerID().toString() : "Admin Claim";
     }
 
-    private String getClaimOwnerName(Claim claim) {
+    private String getClaimOwnerName(ClaimMain claim) {
         return claim.getOwnerName() != null ? claim.getOwnerName() : "Admin Claim";
     }
 }

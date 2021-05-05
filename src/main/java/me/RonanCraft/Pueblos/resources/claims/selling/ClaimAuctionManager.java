@@ -1,8 +1,8 @@
 package me.RonanCraft.Pueblos.resources.claims.selling;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_ERRORS;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.database.DatabaseAuctions;
 
@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class ClaimAuctionManager {
 
     private final ClaimHandler claimHandler;
-    private final HashMap<Claim, ClaimAuction> auctions = new HashMap<>(); //Organized by claim to find auction faster
+    private final HashMap<ClaimMain, ClaimAuction> auctions = new HashMap<>(); //Organized by claim to find auction faster
 
     public ClaimAuctionManager(ClaimHandler claimHandler) {
         this.claimHandler = claimHandler;
@@ -39,7 +39,7 @@ public class ClaimAuctionManager {
         return CLAIM_ERRORS.DATABASE_ERROR;
     }
 
-    public CLAIM_ERRORS createAuction(@Nonnull Claim claim, int price, long time) {
+    public CLAIM_ERRORS createAuction(@Nonnull ClaimMain claim, int price, long time) {
         if (auctions.containsKey(claim)) {
             return CLAIM_ERRORS.AUCTION_EXISTS;
         }
@@ -54,7 +54,7 @@ public class ClaimAuctionManager {
 
     public ClaimAuction loadAuction(@Nonnull ResultSet result) throws SQLException {
         try {
-            Claim claim = claimHandler.getClaim(result.getInt(DatabaseAuctions.COLUMNS.CLAIM_ID.name));
+            ClaimMain claim = claimHandler.getClaim(result.getInt(DatabaseAuctions.COLUMNS.CLAIM_ID.name));
             int price = result.getInt(DatabaseAuctions.COLUMNS.PRICE.name);
             long time = result.getLong(DatabaseAuctions.COLUMNS.HOURS.name);
             ClaimAuction auction = new ClaimAuction(claim, price, time);

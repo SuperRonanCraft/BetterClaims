@@ -1,8 +1,8 @@
 package me.RonanCraft.Pueblos.resources.dependencies;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_ERRORS;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.claims.BoundingBox;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
@@ -37,9 +37,9 @@ public class ConverterGriefPrevention {
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(f);
                 BoundingBox position = getPosition(config);
                 UUID uuid = getID(config);
-                Claim claim;
+                ClaimMain claim;
                 claim = claimHandler.claimCreate(uuid, null, position, null);
-                CLAIM_ERRORS error = claimHandler.uploadClaim(claim, null);
+                CLAIM_ERRORS error = claimHandler.uploadClaim(claim, null, null);
                 if (error != CLAIM_ERRORS.NONE) {
                     Pueblos.getInstance().getLogger().warning(error.getMsg(claim));
                     //error.sendMsg(converter, claim);

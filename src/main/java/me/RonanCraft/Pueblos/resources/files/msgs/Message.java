@@ -3,6 +3,9 @@ package me.RonanCraft.Pueblos.resources.files.msgs;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.*;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG_MEMBER;
 import me.RonanCraft.Pueblos.resources.files.FileLanguage;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
@@ -52,8 +55,8 @@ public class Message {
             //Placeholders based off info
             if (info instanceof String && str.contains("%command%"))
                 str = str.replace("%command%", (String) info);
-            else if (info instanceof Claim)
-                str = claims(str, (Claim) info, null);
+            else if (info instanceof ClaimMain)
+                str = claims(str, (ClaimMain) info, null);
             else if (info instanceof ClaimMember)
                 str = member(str, (ClaimMember) info, null);
             else if (info instanceof ClaimRequest)
@@ -72,8 +75,8 @@ public class Message {
     private static String getPlaceholder(String str, Object[] info) {
         if (info[0] instanceof ClaimMember && info[1] instanceof CLAIM_FLAG_MEMBER)
             str = member(str, (ClaimMember) info[0], (CLAIM_FLAG_MEMBER) info[1]);
-        else if (info[0] instanceof Claim && info[1] instanceof CLAIM_FLAG)
-            str = claims(str, (Claim) info[0], (CLAIM_FLAG) info[1]);
+        else if (info[0] instanceof ClaimMain && info[1] instanceof CLAIM_FLAG)
+            str = claims(str, (ClaimMain) info[0], (CLAIM_FLAG) info[1]);
         return str;
     }
 

@@ -1,7 +1,7 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
@@ -70,7 +70,7 @@ public class InventoryConfirm extends PueblosInvLoader implements PueblosInv_Con
                         HelperClaim.requestAction(false, p, (ClaimRequest) confirmation.info);
                         break;
                     case CLAIM_DELETE:
-                        HelperClaim.deleteClaim(p, (Claim) confirmation.info);
+                        HelperClaim.deleteClaim(p, (ClaimMain) confirmation.info);
                         p.closeInventory();
                         return;
                 }

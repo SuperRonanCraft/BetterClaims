@@ -1,14 +1,11 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.player.data.PlayerData;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
-
-import java.util.HashMap;
-import java.util.Objects;
 
 public class EventMove implements PueblosEvents {
 
@@ -27,7 +24,7 @@ public class EventMove implements PueblosEvents {
         Location loc = e.getTo();
         PlayerData data = listener.getPlayerData(p);
         if (data.getInsideClaim() != null) {
-            Claim claim = data.getInsideClaim();
+            ClaimMain claim = data.getInsideClaim();
             if (claim.deleted)
                 data.removeInsideClaim();
             else if (!claim.contains(loc)) {
@@ -35,7 +32,7 @@ public class EventMove implements PueblosEvents {
                 HelperEvent.claimWalked(p, claim, false);
             }
         } else {
-            Claim claim = getClaim(loc);
+            ClaimMain claim = getClaim(loc);
             if (claim != null) {
                 data.setInsideClaim(claim);
                 HelperEvent.claimWalked(p, claim, true);

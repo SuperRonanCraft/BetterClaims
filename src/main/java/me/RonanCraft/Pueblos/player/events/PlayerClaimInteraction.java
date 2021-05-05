@@ -2,9 +2,10 @@ package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_ERRORS;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_MODE;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Location;
@@ -19,8 +20,8 @@ public class PlayerClaimInteraction {
     private final Player player;
     final List<Location> locations = new ArrayList<>();
     boolean locked = false;
-    CLAIM_MODE mode;
-    Claim editing;
+    public CLAIM_MODE mode;
+    public ClaimMain editing;
 
     PlayerClaimInteraction(Player player, CLAIM_MODE mode) {
         this.player = player;
@@ -31,9 +32,9 @@ public class PlayerClaimInteraction {
         if (locations.contains(loc)) {
             return CLAIM_ERRORS.LOCATION_ALREADY_EXISTS;
         } else {
-            for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaims(false))
+            for (ClaimMain claim : Pueblos.getInstance().getClaimHandler().getClaims())
                 if (claim.contains(loc)) {
-                    if (locations.size() == 0 && claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
+                    if (editing == null && locations.size() == 0 && claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
                         if (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) {
                             mode = CLAIM_MODE.EDIT;
                             editing = claim;
@@ -41,12 +42,18 @@ public class PlayerClaimInteraction {
                             Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.EDIT, player.getLocation()).apply(player);
                             break;
                         } //else {
-                            //Clicked a corner, but not allowed to resize this claim
+                            //Clicked a corner, but not allowed to resize this claim, next method will handle this
                         //}
                     }
-                    if (!(mode == CLAIM_MODE.EDIT && editing == claim)) { //Not editing the current overlapping claim area
-                        Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
-                        return CLAIM_ERRORS.OVERLAPPING;
+                    if (mode != CLAIM_MODE.EDIT || editing != claim) { //Not editing the current overlapping claim area
+                        if (editing == null && (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) /*Is Child thing here*/) {
+                            mode = CLAIM_MODE.SUBCLAIM;
+                            editing = claim;
+                            break;
+                        } else {
+                            Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
+                            return CLAIM_ERRORS.OVERLAPPING;
+                        }
                     }
                 }
             if (locations.size() > 1 && !Objects.equals(locations.get(0).getWorld(), loc.getWorld())) {
@@ -57,6 +64,14 @@ public class PlayerClaimInteraction {
         }
         if (locations.size() > 2)
             locations.remove(1);
+        if (locations.size() == 1) { //First Location
+            switch (mode) {
+                case CREATE: MessagesCore.CLAIM_ITEM_WAND_NORMAL.send(p); break;
+                case CREATE_ADMIN: MessagesCore.CLAIM_ITEM_WAND_ADMIN.send(p); break;
+                case SUBCLAIM: MessagesCore.CLAIM_ITEM_WAND_SUBCLAIM.send(p); break;
+                case EDIT: MessagesCore.CLAIM_ITEM_WAND_EDIT.send(p); break;
+            }
+        }
         return CLAIM_ERRORS.NONE;
     }
 

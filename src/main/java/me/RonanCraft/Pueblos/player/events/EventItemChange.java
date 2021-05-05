@@ -3,8 +3,8 @@ package me.RonanCraft.Pueblos.player.events;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.data.PlayerData;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_MODE;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
@@ -34,14 +34,14 @@ public class EventItemChange implements PueblosEvents {
         ItemStack item = e.getPlayer().getInventory().getItem(e.getNewSlot());
         if (item != null && item.getType().equals(getClaimItem()) && data.getClaimInteraction() == null) {
             data.setClaimInteraction(new PlayerClaimInteraction(e.getPlayer(), CLAIM_MODE.CREATE));
-            Claim claim = getClaim(e.getPlayer().getLocation());
+            ClaimMain claim = getClaim(e.getPlayer().getLocation());
             showClaimLater(claim, e.getPlayer());
         } else
             data.removeClaimInteraction();
     }
 
     //Delay showing the claim and message to not spam player scrolling through inventory
-    private void showClaimLater(Claim claim, Player p) {
+    private void showClaimLater(ClaimMain claim, Player p) {
         claimShowing.put(p,
             Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
                 ItemStack item = p.getInventory().getItemInMainHand();

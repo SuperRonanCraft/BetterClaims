@@ -1,12 +1,10 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
-import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.inventory.*;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG_MEMBER;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG_MEMBER;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;

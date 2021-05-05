@@ -1,8 +1,8 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_FLAG;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
@@ -30,7 +30,7 @@ public class EventDamage implements PueblosEvents {
             return;
         }
 
-        Claim claim = getClaim(damager.getLocation());
+        ClaimMain claim = getClaim(damager.getLocation());
         if (claim == null)
             claim = getClaim(damaged.getLocation());
         if (claim != null) {

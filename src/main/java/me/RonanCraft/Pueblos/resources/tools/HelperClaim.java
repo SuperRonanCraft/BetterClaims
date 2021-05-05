@@ -1,9 +1,12 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.CLAIM_MODE;
+import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
 import me.RonanCraft.Pueblos.resources.claims.*;
-import me.RonanCraft.Pueblos.resources.files.FileLanguage;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -13,22 +16,23 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
 public class HelperClaim {
 
-    public static void toggleFlag(Player p, Claim claim, CLAIM_FLAG flag) {
+    public static void toggleFlag(Player p, ClaimMain claim, CLAIM_FLAG flag) {
         setFlag(p, claim, flag, !(Boolean) claim.getFlags().getFlag(flag));
     }
 
-    public static void setFlag(Player p, Claim claim, CLAIM_FLAG flag, Object value) {
+    public static void setFlag(Player p, ClaimMain claim, CLAIM_FLAG flag, Object value) {
         claim.getFlags().setFlag(flag, value, true);
         MessagesCore.CLAIM_FLAGCHANGE.send(p, new Object[]{claim, flag});
     }
 
-    public static boolean requestJoin(Player p, Claim claim) {
+    public static boolean requestJoin(Player p, ClaimMain claim) {
         if (claim.hasRequestFrom(p)) { //Already has a request
             MessagesCore.REQUEST_REQUESTER_ALREADY.send(p, claim.getRequest(p));
             return false;
@@ -84,13 +88,13 @@ public class HelperClaim {
         }
     }
 
-    public static CLAIM_ERRORS createClaim(@Nonnull Player creator, @Nonnull World world, @Nonnull Location pos1, @Nonnull Location pos2, boolean sendMsg, @Nonnull CLAIM_MODE mode) {
+    public static CLAIM_ERRORS createClaim(@Nonnull Player creator, @Nonnull World world, @Nonnull Location pos1, @Nonnull Location pos2, boolean sendMsg, @Nullable PlayerClaimInteraction claimInteraction) {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
-        Claim claim = handler.claimCreate(creator.getUniqueId(), creator.getName(), new BoundingBox(world, pos1, pos2), mode);
+        ClaimMain claim = handler.claimCreate(creator.getUniqueId(), creator.getName(), new BoundingBox(world, pos1, pos2), claimInteraction != null ? claimInteraction.mode : CLAIM_MODE.CREATE);
         if (!HelperEvent.claimAttemptCreate(claim, creator).isCancelled()) {
             if (claim != null) {
-                error = handler.uploadClaim(claim, creator);
+                error = handler.uploadClaim(claim, creator, claimInteraction);
                 switch (error) {
                     case NONE:
                         MessagesCore.CLAIM_CREATE_SUCCESS.send(creator, claim);
@@ -99,8 +103,6 @@ public class HelperClaim {
                     case SIZE_LARGE:
                     case OVERLAPPING:
                         break;
-                    default:
-                        Message.sms(creator, "An Error Happened!", null);
                 }
             } else { //Overlapping
                 //MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM.send(owner);
@@ -118,14 +120,14 @@ public class HelperClaim {
         return pos.getLeft() + "x, " + pos.getTop() + "z";
     }
 
-    public static void teleportTo(Player p, Claim claim) {
+    public static void teleportTo(Player p, ClaimMain claim) {
         if (!HelperEvent.teleportToClaim(p, claim, p, p.getLocation()).isCancelled()) {
             p.teleport(claim.getBoundingBox().getLocation());
             MessagesCore.CLAIM_TELEPORT.send(p, claim);
         }
     }
 
-    public static void deleteClaim(Player p, Claim claim) {
+    public static void deleteClaim(Player p, ClaimMain claim) {
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         CLAIM_ERRORS error = handler.deleteClaim(p, claim);
         if (error == CLAIM_ERRORS.NONE)
@@ -134,7 +136,7 @@ public class HelperClaim {
             error.sendMsg(p, claim);
     }
 
-    public static void sendClaimInfo(Player p, Claim claim) {
+    public static void sendClaimInfo(Player p, ClaimMain claim) {
         List<String> msg = Pueblos.getInstance().getFiles().getLang().getStringList("ClaimInfo");
         Message.sms(p, msg, claim);
     }

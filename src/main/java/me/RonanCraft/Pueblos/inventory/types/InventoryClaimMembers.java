@@ -1,7 +1,7 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
@@ -18,10 +18,10 @@ import java.util.List;
 public class InventoryClaimMembers extends PueblosInvLoader implements PueblosInv_Claim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, Claim> claim = new HashMap<>();
+    private final HashMap<Player, ClaimMain> claim = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, Claim claim) {
+    public Inventory open(Player p, ClaimMain claim) {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claim));
 
         addBorder(inv);

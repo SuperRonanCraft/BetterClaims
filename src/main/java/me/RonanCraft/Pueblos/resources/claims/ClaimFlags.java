@@ -1,4 +1,11 @@
+/*
+ * Copyright (c) 2021 RonanCraft Network
+ * All rights reserved.
+ */
+
 package me.RonanCraft.Pueblos.resources.claims;
+
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
 
 import java.util.HashMap;
 

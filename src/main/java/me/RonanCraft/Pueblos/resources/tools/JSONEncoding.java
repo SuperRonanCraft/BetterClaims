@@ -1,6 +1,9 @@
 package me.RonanCraft.Pueblos.resources.tools;
 
 import me.RonanCraft.Pueblos.resources.claims.*;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG_MEMBER;
 import org.bukkit.Bukkit;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -121,7 +124,7 @@ public class JSONEncoding {
         }
     }
 
-    public static List<ClaimRequest> getRequests(String json, Claim claim) {
+    public static List<ClaimRequest> getRequests(String json, ClaimMain claim) {
         if (json == null)
             return null;
         try {
@@ -142,7 +145,7 @@ public class JSONEncoding {
         }
     }
 
-    public static List<ClaimMember> getMember(String json, Claim claim) {
+    public static List<ClaimMember> getMember(String json, ClaimMain claim) {
         if (json == null)
             return null;
         try {

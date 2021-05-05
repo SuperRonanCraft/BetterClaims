@@ -1,6 +1,9 @@
-package me.RonanCraft.Pueblos.resources.claims;
+/*
+ * Copyright (c) 2021 RonanCraft Network
+ * All rights reserved.
+ */
 
-import org.bukkit.entity.Player;
+package me.RonanCraft.Pueblos.resources.claims;
 
 import java.util.ArrayList;
 import java.util.List;

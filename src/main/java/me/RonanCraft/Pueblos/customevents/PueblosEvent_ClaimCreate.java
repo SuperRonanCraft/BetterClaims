@@ -1,8 +1,7 @@
 package me.RonanCraft.Pueblos.customevents;
 
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import org.bukkit.entity.Player;
-import org.bukkit.event.HandlerList;
 
 //Called when a claim has successfully uploaded to the database and is now being protected
 public class PueblosEvent_ClaimCreate extends PueblosEventType_Claim {
@@ -14,7 +13,7 @@ public class PueblosEvent_ClaimCreate extends PueblosEventType_Claim {
      * @param claim The claim that was just created
      * @param creator The player who created this claim
      */
-    public PueblosEvent_ClaimCreate(Claim claim, Player creator) {
+    public PueblosEvent_ClaimCreate(ClaimMain claim, Player creator) {
         super(claim);
         this.creator = creator;
     }

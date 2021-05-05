@@ -2,9 +2,18 @@ package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.Settings;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_CORNER;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+/**
+ * Most credit for this class, the heart of Pueblos goes to `GriefPrevention` by BigScary
+ * https://github.com/TechFortress/GriefPrevention/blob/master/src/main/java/me/ryanhamshire/GriefPrevention/util/BoundingBox.java
+ */
 
 public class BoundingBox {
 
@@ -14,17 +23,18 @@ public class BoundingBox {
     private int minX, minZ;
     private final int minY;
 
-    public BoundingBox(World world, int x1, int z1, int x2, int z2) {
+    public BoundingBox(@Nullable World world, int x1, int z1, int x2, int z2) {
         this.world = world;
         setMinMax(x1, z1, x2, z2);
-        maxY = world.getMaxHeight();
+        maxY = world != null ? world.getMaxHeight() : 255;
         minY = Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXDEPTH);
     }
 
-    public BoundingBox(World world, Location loc_1, Location loc_2) {
+    public BoundingBox(@Nullable World world, Location loc_1, Location loc_2) {
         this(world, loc_1.getBlockX(), loc_1.getBlockZ(), loc_2.getBlockX(), loc_2.getBlockZ());
     }
 
+    @Nonnull
     public World getWorld() {
         return world;
     }
@@ -171,6 +181,19 @@ public class BoundingBox {
     //Use for checking if a sub claim is inside a master claim
     public boolean contains(BoundingBox otherBox) {
         return this.containsInternal(otherBox.minX, otherBox.minY, otherBox.minZ, otherBox.maxX, otherBox.maxY, otherBox.maxZ);
+    }
+
+    /**
+     * Checks if the bounding box intersects another bounding box.
+     *
+     * @param other the other bounding box
+     * @return true if the specified positions are inside the bounding box
+     */
+    public boolean intersects(BoundingBox other) {
+        // For help visualizing test cases, try https://silentmatt.com/rectangle-intersection/
+        return this.minX <= other.maxX && this.maxX >= other.minX
+                && this.minY <= other.maxY && this.maxY >= other.minY
+                && this.minZ <= other.maxZ && this.maxZ >= other.minZ;
     }
 
 }
