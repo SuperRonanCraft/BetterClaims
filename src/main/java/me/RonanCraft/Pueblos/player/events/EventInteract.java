@@ -81,12 +81,11 @@ public class EventInteract implements PueblosEvents {
                 List<Location> corners = claimInteraction.locations;
                 if (corners.size() >= 2) { //Create claim
                     switch (claimInteraction.mode) {
-                        //Create a claim inside another claim
-                        case SUBCLAIM:
                         //Normal user claim
                         case CREATE:
                         //Create a claim with no owner, making it an admin claim
-                        case CREATE_ADMIN:
+                        case CREATE_ADMIN://Create a claim inside another claim
+                        case SUBCLAIM:
                             error = HelperClaim.createClaim(p, p.getWorld(), corners.get(0), corners.get(1), false, claimInteraction); break; //MODE will handle the rest
                         //Edit a claims size
                         case EDIT: error = resizeClaim(p, claimInteraction.editing, corners); errorInfo = claimInteraction.editing; break;

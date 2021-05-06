@@ -17,13 +17,13 @@ import javax.annotation.Nullable;
 
 public class HelperEvent {
 
-    public static Cancellable claimAttemptCreate(ClaimMain claim, Player creator) {
+    public static Cancellable claimAttemptCreate(Claim claim, Player creator) {
         PueblosEvent_ClaimAttemptCreate event = new PueblosEvent_ClaimAttemptCreate(claim, creator);
         callEvent(creator, event);
         return event;
     }
 
-    public static void claimCreate(@Nullable CommandSender executor, ClaimMain claim, Player creator) {
+    public static void claimCreate(@Nullable CommandSender executor, Claim claim, Player creator) {
         PueblosEvent_ClaimCreate event = new PueblosEvent_ClaimCreate(claim, creator);
         callEvent(executor, event);
     }

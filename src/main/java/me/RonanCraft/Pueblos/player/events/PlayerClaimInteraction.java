@@ -32,7 +32,7 @@ public class PlayerClaimInteraction {
         if (locations.contains(loc)) {
             return CLAIM_ERRORS.LOCATION_ALREADY_EXISTS;
         } else {
-            for (ClaimMain claim : Pueblos.getInstance().getClaimHandler().getClaims())
+            for (ClaimMain claim : Pueblos.getInstance().getClaimHandler().getMainClaims())
                 if (claim.contains(loc)) {
                     if (editing == null && locations.size() == 0 && claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
                         if (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) {

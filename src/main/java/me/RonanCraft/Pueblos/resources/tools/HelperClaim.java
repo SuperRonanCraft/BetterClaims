@@ -7,6 +7,7 @@ import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_TYPE;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -20,6 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 public class HelperClaim {
 
@@ -88,13 +90,47 @@ public class HelperClaim {
         }
     }
 
-    public static CLAIM_ERRORS createClaim(@Nonnull Player creator, @Nonnull World world, @Nonnull Location pos1, @Nonnull Location pos2, boolean sendMsg, @Nullable PlayerClaimInteraction claimInteraction) {
+    public static Claim createClaim(BoundingBox box, @Nullable UUID ownerID, @Nullable String ownerName, boolean admin_claim) {
+        Claim claim;
+        if (ownerID != null && !admin_claim) //Is this an admin claim?
+            claim = new ClaimMain(ownerID, ownerName, box);
+        else
+            claim = new ClaimMain(box);
+        return claim;
+    }
+
+    public static CLAIM_ERRORS createClaim(@Nonnull Player creator, @Nonnull World world, @Nonnull Location pos1,
+                                           @Nonnull Location pos2, boolean sendMsg,
+                                           @Nullable PlayerClaimInteraction claimInteraction) {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
-        ClaimMain claim = handler.claimCreate(creator.getUniqueId(), creator.getName(), new BoundingBox(world, pos1, pos2), claimInteraction != null ? claimInteraction.mode : CLAIM_MODE.CREATE);
+        BoundingBox box = new BoundingBox(world, pos1, pos2);
+        Claim claim = createClaim(box, creator.getUniqueId(), creator.getName(), claimInteraction != null && claimInteraction.mode == CLAIM_MODE.CREATE_ADMIN);
+        if (!HelperEvent.claimAttemptCreate(claim, creator).isCancelled()) {
+            error = handler.uploadCreatedClaim(claim, creator, claimInteraction);
+            switch (error) {
+                case NONE:
+                    MessagesCore.CLAIM_CREATE_SUCCESS.send(creator, claim);
+                    Visualization.fromClaim(claim, creator.getLocation().getBlockY(), VisualizationType.CLAIM, creator.getLocation()).apply(creator);
+                case SIZE_SMALL:
+                case SIZE_LARGE:
+                case OVERLAPPING:
+                    break;
+            }
+            if (sendMsg)
+                error.sendMsg(creator, claim);
+        } else
+            error = CLAIM_ERRORS.CANCELLED;
+        return error;
+    }
+
+    public static CLAIM_ERRORS createClaimSub(@Nonnull Player creator, @Nonnull World world, @Nonnull Location pos1, @Nonnull Location pos2, boolean sendMsg, @Nullable PlayerClaimInteraction claimInteraction) {
+        CLAIM_ERRORS error;
+        ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
+        ClaimMain claim = new ClaimMain(creator.getUniqueId(), creator.getName(), new BoundingBox(world, pos1, pos2));
         if (!HelperEvent.claimAttemptCreate(claim, creator).isCancelled()) {
             if (claim != null) {
-                error = handler.uploadClaim(claim, creator, claimInteraction);
+                error = handler.uploadCreatedClaim(claim, creator, claimInteraction);
                 switch (error) {
                     case NONE:
                         MessagesCore.CLAIM_CREATE_SUCCESS.send(creator, claim);

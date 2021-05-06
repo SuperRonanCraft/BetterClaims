@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.resources.database;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
@@ -55,13 +56,13 @@ public class DatabaseClaims extends SQLite {
                     claims.add(claim);
             }
             //Give child claims a parent to sleep with
-            rs.beforeFirst();
+            /*rs.beforeFirst(); //////// ------- LOAD CHILD CLAIMS FROM ANOTHER DATABASE!
             while (rs.next()) {
                 int parent_id = rs.getInt(COLUMNS.PARENT.name);
                 if (!rs.wasNull()) { //Check if the parent column was not null
                     int claim_id = rs.getInt(COLUMNS.CLAIM_ID.name);
-                    ClaimMain claim_child = null;
-                    for (ClaimMain claim : claims)
+                    ClaimChild claim_child = null;
+                    for (ClaimChild claim : claims)
                         if (claim.claimId == claim_id) {
                             claim_child = claim;
                             break;
@@ -80,7 +81,7 @@ public class DatabaseClaims extends SQLite {
                         Pueblos.getInstance().getLogger().severe("Something went wrong with claim #" + claim_id + ", its a child claim but it wasn't loaded?");
                     }
                 }
-            }
+            }*/
             return claims;
         } catch (SQLException ex) {
             Pueblos.getInstance().getLogger().log(Level.SEVERE, Errors.sqlConnectionExecute(), ex);
@@ -91,7 +92,7 @@ public class DatabaseClaims extends SQLite {
     }
 
     //Create a claim
-    public boolean createClaim(ClaimMain claim) {
+    public boolean createClaim(Claim claim) {
         String pre = "INSERT INTO ";
         String sql = pre + table + " ("
                 + COLUMNS.OWNER_UUID.name + ", "
@@ -154,14 +155,14 @@ public class DatabaseClaims extends SQLite {
     }
 
     public void saveChanges() {
-        for (ClaimMain claim : Pueblos.getInstance().getClaimHandler().getClaims())
+        for (ClaimMain claim : Pueblos.getInstance().getClaimHandler().getMainClaims())
             if (claim.wasUpdated())
                 saveClaim(claim);
     }
 
     //Tools
 
-    private boolean sqlCreateClaim(String statement, List<Object> params, ClaimMain claim) {
+    private boolean sqlCreateClaim(String statement, List<Object> params, Claim claim) {
         Connection conn = null;
         PreparedStatement ps = null;
         boolean success = true;
@@ -191,11 +192,11 @@ public class DatabaseClaims extends SQLite {
         return success;
     }
 
-    private String getClaimOwnerID(ClaimMain claim) {
+    private String getClaimOwnerID(Claim claim) {
         return claim.getOwnerID() != null ? claim.getOwnerID().toString() : "Admin Claim";
     }
 
-    private String getClaimOwnerName(ClaimMain claim) {
+    private String getClaimOwnerName(Claim claim) {
         return claim.getOwnerName() != null ? claim.getOwnerName() : "Admin Claim";
     }
 }

@@ -4,10 +4,7 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG_MEMBER;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
+import me.RonanCraft.Pueblos.resources.claims.enums.*;
 import me.RonanCraft.Pueblos.resources.claims.selling.ClaimAuctionManager;
 import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
 import me.RonanCraft.Pueblos.resources.tools.HelperDate;
@@ -28,7 +25,8 @@ import java.util.*;
 
 public class ClaimHandler {
     private final ClaimAuctionManager auctionManager = new ClaimAuctionManager(this);
-    private final List<ClaimMain> claims = new ArrayList<>();
+    private final List<ClaimMain> mainClaims = new ArrayList<>();
+    private final List<ClaimChild> childClaims = new ArrayList<>();
     private int claim_maxSize = 256;
 
     private DatabaseClaims getDatabase() {
@@ -36,9 +34,10 @@ public class ClaimHandler {
     }
 
     public void load() {
-        claims.clear();
-        List<ClaimMain> claims = getDatabase().getClaims();
-        this.claims.addAll(claims);
+        mainClaims.clear();
+        childClaims.clear();
+        this.mainClaims.addAll(getDatabase().getClaims());
+        //this.childClaims.addAll(getDatabase().getClaimsChild());
         claim_maxSize = Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE);
         if (claim_maxSize < 10)
             claim_maxSize = 10;
@@ -95,12 +94,17 @@ public class ClaimHandler {
         return CLAIM_ERRORS.DATABASE_ERROR;
     }
 
-    public CLAIM_ERRORS uploadClaim(ClaimMain claim, @Nullable Player creator, @Nullable PlayerClaimInteraction claimInteraction) {
-        CLAIM_ERRORS error = isLocationValid(claim, creator, claimInteraction);
+    public CLAIM_ERRORS uploadCreatedClaim(Claim claim, @Nullable Player creator, @Nullable PlayerClaimInteraction claimInteraction) {
+        Claim ignoredClaim = claim instanceof ClaimChild ? ((ClaimChild) claim).getParent() : null;
+        CLAIM_ERRORS error = isLocationValid(claim, creator, claimInteraction, ignoredClaim);
         if (error == CLAIM_ERRORS.NONE) {
             claim.dateCreated = Calendar.getInstance().getTime();
             if (getDatabase().createClaim(claim)) {
-                claims.add(claim);
+                //Add claim to cache
+                if (claim instanceof ClaimMain)
+                    mainClaims.add((ClaimMain) claim);
+                else if (claim instanceof ClaimChild)
+                    childClaims.add((ClaimChild) claim);
                 if (creator != null)
                     HelperEvent.claimCreate(creator, claim, null);
                 return CLAIM_ERRORS.NONE;
@@ -112,21 +116,26 @@ public class ClaimHandler {
 
     public CLAIM_ERRORS deleteClaim(Player deletor, ClaimMain claim) {
         CLAIM_ERRORS error = CLAIM_ERRORS.NONE;
+        List<ClaimChild> childrenClaims = new ArrayList<>();
+        for (ClaimChild child : this.childClaims)
+            if (child.getParent() == claim)
+                childrenClaims.add(child);
+        //DELETE ALL THESE CHILDREN TOO!
         if (getDatabase().deleteClaim(claim)) {
-            claims.remove(claim);
+            mainClaims.remove(claim);
             HelperEvent.claimDelete(deletor, claim);
         } else
             error = CLAIM_ERRORS.DATABASE_ERROR;
         return error;
     }
 
-    private CLAIM_ERRORS isLocationValid(ClaimMain claim, @Nullable Player p, @Nullable PlayerClaimInteraction claimInteraction) {
+    private CLAIM_ERRORS isLocationValid(Claim claim, @Nullable Player p, @Nullable PlayerClaimInteraction claimInteraction, Claim ingnoredClaim) {
         Location greater = claim.getBoundingBox().getGreaterBoundaryCorner();
         Location lower = claim.getBoundingBox().getLesserBoundaryCorner();
-        return isLocationValid(greater, lower, p, null, claimInteraction);
+        return isLocationValid(greater, lower, p, ingnoredClaim, claimInteraction);
     }
 
-    public CLAIM_ERRORS isLocationValid(Location greater, Location lower, @Nullable Player p, @Nullable ClaimMain claimIgnored, @Nullable PlayerClaimInteraction claimInteraction) {
+    public CLAIM_ERRORS isLocationValid(Location greater, Location lower, @Nullable Player p, @Nullable Claim claimIgnored, @Nullable PlayerClaimInteraction claimInteraction) {
         //Size
         if (Math.abs(greater.getBlockX() - lower.getBlockX()) < 10 || Math.abs(greater.getBlockZ() - lower.getBlockZ()) < 10) {
             if (p != null)
@@ -138,12 +147,12 @@ public class ClaimHandler {
             return CLAIM_ERRORS.SIZE_LARGE;
         }
         //Overlapping
-        int x1 = lower.getBlockX();
-        int x2 = greater.getBlockX();
-        int y1 = lower.getBlockZ();
-        int y2 = greater.getBlockZ();
-        for (ClaimMain _claim : claims) {
-            if (claimIgnored != null && _claim == claimIgnored) //Ignore this claim
+        //int x1 = lower.getBlockX();
+        //int x2 = greater.getBlockX();
+        //int y1 = lower.getBlockZ();
+        //int y2 = greater.getBlockZ();
+        for (ClaimMain _claim : mainClaims) {
+            if (_claim == claimIgnored) //Ignore this claim
                 continue;
             if (claimInteraction != null && _claim == claimInteraction.editing) //Ignore this claim
                 continue;
@@ -169,35 +178,28 @@ public class ClaimHandler {
 
     public List<ClaimMain> getClaims(@Nonnull UUID uuid) {
         List<ClaimMain> claims = new ArrayList<>();
-        for (ClaimMain claim : this.claims)
+        for (ClaimMain claim : this.mainClaims)
             if (claim.getOwnerID() != null && claim.getOwnerID().equals(uuid))
                 claims.add(claim);
         return claims;
     }
 
     public ClaimMain getClaim(Location loc) {
-        for (ClaimMain claim : this.claims)
+        for (ClaimMain claim : this.mainClaims)
             if (claim.contains(loc))
                 return claim;
         return null;
     }
 
     public ClaimMain getClaim(int claimId) {
-        for (ClaimMain claim : this.claims)
+        for (ClaimMain claim : this.mainClaims)
             if (claim.claimId == claimId)
                 return claim;
         return null;
     }
 
-    public List<ClaimMain> getClaims() {
-        return claims;
-    }
-
-    public ClaimMain claimCreate(@Nullable UUID owner, @Nullable String name, BoundingBox position, CLAIM_MODE mode) {
-        if (owner == null || mode == CLAIM_MODE.CREATE_ADMIN)
-            return new ClaimMain(position);
-        else
-            return new ClaimMain(owner, name, position);
+    public List<ClaimMain> getMainClaims() {
+        return mainClaims;
     }
 
     public boolean allowBreak(@Nonnull Player p, @Nonnull Location block_location) {
