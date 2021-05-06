@@ -3,7 +3,6 @@ package me.RonanCraft.Pueblos.resources.dependencies;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.claims.BoundingBox;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
@@ -13,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Objects;
@@ -40,7 +40,7 @@ public class ConverterGriefPrevention {
                 BoundingBox position = getPosition(config);
                 UUID uuid = getID(config);
                 Claim claim;
-                claim = HelperClaim.createClaim(position, uuid, null, uuid == null);
+                claim = HelperClaim.createClaimMain(getWorld(config), position, uuid, null, uuid == null);
                 CLAIM_ERRORS error = claimHandler.uploadCreatedClaim(claim, null, null);
                 if (error != CLAIM_ERRORS.NONE) {
                     Pueblos.getInstance().getLogger().warning(error.getMsg(claim));
@@ -61,12 +61,18 @@ public class ConverterGriefPrevention {
     private BoundingBox getPosition(YamlConfiguration config) {
         String[] lesser_boundary_corner = Objects.requireNonNull(config.getString("Lesser Boundary Corner")).split(";");
         String[] greater_boundary_corner = Objects.requireNonNull(config.getString("Greater Boundary Corner")).split(";");
-        World world = Bukkit.getWorld(lesser_boundary_corner[0]);
+        //World world = Bukkit.getWorld(lesser_boundary_corner[0]);
         int x1 = Integer.parseInt(lesser_boundary_corner[1]);
         int z1 = Integer.parseInt(lesser_boundary_corner[3]);
         int x2 = Integer.parseInt(greater_boundary_corner[1]);
         int z2 = Integer.parseInt(greater_boundary_corner[3]);
-        return new BoundingBox(world, x1, z1, x2, z2);
+        return new BoundingBox(x1, z1, x2, z2);
+    }
+
+    @Nullable
+    private World getWorld(YamlConfiguration config) {
+        String[] lesser_boundary_corner = Objects.requireNonNull(config.getString("Lesser Boundary Corner")).split(";");
+        return Bukkit.getWorld(lesser_boundary_corner[0]);
     }
 
     private UUID getID(YamlConfiguration config) {

@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
+import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +34,7 @@ public class HelperEvent {
         callEvent(executor, event);
     }
 
-    public static Cancellable claimResize(CommandSender executor, Claim claim, Player editor, Location loc_1, Location loc_2) {
+    public static Cancellable claimResize(CommandSender executor, Claim claim, Player editor, Vector loc_1, Vector loc_2) {
         PueblosEvent_ClaimResize event = new PueblosEvent_ClaimResize(claim, editor, loc_1, loc_2);
         callEvent(executor, event);
         if (event.isCancelled() && event.sendCancelledMessage())

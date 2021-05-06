@@ -2,6 +2,7 @@ package me.RonanCraft.Pueblos.player.data;
 
 import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import org.bukkit.inventory.Inventory;

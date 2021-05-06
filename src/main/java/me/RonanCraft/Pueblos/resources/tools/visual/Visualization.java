@@ -2,6 +2,8 @@ package me.RonanCraft.Pueblos.resources.tools.visual;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimChild;
+import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -74,11 +76,15 @@ public class Visualization {
         Visualization visualization = new Visualization();
 
         //add subdivisions first
-        /*for (int i = 0; i < claim.children.size(); i++) {
-            Claim child = claim.children.get(i);
-            if (!child.inDataStore) continue;
-            addClaimElements(child, height, VisualizationType.Subdivision, locality);
-        }*/
+        ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
+
+        if (claim instanceof ClaimChild)
+            claim = ((ClaimChild) claim).parent;
+
+        List<ClaimChild> children = handler.getClaimsChild((ClaimMain) claim);
+        for (ClaimChild child : children) {
+            visualization.addElements(claim.getLesserBoundaryCorner(), claim.getGreaterBoundaryCorner(), height, VisualizationType.CLAIM_SUB, locality);
+        }
 
         //special visualization for administrative land claims
         if (visualizationType == VisualizationType.CLAIM && claim.isAdminClaim())
@@ -86,7 +92,7 @@ public class Visualization {
         //}
 
         //add top level last so that it takes precedence (it shows on top when the child claim boundaries overlap with its boundaries)
-        visualization.addElements(claim.getBoundingBox().getLesserBoundaryCorner(), claim.getBoundingBox().getGreaterBoundaryCorner(), height, visualizationType, locality);
+        visualization.addElements(claim.getLesserBoundaryCorner(), claim.getGreaterBoundaryCorner(), height, visualizationType, locality);
 
         return visualization;
     }

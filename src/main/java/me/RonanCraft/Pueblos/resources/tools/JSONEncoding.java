@@ -9,6 +9,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import javax.annotation.Nullable;
 import java.text.ParseException;
 import java.util.*;
 
@@ -29,7 +30,7 @@ public class JSONEncoding {
         if (position == null)
             return null;
         Map obj = new LinkedHashMap();
-        obj.put("world", position.getWorld().getName());
+        //obj.put("world", position.getWorld().getName());
         obj.put("x_1", position.getMaxX());
         obj.put("z_1", position.getMaxZ());
         obj.put("x_2", position.getMinX());
@@ -38,16 +39,17 @@ public class JSONEncoding {
         return json.toString();
     }
 
+    @Nullable
     public static BoundingBox getPosition(String json) {
         try {
             JSONObject obj = (JSONObject) JSONValue.parse(json);
             Map chunk_info = (Map) obj;
-            String world = chunk_info.get("world").toString();
+            //String world = chunk_info.get("world").toString();
             int x_1 = Integer.valueOf(chunk_info.get("x_1").toString());
             int z_1 = Integer.valueOf(chunk_info.get("z_1").toString());
             int x_2 = Integer.valueOf(chunk_info.get("x_2").toString());
             int z_2 = Integer.valueOf(chunk_info.get("z_2").toString());
-            return new BoundingBox(Bukkit.getWorld(world), x_1, z_1, x_2, z_2);
+            return new BoundingBox(/*Bukkit.getWorld(world),*/ x_1, z_1, x_2, z_2);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return null;
@@ -124,7 +126,7 @@ public class JSONEncoding {
         }
     }
 
-    public static List<ClaimRequest> getRequests(String json, ClaimMain claim) {
+    public static List<ClaimRequest> getRequests(String json, Claim claim) {
         if (json == null)
             return null;
         try {
@@ -145,7 +147,7 @@ public class JSONEncoding {
         }
     }
 
-    public static List<ClaimMember> getMember(String json, ClaimMain claim) {
+    public static List<ClaimMember> getMember(String json, Claim claim) {
         if (json == null)
             return null;
         try {

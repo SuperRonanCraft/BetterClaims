@@ -36,53 +36,16 @@ public class ClaimHandler {
     public void load() {
         mainClaims.clear();
         childClaims.clear();
-        this.mainClaims.addAll(getDatabase().getClaims());
+        HashMap<CLAIM_TYPE, List<Claim>> databaseClaims = getDatabase().getClaims();
+        for (Claim claim : databaseClaims.get(CLAIM_TYPE.MAIN))
+            this.mainClaims.add((ClaimMain) claim);
+        for (Claim claim : databaseClaims.get(CLAIM_TYPE.CHILD))
+            this.childClaims.add((ClaimChild) claim);
         //this.childClaims.addAll(getDatabase().getClaimsChild());
         claim_maxSize = Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE);
         if (claim_maxSize < 10)
             claim_maxSize = 10;
         auctionManager.load();
-    }
-
-    public ClaimMain loadClaim(ResultSet result) throws SQLException {
-        UUID id = null;
-        try {
-            id = UUID.fromString(result.getString(DatabaseClaims.COLUMNS.OWNER_UUID.name));
-        } catch (IllegalArgumentException e) {
-            //id = UUID.randomUUID();
-        }
-        String name = result.getString(DatabaseClaims.COLUMNS.OWNER_NAME.name);
-        try {
-            ClaimMain claim;
-            BoundingBox position = JSONEncoding.getPosition(result.getString(DatabaseClaims.COLUMNS.POSITION.name));
-            if (result.getBoolean(DatabaseClaims.COLUMNS.ADMIN_CLAIM.name) || id == null)
-                claim = new ClaimMain(position);
-            else
-                claim = new ClaimMain(id, name, position);
-            //Members Load
-            List<ClaimMember> members = JSONEncoding.getMember(result.getString(DatabaseClaims.COLUMNS.MEMBERS.name), claim);
-            if (members != null)
-                for (ClaimMember member : members)
-                    claim.addMember(member, false);
-
-            //Flags Load
-            HashMap<CLAIM_FLAG, Object> flags = JSONEncoding.getFlags(result.getString(DatabaseClaims.COLUMNS.FLAGS.name));
-            if (flags != null)
-                for (Map.Entry<CLAIM_FLAG, Object> flag : flags.entrySet())
-                    claim.getFlags().setFlag(flag.getKey(), flag.getValue(), false);
-
-            //Join Requests Load
-            List<ClaimRequest> requests = JSONEncoding.getRequests(result.getString(DatabaseClaims.COLUMNS.REQUESTS.name), claim);
-            if (requests != null)
-                for (ClaimRequest request : requests)
-                    claim.addRequest(request, false);
-            claim.claimId = result.getInt(DatabaseClaims.COLUMNS.CLAIM_ID.name);
-            claim.dateCreated = HelperDate.getDate(result.getString(DatabaseClaims.COLUMNS.DATE.name));
-            return claim;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     public CLAIM_ERRORS changeOwner(ClaimMain claim, boolean save_oldOwner, @Nullable UUID id, boolean adminClaim) {
@@ -130,8 +93,8 @@ public class ClaimHandler {
     }
 
     private CLAIM_ERRORS isLocationValid(Claim claim, @Nullable Player p, @Nullable PlayerClaimInteraction claimInteraction, Claim ingnoredClaim) {
-        Location greater = claim.getBoundingBox().getGreaterBoundaryCorner();
-        Location lower = claim.getBoundingBox().getLesserBoundaryCorner();
+        Location greater = claim.getGreaterBoundaryCorner();
+        Location lower = claim.getLesserBoundaryCorner();
         return isLocationValid(greater, lower, p, ingnoredClaim, claimInteraction);
     }
 
@@ -156,7 +119,7 @@ public class ClaimHandler {
                 continue;
             if (claimInteraction != null && _claim == claimInteraction.editing) //Ignore this claim
                 continue;
-            if (_claim.getBoundingBox().intersects(new BoundingBox(null, greater, lower))) { //Intersecting with this claim
+            if (_claim.getBoundingBox().intersects(new BoundingBox(greater, lower))) { //Intersecting with this claim
                 if (p != null)
                     Visualization.fromClaim(_claim, p.getLocation().getBlockY(), VisualizationType.ERROR, p.getLocation()).apply(p);
                 return CLAIM_ERRORS.OVERLAPPING;
@@ -184,38 +147,86 @@ public class ClaimHandler {
         return claims;
     }
 
-    public ClaimMain getClaim(Location loc) {
+    public ClaimMain getClaimMain(Location loc) {
         for (ClaimMain claim : this.mainClaims)
             if (claim.contains(loc))
                 return claim;
         return null;
     }
 
-    public ClaimMain getClaim(int claimId) {
+    public ClaimMain getClaimMain(int id) {
         for (ClaimMain claim : this.mainClaims)
+            if (claim.claimId == id)
+                return claim;
+        return null;
+    }
+
+    public ClaimChild getClaimChild(Location loc) {
+        for (ClaimChild claim : this.childClaims)
+            if (claim.contains(loc))
+                return claim;
+        return null;
+    }
+
+    @Nullable
+    public Claim getClaim(int claimId) {
+        for (Claim claim : getClaimsAll())
             if (claim.claimId == claimId)
                 return claim;
         return null;
     }
 
-    public List<ClaimMain> getMainClaims() {
+    public Claim getClaimAt(Location loc, boolean ignoreChild) {
+        for (ClaimMain claim : this.mainClaims)
+            if (claim.contains(loc)) {
+                if (!ignoreChild) {
+                    List<ClaimChild> children = getClaimsChild(claim);
+                    for (ClaimChild child : children)
+                        if (child.contains(loc))
+                            return child; //Return the child claim first
+                }
+                return claim; //Return the parent if no children in this location
+            }
+        return null;
+    }
+
+    public List<ClaimMain> getClaimsMain() {
         return mainClaims;
     }
 
+    public List<ClaimChild> getClaimsChild() {
+        return childClaims;
+    }
+
+    public List<ClaimChild> getClaimsChild(ClaimMain claimMain) {
+        List<ClaimChild> claimChildren = new ArrayList<>();
+        for (ClaimChild child : getClaimsChild())
+            if (child.getParent().equals(claimMain))
+                claimChildren.add(child);
+        return claimChildren;
+    }
+
+    public List<Claim> getClaimsAll() {
+        List<Claim> claims = new ArrayList<>(getClaimsMain());
+        claims.addAll(getClaimsChild());
+        return claims;
+    }
+
     public boolean allowBreak(@Nonnull Player p, @Nonnull Location block_location) {
-        ClaimMain claim = getClaim(block_location);
+        Claim claim = getClaimAt(block_location, false); //Grab the parent or the child claim if one here
         if (claim == null)
             return true;
         else if (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p)) //Is an admin CLAIM, and player is an admin
             return true;
         else if (Pueblos.getInstance().getPlayerData(p).isOverriding()) //Is an admin and wants to override claims
             return true;
-        else
+        else {
             return claim.canBuild(p);
+        }
     }
 
     public boolean allowInteract(Player p, Block block) {
-        ClaimMain claim = getClaim(block.getLocation());
+        Claim claim = getClaimAt(block.getLocation(), false);
         if (claim == null || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) { //No claim here or is an admin claim
             return true;
         } else if (claim.isAdminClaim()) {
@@ -264,4 +275,18 @@ public class ClaimHandler {
         return auctionManager;
     }
 
+    public boolean canResize(Player editor, Claim claim, BoundingBox newBox) {
+        if (claim instanceof ClaimMain) {
+            List<ClaimChild> claimChildren = getClaimsChild((ClaimMain) claim);
+            for (ClaimChild child : claimChildren)
+                if (!newBox.contains(child.getBoundingBox())) { //Are all children contained in this new box?
+                    Visualization.fromClaim(child, editor.getLocation().getBlockY(), VisualizationType.ERROR, editor.getLocation());
+                    return false;
+                }
+            return true;
+        } else {
+            ClaimChild claimChild = (ClaimChild) claim;
+            return claimChild.getParent().getBoundingBox().contains(newBox);
+        }
+    }
 }

@@ -49,7 +49,7 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
                 MessagesCore.INVALIDFLAG.send(sendi);
                 return;
             }
-            ClaimMain claim = handler.getClaim(p.getLocation());
+            ClaimMain claim = handler.getClaimMain(p.getLocation());
             if (claim != null) {
                 if (claim.isOwner(p)) {
                     HelperClaim.setFlag(p, claim, flag, value);

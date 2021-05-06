@@ -25,7 +25,7 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
     public void execute(CommandSender sendi, String label, String[] args) {
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         Player p = (Player) sendi;
-        ClaimMain claim = handler.getClaim(p.getLocation());
+        ClaimMain claim = handler.getClaimMain(p.getLocation());
         if (claim != null) {
             if (claim.isMember(p)) {
                 //---- JUNK CLAIM MEMBER

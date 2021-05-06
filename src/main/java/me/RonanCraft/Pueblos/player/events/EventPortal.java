@@ -29,7 +29,7 @@ public class EventPortal implements PueblosEvents {
                 top_locs.add(loc);
         }
         for (Location loc : top_locs)
-            if (getClaim(loc) != null) {
+            if (getClaimAt(loc, true) != null) {
                 e.setCancelled(true);
                 return;
             }

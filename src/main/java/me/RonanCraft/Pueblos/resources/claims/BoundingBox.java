@@ -17,27 +17,25 @@ import javax.annotation.Nullable;
 
 public class BoundingBox {
 
-    private final World world;
     private int maxX, maxZ;
     private final int maxY;
     private int minX, minZ;
     private final int minY;
 
-    public BoundingBox(@Nullable World world, int x1, int z1, int x2, int z2) {
-        this.world = world;
+    public BoundingBox(int x1, int z1, int x2, int z2) {
         setMinMax(x1, z1, x2, z2);
-        maxY = world != null ? world.getMaxHeight() : 255;
+        maxY = 255;//world != null ? world.getMaxHeight() : 255;
         minY = Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXDEPTH);
     }
 
-    public BoundingBox(@Nullable World world, Location loc_1, Location loc_2) {
-        this(world, loc_1.getBlockX(), loc_1.getBlockZ(), loc_2.getBlockX(), loc_2.getBlockZ());
+    public BoundingBox(Location loc_1, Location loc_2) {
+        this(loc_1.getBlockX(), loc_1.getBlockZ(), loc_2.getBlockX(), loc_2.getBlockZ());
     }
 
-    @Nonnull
-    public World getWorld() {
-        return world;
+    public BoundingBox(Vector loc_1, Vector loc_2) {
+        this(loc_1.getBlockX(), loc_1.getBlockZ(), loc_2.getBlockX(), loc_2.getBlockZ());
     }
+
 
     public int getMaxX() {
         return maxX;
@@ -71,42 +69,30 @@ public class BoundingBox {
         return Math.min(getMaxZ(), getMinZ());
     }
 
-    public Location getLesserBoundaryCorner() {
-        return new Location(getWorld(), getLeft(), 0, getBottom());
-    }
-
-    public Location getGreaterBoundaryCorner() {
-        return new Location(getWorld(), getRight(), 0, getTop());
-    }
-
-    public Location getLocation() {
-        return new Location(getWorld(), getLeft() + 0.5, getWorld().getHighestBlockYAt(getLeft(), getTop()) + 1.25, getTop() + 0.5);
-    }
-
     public boolean isCorner(Location loc) {
         return (loc.getBlockX() == getLeft() || loc.getBlockX() == getRight()) && (loc.getBlockZ() == getTop() || loc.getBlockZ() == getBottom());
     }
 
-    public Location getCorner(CLAIM_CORNER corner) {
+    public Vector getCorner(CLAIM_CORNER corner) {
         switch (corner) {
-            case TOP_LEFT: return new Location(getWorld(), getLeft(), 0, getTop());
-            case TOP_RIGHT: return new Location(getWorld(), getRight(), 0, getTop());
-            case BOTTOM_LEFT: return new Location(getWorld(), getLeft(), 0, getBottom());
-            case BOTTOM_RIGHT: return new Location(getWorld(), getRight(), 0, getBottom());
+            case TOP_LEFT: return new Vector(getLeft(), 0, getTop());
+            case TOP_RIGHT: return new Vector(getRight(), 0, getTop());
+            case BOTTOM_LEFT: return new Vector(getLeft(), 0, getBottom());
+            case BOTTOM_RIGHT: return new Vector(getRight(), 0, getBottom());
         }
         return null;
     }
 
-    public CLAIM_CORNER getCorner(Location loc) {
+    public CLAIM_CORNER getCorner(Vector loc) {
         for (CLAIM_CORNER corner : CLAIM_CORNER.values()) {
-            Location cornerLoc = getCorner(corner);
+            Vector cornerLoc = getCorner(corner);
             if (cornerLoc.getBlockX() == loc.getBlockX() && cornerLoc.getBlockZ() == loc.getBlockZ())
                 return corner;
         }
         return null;
     }
 
-    void editCorners(Location loc_1, Location loc_2) {
+    void editCorners(Vector loc_1, Vector loc_2) {
         int x1 = loc_1.getBlockX();
         int z1 = loc_1.getBlockZ();
         int x2 = loc_2.getBlockX();
@@ -164,6 +150,10 @@ public class BoundingBox {
     }
 
     public boolean contains(Location position) {
+        return this.contains(position.getBlockX(), position.getBlockY(), position.getBlockZ());
+    }
+
+    public boolean contains(Vector position) {
         return this.contains(position.getBlockX(), position.getBlockY(), position.getBlockZ());
     }
 

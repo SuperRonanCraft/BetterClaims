@@ -7,5 +7,5 @@ package me.RonanCraft.Pueblos.resources.claims.enums;
 
 public enum CLAIM_TYPE {
     MAIN,
-    SUB
+    CHILD
 }

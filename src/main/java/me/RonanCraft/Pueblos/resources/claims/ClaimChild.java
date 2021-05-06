@@ -12,8 +12,8 @@ import java.util.List;
 public class ClaimChild extends Claim {
     public final ClaimMain parent;
 
-    ClaimChild(BoundingBox boundingBox, ClaimMain parent) {
-        super(parent.ownerId, parent.ownerName, boundingBox);
+    public ClaimChild(BoundingBox boundingBox, @Nonnull ClaimMain parent) {
+        super(parent.ownerId, parent.ownerName, boundingBox, parent.world);
         this.parent = parent;
     }
 

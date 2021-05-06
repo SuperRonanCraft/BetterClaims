@@ -8,6 +8,7 @@ import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_CORNER;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_TYPE;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -19,9 +20,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.util.Vector;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 public class EventInteract implements PueblosEvents {
 
@@ -86,7 +89,8 @@ public class EventInteract implements PueblosEvents {
                         //Create a claim with no owner, making it an admin claim
                         case CREATE_ADMIN://Create a claim inside another claim
                         case SUBCLAIM:
-                            error = HelperClaim.createClaim(p, p.getWorld(), corners.get(0), corners.get(1), false, claimInteraction); break; //MODE will handle the rest
+                            error = HelperClaim.registerClaim(p, p.getWorld(), corners.get(0), corners.get(1), false,
+                                    claimInteraction, claimInteraction.mode == CLAIM_MODE.SUBCLAIM ? CLAIM_TYPE.CHILD : CLAIM_TYPE.MAIN); break; //MODE will handle the rest
                         //Edit a claims size
                         case EDIT: error = resizeClaim(p, claimInteraction.editing, corners); errorInfo = claimInteraction.editing; break;
                     }
@@ -110,7 +114,7 @@ public class EventInteract implements PueblosEvents {
     private CLAIM_ERRORS resizeClaim(Player p, ClaimMain claim, List<Location> corners) {
 
         BoundingBox position = claim.getBoundingBox();
-        Location start_location = corners.get(0);
+        Vector start_location = corners.get(0).toVector();
 
         CLAIM_CORNER edittedCorner = position.getCorner(start_location);
         if (edittedCorner == null) {
@@ -118,14 +122,14 @@ public class EventInteract implements PueblosEvents {
             return CLAIM_ERRORS.DATABASE_ERROR;
         }
         assert edittedCorner.opposite() != null;
-        Location positionStiff = position.getCorner(edittedCorner.opposite()); //Location that wont move, due to editing the opposite corner
-        Location positionMovingCorner = corners.get(1);
+        Vector positionStiff = position.getCorner(edittedCorner.opposite()); //Location that wont move, due to editing the opposite corner
+        Vector positionMovingCorner = corners.get(1).toVector();
         int max_x = Math.max(positionStiff.getBlockX(), positionMovingCorner.getBlockX());
         int max_z = Math.max(positionStiff.getBlockZ(), positionMovingCorner.getBlockZ());
         int min_x = Math.min(positionStiff.getBlockX(), positionMovingCorner.getBlockX());
         int min_z = Math.min(positionStiff.getBlockZ(), positionMovingCorner.getBlockZ());
-        Location greater = new Location(position.getWorld(), max_x, 0, max_z);
-        Location lower = new Location(position.getWorld(), min_x, 0, min_z);
+        Location greater = new Location(claim.getWorld(), max_x, 0, max_z);
+        Location lower = new Location(claim.getWorld(), min_x, 0, min_z);
         CLAIM_ERRORS error = Pueblos.getInstance().getClaimHandler().isLocationValid(greater, lower, p, claim /*Ignored claim*/, null);
         if (error == CLAIM_ERRORS.NONE) {
             //Save new position
@@ -144,7 +148,7 @@ public class EventInteract implements PueblosEvents {
             Bukkit.getScheduler().cancelTask(cancelTimers.get(p));
         cancelTimers.put(p, Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
             if (listener.getPlayerData(p).getClaimInteraction() != null)
-                listener.getPlayerData(p).getClaimInteraction().reset();
+                Objects.requireNonNull(listener.getPlayerData(p).getClaimInteraction()).reset();
         }, time * 20L));
     }
 }

@@ -11,9 +11,9 @@ public class ClaimRequest {
     public final UUID id;
     public final String name;
     public final Date date;
-    public final ClaimMain claim;
+    public final Claim claim;
 
-    public ClaimRequest(UUID id, String name, Date date, ClaimMain claim) {
+    public ClaimRequest(UUID id, String name, Date date, Claim claim) {
         this.id = id;
         this.name = name;
         this.date = date;

@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.player.data.PlayerData;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import org.bukkit.Location;
@@ -32,7 +33,7 @@ public class EventMove implements PueblosEvents {
                 HelperEvent.claimWalked(p, claim, false);
             }
         } else {
-            ClaimMain claim = getClaim(loc);
+            ClaimMain claim = getClaimMain(loc);
             if (claim != null) {
                 data.setInsideClaim(claim);
                 HelperEvent.claimWalked(p, claim, true);

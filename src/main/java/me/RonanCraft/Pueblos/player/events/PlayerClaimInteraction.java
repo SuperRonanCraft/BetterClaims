@@ -10,6 +10,7 @@ import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class PlayerClaimInteraction {
         if (locations.contains(loc)) {
             return CLAIM_ERRORS.LOCATION_ALREADY_EXISTS;
         } else {
-            for (ClaimMain claim : Pueblos.getInstance().getClaimHandler().getMainClaims())
+            for (ClaimMain claim : Pueblos.getInstance().getClaimHandler().getClaimsMain())
                 if (claim.contains(loc)) {
                     if (editing == null && locations.size() == 0 && claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
                         if (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) {
@@ -46,7 +47,7 @@ public class PlayerClaimInteraction {
                         //}
                     }
                     if (mode != CLAIM_MODE.EDIT || editing != claim) { //Not editing the current overlapping claim area
-                        if (editing == null && (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) /*Is Child thing here*/) {
+                        if (editing == null && !claim.isAdminClaim() && (claim.isOwner(p) || Pueblos.getInstance().getPlayerData(p).isOverriding())) {
                             mode = CLAIM_MODE.SUBCLAIM;
                             editing = claim;
                             break;

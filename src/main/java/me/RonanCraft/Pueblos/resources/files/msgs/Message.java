@@ -85,7 +85,7 @@ public class Message {
         if (str.contains("%claim_name%"))
             str = str.replace("%claim_name%", claim.getClaimName());
         if (str.contains("%claim_location_world%"))
-            str = str.replace("%claim_location_world%", claim.getBoundingBox().getWorld().getName());
+            str = str.replace("%claim_location_world%", claim.getWorld().getName());
         if (str.contains("%claim_location%"))
             str = str.replace("%claim_location%", HelperClaim.getLocationString(claim));
         if (str.contains("%claim_members%"))
@@ -95,11 +95,11 @@ public class Message {
         if (str.contains("%claim_requests%"))
             str = str.replace("%claim_requests%", String.valueOf(claim.getRequests().size()));
         if (str.contains("%claim_width%"))
-            str = str.replace("%claim_width%", String.valueOf(claim.getBoundingBox().getGreaterBoundaryCorner().getBlockX()
-                    - claim.getBoundingBox().getLesserBoundaryCorner().getBlockX()));
+            str = str.replace("%claim_width%", String.valueOf(claim.getGreaterBoundaryCorner().getBlockX()
+                    - claim.getLesserBoundaryCorner().getBlockX()));
         if (str.contains("%claim_length%"))
-            str = str.replace("%claim_length%", String.valueOf(claim.getBoundingBox().getGreaterBoundaryCorner().getBlockZ()
-                    - claim.getBoundingBox().getLesserBoundaryCorner().getBlockZ()));
+            str = str.replace("%claim_length%", String.valueOf(claim.getGreaterBoundaryCorner().getBlockZ()
+                    - claim.getLesserBoundaryCorner().getBlockZ()));
         if (flag != null) {
             if (str.contains("%claim_flag%"))
                 str = str.replace("%claim_flag%", StringUtils.capitalize(flag.name().toLowerCase().replace("_", " ")));

@@ -5,15 +5,17 @@
 
 package me.RonanCraft.Pueblos.resources.claims;
 
+import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_TYPE;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
-import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.util.Vector;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,6 +27,7 @@ public abstract class Claim extends ClaimUpdates {
     UUID ownerId;
     String ownerName;
     private final BoundingBox boundingBox;
+    final World world;
     public boolean deleted;
     //Loaded after
     private String claimName;
@@ -36,19 +39,22 @@ public abstract class Claim extends ClaimUpdates {
     boolean adminClaim;
     public final CLAIM_TYPE claimType;
 
-    Claim(BoundingBox boundingBox) {
-        this(null, null, boundingBox);
+    Claim(BoundingBox boundingBox, World world) {
+        this(null, null, boundingBox, world);
     }
 
-    Claim(UUID ownerId, String ownerName, BoundingBox boundingBox) {
+    Claim(UUID ownerId, String ownerName, @Nonnull BoundingBox boundingBox, @Nonnull World world) {
         this.ownerId = ownerId;
         this.ownerName = ownerName;
         this.boundingBox = boundingBox;
         this.adminClaim = this.ownerId == null;
-        claimType = this instanceof ClaimMain ? CLAIM_TYPE.MAIN : CLAIM_TYPE.SUB;
+        this.world = world;
+        claimType = this instanceof ClaimMain ? CLAIM_TYPE.MAIN : CLAIM_TYPE.CHILD;
     }
 
     public boolean contains(Location loc) {
+        if (!Objects.equals(loc.getWorld(), getWorld()))
+            return false;
         return boundingBox.contains(loc);
     }
 
@@ -155,16 +161,28 @@ public abstract class Claim extends ClaimUpdates {
         return true;
     }
 
-    public String getBoundingBoxJSON() {
-        return JSONEncoding.getJsonFromBoundingBox(getBoundingBox());
-    }
-
-    public boolean editCorners(@Nonnull Player editor, Location loc_1, Location loc_2) {
+    public boolean editCorners(@Nonnull Player editor, Vector loc_1, Vector loc_2) {
         if (!HelperEvent.claimResize(editor, this, editor, loc_1, loc_2).isCancelled()) {
-            getBoundingBox().editCorners(loc_1, loc_2);
-            updated();
-            return true;
+            if (Pueblos.getInstance().getClaimHandler().canResize(editor, this, new BoundingBox(loc_1, loc_2))) {
+                getBoundingBox().editCorners(loc_1, loc_2);
+                updated();
+                return true;
+            } else
+                return false;
         } else
             return false;
+    }
+
+    public Location getLesserBoundaryCorner() {
+        return new Location(world, boundingBox.getLeft(), 0, boundingBox.getBottom());
+    }
+
+    public Location getGreaterBoundaryCorner() {
+        return new Location(world, boundingBox.getRight(), 0, boundingBox.getTop());
+    }
+
+    @Nonnull
+    public World getWorld() {
+        return world;
     }
 }
