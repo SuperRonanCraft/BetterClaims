@@ -106,6 +106,7 @@ public class SQLite {
                 try {
                     String _name = getColumnName(type, c);
                     String _type = getColumnType(type, c);
+                    //System.out.println("Adding " + _name);
                     s.executeUpdate(addMissingColumns.replace("%table%", table).replace("%column%", _name).replace("%type%", _type));
                 } catch (SQLException e) {
                     //e.printStackTrace();
@@ -222,7 +223,7 @@ public class SQLite {
         ResultSet rs = null;
         try {
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE " + DatabaseClaims.COLUMNS.OWNER_UUID.name + " = 0");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE " + getColumnName(type, getColumns(type)[0]) + " = 0");
 
             rs = ps.executeQuery();
         } catch (SQLException ex) {

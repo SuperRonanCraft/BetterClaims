@@ -37,10 +37,12 @@ public class ClaimHandler {
         mainClaims.clear();
         childClaims.clear();
         HashMap<CLAIM_TYPE, List<Claim>> databaseClaims = getDatabase().getClaims();
-        for (Claim claim : databaseClaims.get(CLAIM_TYPE.MAIN))
-            this.mainClaims.add((ClaimMain) claim);
-        for (Claim claim : databaseClaims.get(CLAIM_TYPE.CHILD))
-            this.childClaims.add((ClaimChild) claim);
+        if (databaseClaims.get(CLAIM_TYPE.MAIN) != null)
+            for (Claim claim : databaseClaims.get(CLAIM_TYPE.MAIN))
+                this.mainClaims.add((ClaimMain) claim);
+        if (databaseClaims.get(CLAIM_TYPE.CHILD) != null)
+            for (Claim claim : databaseClaims.get(CLAIM_TYPE.CHILD))
+                this.childClaims.add((ClaimChild) claim);
         //this.childClaims.addAll(getDatabase().getClaimsChild());
         claim_maxSize = Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE);
         if (claim_maxSize < 10)

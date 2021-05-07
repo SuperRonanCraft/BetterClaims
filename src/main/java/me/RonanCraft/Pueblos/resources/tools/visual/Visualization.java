@@ -83,7 +83,7 @@ public class Visualization {
 
         List<ClaimChild> children = handler.getClaimsChild((ClaimMain) claim);
         for (ClaimChild child : children) {
-            visualization.addElements(claim.getLesserBoundaryCorner(), claim.getGreaterBoundaryCorner(), height, VisualizationType.CLAIM_SUB, locality);
+            visualization.addElements(child.getLesserBoundaryCorner(), child.getGreaterBoundaryCorner(), height, VisualizationType.CLAIM_SUB, locality);
         }
 
         //special visualization for administrative land claims

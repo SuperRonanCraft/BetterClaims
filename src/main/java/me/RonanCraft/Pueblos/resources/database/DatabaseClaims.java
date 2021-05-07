@@ -27,7 +27,7 @@ public class DatabaseClaims extends SQLite {
         OWNER_UUID("uuid", "varchar(32) NOT NULL"),
         OWNER_NAME("name", "varchar(32) NOT NULL"),
         POSITION("position", "text NOT NULL"),
-        WORLD("world", "text NOT NULL"),
+        WORLD("world", "text NOT NULL DEFAULT world"),
         ADMIN_CLAIM("admin_claim", "boolean DEFAULT false"),
         MEMBERS("members", "text"),
         FLAGS("flags", "text"),
@@ -50,6 +50,7 @@ public class DatabaseClaims extends SQLite {
         ResultSet rs = null;
         try {
             List<Claim> claimMains = new ArrayList<>();
+            List<Claim> claimChildren = new ArrayList<>();
             conn = getSQLConnection();
             ps = conn.prepareStatement("SELECT * FROM " + table + ";");
 
@@ -59,14 +60,11 @@ public class DatabaseClaims extends SQLite {
                 Claim claim = HelperClaim.loadClaim(rs, CLAIM_TYPE.MAIN);
                 if (claim != null && claim.getBoundingBox() != null)
                     claimMains.add(claim);
-            }
-            List<Claim> claimChildren = new ArrayList<>();
-            //Give child claims a parent to sleep with
-            rs.beforeFirst();
-            while (rs.next()) {
-                Claim claim = HelperClaim.loadClaim(rs, CLAIM_TYPE.CHILD);
-                if (claim != null && claim.getBoundingBox() != null)
-                    claimChildren.add(claim);
+                else if (claim == null) {
+                    claim = HelperClaim.loadClaim(rs, CLAIM_TYPE.CHILD);
+                    if (claim != null && claim.getBoundingBox() != null)
+                        claimChildren.add(claim);
+                }
             }
             //Organize claims
             HashMap<CLAIM_TYPE, List<Claim>> hash = new HashMap<>();
@@ -92,7 +90,7 @@ public class DatabaseClaims extends SQLite {
                 + COLUMNS.POSITION.name + ", "
                 + COLUMNS.WORLD.name + ", "
                 + COLUMNS.PARENT.name + ""
-                + ") VALUES(?, ?, ?, ?, ?, ?)";
+                + ") VALUES(?, ?, ?, ?, ?, ?, ?)";
         List<Object> params = new ArrayList<>() {{
                 add(getClaimOwnerID(claim));
                 add(getClaimOwnerName(claim));

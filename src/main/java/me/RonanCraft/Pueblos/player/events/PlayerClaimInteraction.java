@@ -2,6 +2,7 @@ package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
+import me.RonanCraft.Pueblos.resources.claims.ClaimChild;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
@@ -35,32 +36,31 @@ public class PlayerClaimInteraction {
         } else {
             for (ClaimMain claim : Pueblos.getInstance().getClaimHandler().getClaimsMain())
                 if (claim.contains(loc)) {
-                    if (editing == null && locations.size() == 0 && claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
-                        if (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) {
+                    if (editing == null && locations.size() == 0 && (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p)))) {
+                        if (claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
                             mode = CLAIM_MODE.EDIT;
-                            editing = claim;
                             //Show the claim we are editing
                             Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.EDIT, player.getLocation()).apply(player);
-                            break;
-                        } //else {
-                            //Clicked a corner, but not allowed to resize this claim, next method will handle this
-                        //}
-                    }
-                    if (mode != CLAIM_MODE.EDIT || editing != claim) { //Not editing the current overlapping claim area
-                        if (editing == null && !claim.isAdminClaim() && (claim.isOwner(p) || Pueblos.getInstance().getPlayerData(p).isOverriding())) {
-                            mode = CLAIM_MODE.SUBCLAIM;
-                            editing = claim;
-                            break;
                         } else {
-                            Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
-                            return CLAIM_ERRORS.OVERLAPPING;
+                            mode = CLAIM_MODE.SUBCLAIM;
                         }
+                        editing = claim;
+                        break;
+                    }
+                    if (editing == null || editing != claim) { //Not editing the current overlapping claim area
+                        Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
+                        return CLAIM_ERRORS.OVERLAPPING;
                     }
                 }
-            if (locations.size() > 1 && !Objects.equals(locations.get(0).getWorld(), loc.getWorld())) {
+            if (!locations.isEmpty() && !Objects.equals(locations.get(0).getWorld(), loc.getWorld())) {
                 lock();
                 return CLAIM_ERRORS.CANCELLED; //Another world was selected?
             }
+            if (!locations.isEmpty() && mode == CLAIM_MODE.SUBCLAIM)
+                if (!editing.contains(loc)) {
+                    Visualization.fromClaim(editing, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
+                    return CLAIM_ERRORS.OVERLAPPING;
+                }
             locations.add(loc);
         }
         if (locations.size() > 2)
