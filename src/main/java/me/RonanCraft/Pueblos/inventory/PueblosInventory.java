@@ -33,7 +33,7 @@ public enum PueblosInventory {
         this.claimLevel = claimLevel;
     }
 
-    public void open(Player p, ClaimMain claim, boolean from_command) {
+    public void open(Player p, Claim claim, boolean from_command) {
         if (isAllowed(p, claim))
             if (inv instanceof PueblosInv_Claim)
                 Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_Claim) inv).open(p, claim), this, from_command);
@@ -49,7 +49,7 @@ public enum PueblosInventory {
                 Pueblos.getInstance().getLogger().severe(this.name() + " is not a member type!");
     }
 
-    public void open(Player p, List<ClaimMain> claims, boolean from_command) {
+    public void open(Player p, List<Claim> claims, boolean from_command) {
         if (inv instanceof PueblosInv_MultiClaim)
             Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_MultiClaim) inv).open(p, claims), this, from_command);
         else

@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -15,17 +16,17 @@ import java.util.List;
 public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv_MultiClaim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, List<ClaimMain>> claims = new HashMap<>();
+    private final HashMap<Player, List<Claim>> claims = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, List<ClaimMain> claims) {
+    public Inventory open(Player p, List<Claim> claims) {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claims));
 
         addBorder(inv);
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
         int slot = 0;
-        for (ClaimMain claim : claims) {
+        for (Claim claim : claims) {
             slot = getNextSlot(slot, inv);
             if (slot == -1)
                 break;

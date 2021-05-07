@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
@@ -11,6 +12,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,10 +21,10 @@ import java.util.List;
 public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, ClaimMain> claim = new HashMap<>();
+    private final HashMap<Player, Claim> claim = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, ClaimMain claim) {
+    public Inventory open(Player p, Claim claim) {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claim));
 
         addBorder(inv);
@@ -51,12 +54,17 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
             return;
 
         CLAIM_SETTINGS setting = (CLAIM_SETTINGS) itemInfo.get(p).get(e.getSlot()).info;
-        ClaimMain claim = this.claim.get(p);
+        Claim claim = this.claim.get(p);
         switch (setting) {
             case TELEPORT: HelperClaim.teleportTo(p, claim); p.closeInventory(); break;
             case DELETE: PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_DELETE, p, claim), false); break;
             case STATS: HelperClaim.sendClaimInfo(p, claim); p.closeInventory(); break;
-            default: setting.inv.open(p, claim, false);
+            case CHILD_CLAIM:
+            default:
+                if (setting.inv != null)
+                    setting.inv.open(p, claim, false);
+                else
+                    p.sendMessage("Not Yet Implemented!");
         }
     }
 
@@ -79,20 +87,23 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     }
 
     private enum CLAIM_SETTINGS {
-        MEMBERS(20,     null,                           PueblosInventory.MEMBERS, ITEMS.MEMBERS, null),
-        FLAGS(22,       null,                           PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
-        REQUESTS(24,    null,                           PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
-        TELEPORT(16,    null,                           null, ITEMS.TELEPORT, null),
+        MEMBERS(20,     null,   PueblosInventory.MEMBERS, ITEMS.MEMBERS, null),
+        FLAGS(22,       null,   PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
+        REQUESTS(24,    null,   PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
+        TELEPORT(16,    null,   null, ITEMS.TELEPORT, null),
         DELETE(10,      CLAIM_PERMISSION_LEVEL.OWNER,   null, ITEMS.DELETE, null),
-        STATS(28,       null,                           null, ITEMS.STATS, null);
+        STATS(28,       null,   null, ITEMS.STATS, null),
+        CHILD_CLAIM(34, null,   null, ITEMS.CHILD_CLAIMS, null),
+        ;
 
         int slot;
         CLAIM_PERMISSION_LEVEL claim_permission_level;
+        @Nullable
         PueblosInventory inv;
         ITEMS allowed;
         ITEMS disallowed;
 
-        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_permission_level, PueblosInventory inv, ITEMS allowed, ITEMS disallowed) {
+        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_permission_level, @Nullable PueblosInventory inv, ITEMS allowed, ITEMS disallowed) {
             this.slot = slot;
             this.claim_permission_level = claim_permission_level;
             this.inv = inv;
@@ -100,7 +111,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
             this.disallowed = disallowed;
         }
 
-        ITEMS getItem(Player p, ClaimMain claim) {
+        ITEMS getItem(Player p, Claim claim) {
             if (disallowed != null) {
                 if (inv.isAllowed(p, claim))
                     return allowed;
@@ -118,7 +129,9 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         REQUESTS_ALLOWED("Requests.Allowed"),
         REQUESTS_DISALLOWED("Requests.Disallowed"),
         TELEPORT("Teleport"),
-        DELETE("Delete");
+        DELETE("Delete"),
+        CHILD_CLAIMS("SubClaim"),
+        ;
 
         String section;
 

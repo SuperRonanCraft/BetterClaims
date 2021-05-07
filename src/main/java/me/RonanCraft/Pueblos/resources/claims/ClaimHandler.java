@@ -114,7 +114,7 @@ public class ClaimHandler {
         //int y2 = greater.getBlockZ();
         for (ClaimMain _claim : mainClaims) {
             if (claimIgnored != null && claimIgnored.contains(_claim)) {
-                if (claimInteraction != null && claimInteraction.editing instanceof ClaimChild)
+                if (claimInteraction != null)
                     for (ClaimChild child : Pueblos.getInstance().getClaimHandler().getClaimsChild(_claim)) { //Dont allow overlapping children when resizing child
                         if (!claimIgnored.contains(child)) //Ignore the child being resized
                             if (child.getBoundingBox().intersects(new BoundingBox(greater, lower))) {
@@ -147,9 +147,9 @@ public class ClaimHandler {
         return CLAIM_ERRORS.NONE;
     }
 
-    public List<ClaimMain> getClaims(@Nonnull UUID uuid) {
-        List<ClaimMain> claims = new ArrayList<>();
-        for (ClaimMain claim : this.mainClaims)
+    public List<Claim> getClaims(@Nonnull UUID uuid) {
+        List<Claim> claims = new ArrayList<>();
+        for (Claim claim : this.mainClaims)
             if (claim.getOwnerID() != null && claim.getOwnerID().equals(uuid))
                 claims.add(claim);
         return claims;

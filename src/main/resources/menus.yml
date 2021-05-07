@@ -35,13 +35,13 @@ Claim:
     Flags:
       Allowed:
         Name: '&eFlags'
-        Item: 'gold_ingot'
+        Item: 'writable_book'
         Lore:
         - ''
         - '&7Click to edit claim flags'
       Disallowed:
         Name: '&eFlags'
-        Item: 'gold_ingot'
+        Item: 'book'
         Lore:
           - ''
           - '&8Unable to edit'
@@ -74,6 +74,12 @@ Claim:
       Lore:
         - ''
         - '&7Permanently delete this claim &8(confirm)'
+    SubClaim:
+      Name: '&eSub-Divisions'
+      Item: 'end_portal_frame'
+      Lore:
+        - ''
+        - '&7View/Edit sub divisions of this claim'
 ClaimSelect:
   Title: '&7Select Claim'
   Items:

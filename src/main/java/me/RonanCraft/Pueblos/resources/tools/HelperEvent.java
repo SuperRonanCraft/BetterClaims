@@ -48,7 +48,7 @@ public class HelperEvent {
         return (Cancellable) event;
     }
 
-    public static Cancellable teleportToClaim(CommandSender executor, ClaimMain claim, Player player, Location from) {
+    public static Cancellable teleportToClaim(CommandSender executor, Claim claim, Player player, Location from) {
         Event event = new PueblosEvent_ClaimTeleportTo(claim, player, from);
         callEvent(executor, event);
         return (Cancellable) event;

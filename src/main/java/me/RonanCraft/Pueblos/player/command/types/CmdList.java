@@ -5,6 +5,7 @@ import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
@@ -23,7 +24,7 @@ public class CmdList implements PueblosCommand, PueblosCommandHelpable {
     public void execute(CommandSender sendi, String label, String[] args) {
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         Player p = (Player) sendi;
-        List<ClaimMain> claims = handler.getClaims(p.getUniqueId());
+        List<Claim> claims = handler.getClaims(p.getUniqueId());
         if (!claims.isEmpty()) {
             if (claims.size() == 1)
                 PueblosInventory.CLAIM.open(p, claims.get(0), true);

@@ -4,6 +4,7 @@ import me.RonanCraft.Pueblos.inventory.ITEM_TYPE;
 import me.RonanCraft.Pueblos.inventory.PueblosInvLoader;
 import me.RonanCraft.Pueblos.inventory.PueblosInv_MultiClaim;
 import me.RonanCraft.Pueblos.inventory.PueblosItem;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import org.bukkit.Bukkit;
@@ -19,16 +20,16 @@ import java.util.List;
 public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_MultiClaim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, List<ClaimMain>> claims = new HashMap<>();
+    private final HashMap<Player, List<Claim>> claims = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, List<ClaimMain> claims) {
+    public Inventory open(Player p, List<Claim> claims) {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claims));
 
         addBorder(inv);
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
-        for (ClaimMain claim : claims) {
+        for (Claim claim : claims) {
             ItemStack item;
             if (!claim.hasRequestFrom(p))
                 item = getItem(ITEMS.NEW.section, p, claim);

@@ -26,11 +26,11 @@ import java.util.*;
 
 public class HelperClaim {
 
-    public static void toggleFlag(Player p, ClaimMain claim, CLAIM_FLAG flag) {
+    public static void toggleFlag(Player p, Claim claim, CLAIM_FLAG flag) {
         setFlag(p, claim, flag, !(Boolean) claim.getFlags().getFlag(flag));
     }
 
-    public static void setFlag(Player p, ClaimMain claim, CLAIM_FLAG flag, Object value) {
+    public static void setFlag(Player p, Claim claim, CLAIM_FLAG flag, Object value) {
         claim.getFlags().setFlag(flag, value, true);
         MessagesCore.CLAIM_FLAGCHANGE.send(p, new Object[]{claim, flag});
     }
@@ -127,7 +127,7 @@ public class HelperClaim {
         return pos.getLeft() + "x, " + pos.getTop() + "z";
     }
 
-    public static void teleportTo(Player p, ClaimMain claim) {
+    public static void teleportTo(Player p, Claim claim) {
         if (!HelperEvent.teleportToClaim(p, claim, p, p.getLocation()).isCancelled()) {
             //p.teleport(claim.getBoundingBox().getGreaterBoundaryCorner());
             MessagesCore.CLAIM_TELEPORT.send(p, claim);
@@ -143,13 +143,13 @@ public class HelperClaim {
             error.sendMsg(p, claim);
     }
 
-    public static void sendClaimInfo(Player p, ClaimMain claim) {
+    public static void sendClaimInfo(Player p, Claim claim) {
         List<String> msg = Pueblos.getInstance().getFiles().getLang().getStringList("ClaimInfo");
         Message.sms(p, msg, claim);
     }
 
     @Nullable
-    public static Claim loadClaim(ResultSet result, CLAIM_TYPE toLoad) throws SQLException {
+    public static Claim loadClaim(ResultSet result, CLAIM_TYPE toLoad, List<Claim> current_claims) throws SQLException {
         UUID id = null;
         try {
             id = UUID.fromString(result.getString(DatabaseClaims.COLUMNS.OWNER_UUID.name));
@@ -175,11 +175,18 @@ public class HelperClaim {
                     return null;
             } else {
                 if (result.getLong(DatabaseClaims.COLUMNS.PARENT.name) > -1) {
-                    ClaimMain parent = Pueblos.getInstance().getClaimHandler().getClaimMain((int) result.getLong(DatabaseClaims.COLUMNS.PARENT.name));
+                    int _parent_id = result.getInt(DatabaseClaims.COLUMNS.PARENT.name);
+                    ClaimMain parent = null;
+                    for (Claim _pclaim : current_claims)
+                        if (_pclaim.claimId == _parent_id) {
+                            parent = (ClaimMain) _pclaim;
+                            break;
+                        }
                     if (parent != null)
                         claim = new ClaimChild(position, parent);
                     else {
-                        Pueblos.getInstance().getLogger().severe("A child claim exists without a parent! Please delete claim ID " + _claim_id);
+                        Pueblos.getInstance().getLogger().severe("A child claim exists without the parent Claim #" + _parent_id + "!" +
+                                " Please delete claim ID " + _claim_id);
                         return null;
                     }
                 } else //Skip parent claims

@@ -51,19 +51,23 @@ public class DatabaseClaims extends SQLite {
             List<Claim> claimMains = new ArrayList<>();
             List<Claim> claimChildren = new ArrayList<>();
             conn = getSQLConnection();
-            ps = conn.prepareStatement("SELECT * FROM " + table + ";");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE (" + COLUMNS.PARENT + " IS NULL OR " + COLUMNS.PARENT + " = -1)");
 
             rs = ps.executeQuery();
             //Load all Claims
             while (rs.next()) {
-                Claim claim = HelperClaim.loadClaim(rs, CLAIM_TYPE.MAIN);
+                Claim claim = HelperClaim.loadClaim(rs, CLAIM_TYPE.MAIN, null);
                 if (claim != null && claim.getBoundingBox() != null)
                     claimMains.add(claim);
-                else if (claim == null) {
-                    claim = HelperClaim.loadClaim(rs, CLAIM_TYPE.CHILD);
-                    if (claim != null && claim.getBoundingBox() != null)
-                        claimChildren.add(claim);
-                }
+            }
+            rs.close();
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE (" + COLUMNS.PARENT + " IS NOT NULL AND " + COLUMNS.PARENT + " IS NOT -1)");
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Claim claim = HelperClaim.loadClaim(rs, CLAIM_TYPE.CHILD, claimMains);
+                if (claim != null && claim.getBoundingBox() != null)
+                    claimChildren.add(claim);
             }
             //Organize claims
             HashMap<CLAIM_TYPE, List<Claim>> hash = new HashMap<>();
