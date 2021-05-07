@@ -21,19 +21,21 @@ public class BoundingBox {
     private final int maxY;
     private int minX, minZ;
     private final int minY;
+    private final World world;
 
-    public BoundingBox(int x1, int z1, int x2, int z2) {
+    public BoundingBox(World world, int x1, int z1, int x2, int z2) {
+        this.world = world;
         setMinMax(x1, z1, x2, z2);
         maxY = 255;//world != null ? world.getMaxHeight() : 255;
         minY = Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXDEPTH);
     }
 
     public BoundingBox(Location loc_1, Location loc_2) {
-        this(loc_1.getBlockX(), loc_1.getBlockZ(), loc_2.getBlockX(), loc_2.getBlockZ());
+        this(loc_1.getWorld(),loc_1.getBlockX(), loc_1.getBlockZ(), loc_2.getBlockX(), loc_2.getBlockZ());
     }
 
-    public BoundingBox(Vector loc_1, Vector loc_2) {
-        this(loc_1.getBlockX(), loc_1.getBlockZ(), loc_2.getBlockX(), loc_2.getBlockZ());
+    public BoundingBox(World world, Vector loc_1, Vector loc_2) {
+        this(world, loc_1.getBlockX(), loc_1.getBlockZ(), loc_2.getBlockX(), loc_2.getBlockZ());
     }
 
 
@@ -186,4 +188,7 @@ public class BoundingBox {
                 && this.minZ <= other.maxZ && this.maxZ >= other.minZ;
     }
 
+    public World getWorld() {
+        return world;
+    }
 }

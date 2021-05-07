@@ -40,7 +40,7 @@ public class ConverterGriefPrevention {
                 BoundingBox position = getPosition(config);
                 UUID uuid = getID(config);
                 Claim claim;
-                claim = HelperClaim.createClaimMain(getWorld(config), position, uuid, null, uuid == null);
+                claim = HelperClaim.createClaimMain(position, uuid, null, uuid == null);
                 CLAIM_ERRORS error = claimHandler.uploadCreatedClaim(claim, null, null);
                 if (error != CLAIM_ERRORS.NONE) {
                     Pueblos.getInstance().getLogger().warning(error.getMsg(claim));
@@ -61,18 +61,12 @@ public class ConverterGriefPrevention {
     private BoundingBox getPosition(YamlConfiguration config) {
         String[] lesser_boundary_corner = Objects.requireNonNull(config.getString("Lesser Boundary Corner")).split(";");
         String[] greater_boundary_corner = Objects.requireNonNull(config.getString("Greater Boundary Corner")).split(";");
-        //World world = Bukkit.getWorld(lesser_boundary_corner[0]);
+        World world = Bukkit.getWorld(lesser_boundary_corner[0]);
         int x1 = Integer.parseInt(lesser_boundary_corner[1]);
         int z1 = Integer.parseInt(lesser_boundary_corner[3]);
         int x2 = Integer.parseInt(greater_boundary_corner[1]);
         int z2 = Integer.parseInt(greater_boundary_corner[3]);
-        return new BoundingBox(x1, z1, x2, z2);
-    }
-
-    @Nullable
-    private World getWorld(YamlConfiguration config) {
-        String[] lesser_boundary_corner = Objects.requireNonNull(config.getString("Lesser Boundary Corner")).split(";");
-        return Bukkit.getWorld(lesser_boundary_corner[0]);
+        return new BoundingBox(world, x1, z1, x2, z2);
     }
 
     private UUID getID(YamlConfiguration config) {

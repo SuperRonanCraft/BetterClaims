@@ -13,7 +13,7 @@ public class ClaimChild extends Claim {
     public final ClaimMain parent;
 
     public ClaimChild(BoundingBox boundingBox, @Nonnull ClaimMain parent) {
-        super(parent.ownerId, parent.ownerName, boundingBox, parent.world);
+        super(parent.ownerId, parent.ownerName, boundingBox);
         this.parent = parent;
     }
 

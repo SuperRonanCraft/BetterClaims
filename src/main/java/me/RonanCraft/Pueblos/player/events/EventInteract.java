@@ -93,7 +93,7 @@ public class EventInteract implements PueblosEvents {
                             error = HelperClaim.registerClaim(p, p.getWorld(), corners.get(0), corners.get(1), false,
                                     claimInteraction, claimInteraction.mode == CLAIM_MODE.SUBCLAIM ? CLAIM_TYPE.CHILD : CLAIM_TYPE.MAIN); break; //MODE will handle the rest
                         //Edit a claims size
-                        case EDIT: error = resizeClaim(p, claimInteraction.editing, corners); errorInfo = claimInteraction.editing; break;
+                        case EDIT: error = resizeClaim(p, claimInteraction); errorInfo = claimInteraction.editing; break;
                     }
                     if (error != CLAIM_ERRORS.SIZE_SMALL && error != CLAIM_ERRORS.SIZE_LARGE) //Let the player select another second location if error
                         claimInteraction.lock(); //Lock us from using the same locations again
@@ -116,10 +116,10 @@ public class EventInteract implements PueblosEvents {
         }
     }
 
-    private CLAIM_ERRORS resizeClaim(Player p, Claim claim, List<Location> corners) {
+    private CLAIM_ERRORS resizeClaim(Player p, PlayerClaimInteraction claimInteraction) {
 
-        BoundingBox position = claim.getBoundingBox();
-        Vector start_location = corners.get(0).toVector();
+        BoundingBox position = claimInteraction.editing.getBoundingBox();
+        Vector start_location = claimInteraction.locations.get(0).toVector();
 
         CLAIM_CORNER edittedCorner = position.getCorner(start_location);
         if (edittedCorner == null) {
@@ -128,24 +128,24 @@ public class EventInteract implements PueblosEvents {
         }
         assert edittedCorner.opposite() != null;
         Vector positionStiff = position.getCorner(edittedCorner.opposite()); //Location that wont move, due to editing the opposite corner
-        Vector positionMovingCorner = corners.get(1).toVector();
+        Vector positionMovingCorner = claimInteraction.locations.get(1).toVector();
         int max_x = Math.max(positionStiff.getBlockX(), positionMovingCorner.getBlockX());
         int max_z = Math.max(positionStiff.getBlockZ(), positionMovingCorner.getBlockZ());
         int min_x = Math.min(positionStiff.getBlockX(), positionMovingCorner.getBlockX());
         int min_z = Math.min(positionStiff.getBlockZ(), positionMovingCorner.getBlockZ());
-        Location greater = new Location(claim.getWorld(), max_x, 0, max_z);
-        Location lower = new Location(claim.getWorld(), min_x, 0, min_z);
+        Location greater = new Location(claimInteraction.editing.getWorld(), max_x, 0, max_z);
+        Location lower = new Location(claimInteraction.editing.getWorld(), min_x, 0, min_z);
         List<Claim> ignoredClaims = new ArrayList<>();
-        ignoredClaims.add(claim);
-        if (claim instanceof ClaimChild)
-            ignoredClaims.add(((ClaimChild) claim).getParent());
-        CLAIM_ERRORS error = Pueblos.getInstance().getClaimHandler().isLocationValid(greater, lower, p, ignoredClaims /*Ignored claim*/, null);
+        ignoredClaims.add(claimInteraction.editing);
+        if (claimInteraction.editing instanceof ClaimChild)
+            ignoredClaims.add(((ClaimChild) claimInteraction.editing).getParent());
+        CLAIM_ERRORS error = Pueblos.getInstance().getClaimHandler().isLocationValid(greater, lower, p, ignoredClaims /*Ignored claim*/, claimInteraction);
         if (error == CLAIM_ERRORS.NONE) {
             //Save new position
-            error = claim.editCorners(p, positionStiff, positionMovingCorner);
+            error = claimInteraction.editing.editCorners(p, positionStiff, positionMovingCorner);
             if (error == CLAIM_ERRORS.NONE) {
-                MessagesCore.CLAIM_RESIZE_SUCCESS.send(p, claim);
-                Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
+                MessagesCore.CLAIM_RESIZE_SUCCESS.send(p, claimInteraction.editing);
+                Visualization.fromClaim(claimInteraction.editing, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
             }
         }// else
          //   error.sendMsg(p, claim);

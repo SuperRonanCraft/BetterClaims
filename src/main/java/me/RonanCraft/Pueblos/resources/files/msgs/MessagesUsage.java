@@ -5,6 +5,7 @@ import org.bukkit.command.CommandSender;
 public enum MessagesUsage {
 
     CONVERT("Convert"),
+    AUCTION_CREATE("Auction.Create"),
     ;
 
     String section;

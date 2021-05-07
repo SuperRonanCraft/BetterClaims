@@ -13,7 +13,9 @@ public enum MessagesHelp {
     CONVERT("Convert"),
     CLAIM_ITEM("ClaimItem"),
     ADMIN_CLAIM("AdminClaim"),
-    ADMIN_OVERRIDE("AdminOverride");
+    ADMIN_OVERRIDE("AdminOverride"),
+    AUCTION("Auction"),
+    ;
 
     String section;
 

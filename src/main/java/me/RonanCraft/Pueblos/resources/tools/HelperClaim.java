@@ -35,7 +35,7 @@ public class HelperClaim {
         MessagesCore.CLAIM_FLAGCHANGE.send(p, new Object[]{claim, flag});
     }
 
-    public static boolean requestJoin(Player p, ClaimMain claim) {
+    public static boolean requestJoin(Player p, Claim claim) {
         if (claim.hasRequestFrom(p)) { //Already has a request
             MessagesCore.REQUEST_REQUESTER_ALREADY.send(p, claim.getRequest(p));
             return false;
@@ -43,6 +43,7 @@ public class HelperClaim {
             ClaimRequest request = new ClaimRequest(p.getUniqueId(), p.getName(), Calendar.getInstance().getTime(), claim);
             claim.addRequest(request, true);
             MessagesCore.REQUEST_REQUESTER_SENT.send(p, request);
+            Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
             if (Objects.requireNonNull(claim.getOwner()).isOnline())
                 MessagesCore.REQUEST_NEW.send((Player) claim.getOwner(), request);
         }
@@ -81,11 +82,11 @@ public class HelperClaim {
         }
     }
 
-    public static ClaimMain createClaimMain(@Nonnull World world, BoundingBox box, @Nullable UUID ownerID, @Nullable String ownerName, boolean admin_claim) {
+    public static ClaimMain createClaimMain(@Nonnull BoundingBox box, @Nullable UUID ownerID, @Nullable String ownerName, boolean admin_claim) {
         if (ownerID != null && !admin_claim) //Is this an admin claim?
-            return new ClaimMain(ownerID, ownerName, box, world);
+            return new ClaimMain(ownerID, ownerName, box);
         else
-            return new ClaimMain(box, world);
+            return new ClaimMain(box);
     }
 
     public static ClaimChild createClaimSub(BoundingBox box, ClaimMain parent) {
@@ -100,7 +101,7 @@ public class HelperClaim {
         BoundingBox box = new BoundingBox(pos1, pos2);
         Claim claim;
         if (claimInteraction == null || type == CLAIM_TYPE.MAIN)
-            claim = createClaimMain(world, box, creator.getUniqueId(), creator.getName(), claimInteraction != null && claimInteraction.mode == CLAIM_MODE.CREATE_ADMIN);
+            claim = createClaimMain(box, creator.getUniqueId(), creator.getName(), claimInteraction != null && claimInteraction.mode == CLAIM_MODE.CREATE_ADMIN);
         else
             claim = createClaimSub(box, (ClaimMain) claimInteraction.editing);
         if (!HelperEvent.claimAttemptCreate(claim, creator).isCancelled()) {
@@ -166,17 +167,10 @@ public class HelperClaim {
             }
             if (toLoad == CLAIM_TYPE.MAIN) { //Loading main parent claims
                 if (result.getLong(DatabaseClaims.COLUMNS.PARENT.name) == -1) {
-                    String _world_name = result.getString(DatabaseClaims.COLUMNS.WORLD.name);
-                    World world = Bukkit.getWorld(_world_name);
-                    if (world != null) {
-                        if (result.getBoolean(DatabaseClaims.COLUMNS.ADMIN_CLAIM.name) || id == null)
-                            claim = new ClaimMain(position, world);
-                        else
-                            claim = new ClaimMain(id, name, position, world);
-                    } else {
-                        Pueblos.getInstance().getLogger().severe("The world " + _world_name + " does not exist! Claim #" + id + " has not been registered!");
-                        return null;
-                    }
+                    if (result.getBoolean(DatabaseClaims.COLUMNS.ADMIN_CLAIM.name) || id == null)
+                        claim = new ClaimMain(position);
+                    else
+                        claim = new ClaimMain(id, name, position);
                 } else //Skip children claims
                     return null;
             } else {

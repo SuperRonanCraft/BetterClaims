@@ -27,7 +27,6 @@ public class DatabaseClaims extends SQLite {
         OWNER_UUID("uuid", "varchar(32) NOT NULL"),
         OWNER_NAME("name", "varchar(32) NOT NULL"),
         POSITION("position", "text NOT NULL"),
-        WORLD("world", "text NOT NULL DEFAULT world"),
         ADMIN_CLAIM("admin_claim", "boolean DEFAULT false"),
         MEMBERS("members", "text"),
         FLAGS("flags", "text"),
@@ -88,16 +87,14 @@ public class DatabaseClaims extends SQLite {
                 + COLUMNS.ADMIN_CLAIM.name + ", "
                 + COLUMNS.DATE.name + ", "
                 + COLUMNS.POSITION.name + ", "
-                + COLUMNS.WORLD.name + ", "
                 + COLUMNS.PARENT.name + ""
-                + ") VALUES(?, ?, ?, ?, ?, ?, ?)";
+                + ") VALUES(?, ?, ?, ?, ?, ?)";
         List<Object> params = new ArrayList<>() {{
                 add(getClaimOwnerID(claim));
                 add(getClaimOwnerName(claim));
                 add(claim.isAdminClaim());
                 add(HelperDate.getDate(claim.dateCreated));
                 add(getBoundingBoxJSON(claim));
-                add(claim.getWorld().getName());
                 add(getParent(claim));
         }};
         return sqlCreateClaim(sql, params, claim);

@@ -5,11 +5,9 @@ import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.enums.*;
-import me.RonanCraft.Pueblos.resources.claims.selling.ClaimAuctionManager;
+import me.RonanCraft.Pueblos.resources.claims.selling.AuctionManager;
 import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
-import me.RonanCraft.Pueblos.resources.tools.HelperDate;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
-import me.RonanCraft.Pueblos.resources.tools.JSONEncoding;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Location;
@@ -19,12 +17,10 @@ import org.bukkit.inventory.InventoryHolder;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 public class ClaimHandler {
-    private final ClaimAuctionManager auctionManager = new ClaimAuctionManager(this);
+    private final AuctionManager auctionManager = new AuctionManager(this);
     private final List<ClaimMain> mainClaims = new ArrayList<>();
     private final List<ClaimChild> childClaims = new ArrayList<>();
     private int claim_maxSize = 256;
@@ -117,8 +113,18 @@ public class ClaimHandler {
         //int y1 = lower.getBlockZ();
         //int y2 = greater.getBlockZ();
         for (ClaimMain _claim : mainClaims) {
-            if (claimIgnored != null && claimIgnored.contains(_claim))
+            if (claimIgnored != null && claimIgnored.contains(_claim)) {
+                if (claimInteraction != null && claimInteraction.editing instanceof ClaimChild)
+                    for (ClaimChild child : Pueblos.getInstance().getClaimHandler().getClaimsChild(_claim)) { //Dont allow overlapping children when resizing child
+                        if (!claimIgnored.contains(child)) //Ignore the child being resized
+                            if (child.getBoundingBox().intersects(new BoundingBox(greater, lower))) {
+                                if (p != null)
+                                    Visualization.fromClaim(_claim, p.getLocation().getBlockY(), VisualizationType.ERROR, p.getLocation()).apply(p);
+                                return CLAIM_ERRORS.OVERLAPPING;
+                            }
+                    }
                 continue;
+            }
             if (claimInteraction != null && _claim == claimInteraction.editing) //Ignore this claim
                 continue;
             if (_claim.getBoundingBox().intersects(new BoundingBox(greater, lower))) { //Intersecting with this claim
@@ -278,7 +284,7 @@ public class ClaimHandler {
         return null;
     }
 
-    public ClaimAuctionManager getAuctionManager() {
+    public AuctionManager getAuctionManager() {
         return auctionManager;
     }
 

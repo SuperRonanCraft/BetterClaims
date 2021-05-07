@@ -1,7 +1,7 @@
 package me.RonanCraft.Pueblos.resources.database;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.selling.ClaimAuction;
+import me.RonanCraft.Pueblos.resources.claims.selling.Auction;
 
 import javax.annotation.Nonnull;
 import java.sql.*;
@@ -31,18 +31,18 @@ public class DatabaseAuctions extends SQLite {
         }
     }
 
-    public List<ClaimAuction> getAuctions() {
+    public List<Auction> getAuctions() {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            List<ClaimAuction> list = new ArrayList<>();
+            List<Auction> list = new ArrayList<>();
             conn = getSQLConnection();
             ps = conn.prepareStatement("SELECT * FROM " + table + ";");
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                ClaimAuction auction = Pueblos.getInstance().getClaimHandler().getAuctionManager().loadAuction(rs);
+                Auction auction = Pueblos.getInstance().getClaimHandler().getAuctionManager().loadAuction(rs);
                 if (auction != null)
                     list.add(auction);
             }
@@ -55,7 +55,7 @@ public class DatabaseAuctions extends SQLite {
         return null;
     }
 
-    public boolean deleteAuction(@Nonnull ClaimAuction auction) {
+    public boolean deleteAuction(@Nonnull Auction auction) {
         String pre = "DELETE FROM ";
         String sql = pre + table + " WHERE "
                 + COLUMNS.AUCTION_ID.name + " = ?";
@@ -66,7 +66,7 @@ public class DatabaseAuctions extends SQLite {
     }
 
     //Create/Upload an auction
-    public boolean createAuction(ClaimAuction auction) {
+    public boolean createAuction(Auction auction) {
         String pre = "INSERT INTO ";
         String sql = pre + table + " ("
                 + COLUMNS.CLAIM_ID.name + ", "
@@ -83,7 +83,7 @@ public class DatabaseAuctions extends SQLite {
 
     //Tools
     //Saves the auction id to auction
-    private boolean sqlCreateAuction(String statement, List<Object> params, ClaimAuction auction) {
+    private boolean sqlCreateAuction(String statement, List<Object> params, Auction auction) {
         Connection conn = null;
         PreparedStatement ps = null;
         boolean success = true;

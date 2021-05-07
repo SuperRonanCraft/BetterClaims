@@ -6,6 +6,7 @@ import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG_MEMBER;
+import me.RonanCraft.Pueblos.resources.claims.selling.Auction;
 import me.RonanCraft.Pueblos.resources.files.FileLanguage;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
@@ -63,6 +64,8 @@ public class Message {
                 str = requests(str, (ClaimRequest) info);
             else if (info instanceof Confirmation)
                 str = confirmation(str, (Confirmation) info);
+            else if (info instanceof Auction)
+                str = auctions(str, (Auction) info);
             else if (info instanceof Object[] && ((Object[]) info).length == 2)
                 str = getPlaceholder(str, (Object[]) info);
         }
@@ -146,5 +149,14 @@ public class Message {
             str = str.replace("%confirm_action%", action);
         }
         return str;
+    }
+
+    //Auctions
+    private static String auctions(String str, Auction auction) {
+        if (str.contains("%auction_price%"))
+            str = str.replace("%auction_price%", String.valueOf(auction.getPrice()));
+        if (str.contains("%auction_time%"))
+            str = str.replace("%auction_time%", String.valueOf(auction.getPrice()));
+        return claims(str, auction.claim, null);
     }
 }

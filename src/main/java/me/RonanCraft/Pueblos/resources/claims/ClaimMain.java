@@ -17,12 +17,12 @@ import java.util.UUID;
 
 public class ClaimMain extends Claim {
 
-    public ClaimMain(UUID ownerId, String ownerName, @Nonnull BoundingBox boundingBox, @Nonnull World world) {
-        super(ownerId, ownerName, boundingBox, world);
+    public ClaimMain(UUID ownerId, String ownerName, @Nonnull BoundingBox boundingBox) {
+        super(ownerId, ownerName, boundingBox);
     }
 
-    public ClaimMain(BoundingBox position, World world) {
-        super(position, world);
+    public ClaimMain(BoundingBox position) {
+        super(position);
     }
 
     void changeOwner(@Nullable UUID newOwnerId, boolean save_oldOwner_as_Member) {

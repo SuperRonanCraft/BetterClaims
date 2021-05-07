@@ -9,6 +9,11 @@ Messages:
   CannotEdit: '&cUnable to edit this while outside a claim!'
   UnknownID: '&cClaim id is not a valid. &7Please use `/pueblos list` to view claims you are allowed to edit!'
   Claim:
+    Auction:
+      NotInside: '&7You are not inside any claim to auction off!'
+      NotOwner: '&cYou cannot auction off another players claim! &8Duh...'
+      Created: '&aAuction is now live for claim #%claim_id% at $%auction_price%! &7Make an auction sign with `/pueblos auction sign`'
+      Deleted: '&cAuction deleted for claim #%claim_id%!'
     Override:
       Enabled: '&7Override &aEnabled&7, you are now able to edit any claim! &8Watch it, with great power comes great responsibility!'
       Disabled: '&7Override &cDisabled&7, you will no longer be able to edit other players claims!'
@@ -85,9 +90,12 @@ Help:
   ClaimItem: ' &7- &e/%command% claimitem &7- Get a copy of the claiming item'
   AdminClaim: ' &7- &e/%command% adminclaim &7- Toggle claim-mode to admin claim'
   AdminOverride: ' &7- &e/%command% adminoverride &7- Enable the ability to edit in any claim'
+  Auction: ' &7- &e/%command% auction <create/delete/sign> &7- Sell off claims to others for a price and time!'
 
 Usage:
   Convert: '&cUsage&7: /%command% convert <plugin_name>'
+  Auction:
+    Create: '&cUsage&7: /%command% auction create <price> <time_in_hours (0 = forever)>'
 
 ClaimInfo:
   - '&e&m------&6&l Pueblos &8| Claim Info &e&m------'

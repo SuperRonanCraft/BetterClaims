@@ -28,7 +28,6 @@ public abstract class Claim extends ClaimUpdates {
     UUID ownerId;
     String ownerName;
     private final BoundingBox boundingBox;
-    final World world;
     public boolean deleted;
     //Loaded after
     private String claimName;
@@ -40,16 +39,15 @@ public abstract class Claim extends ClaimUpdates {
     boolean adminClaim;
     public final CLAIM_TYPE claimType;
 
-    Claim(BoundingBox boundingBox, World world) {
-        this(null, null, boundingBox, world);
+    Claim(BoundingBox boundingBox) {
+        this(null, null, boundingBox);
     }
 
-    Claim(UUID ownerId, String ownerName, @Nonnull BoundingBox boundingBox, @Nonnull World world) {
+    Claim(UUID ownerId, String ownerName, @Nonnull BoundingBox boundingBox) {
         this.ownerId = ownerId;
         this.ownerName = ownerName;
         this.boundingBox = boundingBox;
         this.adminClaim = this.ownerId == null;
-        this.world = world;
         claimType = this instanceof ClaimMain ? CLAIM_TYPE.MAIN : CLAIM_TYPE.CHILD;
     }
 
@@ -164,7 +162,7 @@ public abstract class Claim extends ClaimUpdates {
 
     public CLAIM_ERRORS editCorners(@Nonnull Player editor, Vector loc_1, Vector loc_2) {
         if (!HelperEvent.claimResize(editor, this, editor, loc_1, loc_2).isCancelled()) {
-            if (Pueblos.getInstance().getClaimHandler().canResize(editor, this, new BoundingBox(loc_1, loc_2))) {
+            if (Pueblos.getInstance().getClaimHandler().canResize(editor, this, new BoundingBox(editor.getWorld(), loc_1, loc_2))) {
                 getBoundingBox().editCorners(loc_1, loc_2);
                 updated();
                 return CLAIM_ERRORS.NONE;
@@ -178,15 +176,15 @@ public abstract class Claim extends ClaimUpdates {
     }
 
     public Location getLesserBoundaryCorner() {
-        return new Location(world, boundingBox.getLeft(), 0, boundingBox.getBottom());
+        return new Location(boundingBox.getWorld(), boundingBox.getLeft(), 0, boundingBox.getBottom());
     }
 
     public Location getGreaterBoundaryCorner() {
-        return new Location(world, boundingBox.getRight(), 0, boundingBox.getTop());
+        return new Location(boundingBox.getWorld(), boundingBox.getRight(), 0, boundingBox.getTop());
     }
 
     @Nonnull
     public World getWorld() {
-        return world;
+        return boundingBox.getWorld();
     }
 }
