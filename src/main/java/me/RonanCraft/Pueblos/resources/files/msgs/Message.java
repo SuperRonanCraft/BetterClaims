@@ -55,8 +55,8 @@ public class Message {
             //Placeholders based off info
             if (info instanceof String && str.contains("%command%"))
                 str = str.replace("%command%", (String) info);
-            else if (info instanceof ClaimMain)
-                str = claims(str, (ClaimMain) info, null);
+            else if (info instanceof Claim)
+                str = claims(str, (Claim) info, null);
             else if (info instanceof ClaimMember)
                 str = member(str, (ClaimMember) info, null);
             else if (info instanceof ClaimRequest)

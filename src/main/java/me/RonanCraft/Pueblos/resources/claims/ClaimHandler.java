@@ -61,7 +61,7 @@ public class ClaimHandler {
 
     public CLAIM_ERRORS uploadCreatedClaim(Claim claim, @Nullable Player creator, @Nullable PlayerClaimInteraction claimInteraction) {
         Claim ignoredClaim = claim instanceof ClaimChild ? ((ClaimChild) claim).getParent() : null;
-        CLAIM_ERRORS error = isLocationValid(claim, creator, claimInteraction, ignoredClaim);
+        CLAIM_ERRORS error = isLocationValid(claim, creator, claimInteraction, new ArrayList<>(Collections.singletonList(ignoredClaim)));
         if (error == CLAIM_ERRORS.NONE) {
             claim.dateCreated = Calendar.getInstance().getTime();
             if (getDatabase().createClaim(claim)) {
@@ -94,13 +94,13 @@ public class ClaimHandler {
         return error;
     }
 
-    private CLAIM_ERRORS isLocationValid(Claim claim, @Nullable Player p, @Nullable PlayerClaimInteraction claimInteraction, Claim ingnoredClaim) {
+    private CLAIM_ERRORS isLocationValid(Claim claim, @Nullable Player p, @Nullable PlayerClaimInteraction claimInteraction, List<Claim> ingnoredClaim) {
         Location greater = claim.getGreaterBoundaryCorner();
         Location lower = claim.getLesserBoundaryCorner();
         return isLocationValid(greater, lower, p, ingnoredClaim, claimInteraction);
     }
 
-    public CLAIM_ERRORS isLocationValid(Location greater, Location lower, @Nullable Player p, @Nullable Claim claimIgnored, @Nullable PlayerClaimInteraction claimInteraction) {
+    public CLAIM_ERRORS isLocationValid(Location greater, Location lower, @Nullable Player p, @Nullable List<Claim> claimIgnored, @Nullable PlayerClaimInteraction claimInteraction) {
         //Size
         if (Math.abs(greater.getBlockX() - lower.getBlockX()) < 10 || Math.abs(greater.getBlockZ() - lower.getBlockZ()) < 10) {
             if (p != null)
@@ -117,7 +117,7 @@ public class ClaimHandler {
         //int y1 = lower.getBlockZ();
         //int y2 = greater.getBlockZ();
         for (ClaimMain _claim : mainClaims) {
-            if (_claim == claimIgnored) //Ignore this claim
+            if (claimIgnored != null && claimIgnored.contains(_claim))
                 continue;
             if (claimInteraction != null && _claim == claimInteraction.editing) //Ignore this claim
                 continue;
@@ -271,6 +271,11 @@ public class ClaimHandler {
             Object flagValue = claim.getFlags().getFlag(flag); //Get the claims flag value
             return ((Boolean) flagValue);
         }
+    }
+
+    public HashMap<CLAIM_FLAG, Object> getFlagsAt(Location loc, boolean asMember) {
+        Claim claim = getClaimAt(loc, false);
+        return null;
     }
 
     public ClaimAuctionManager getAuctionManager() {

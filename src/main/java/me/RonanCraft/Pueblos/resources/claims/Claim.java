@@ -7,6 +7,7 @@ package me.RonanCraft.Pueblos.resources.claims;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_TYPE;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
@@ -161,16 +162,19 @@ public abstract class Claim extends ClaimUpdates {
         return true;
     }
 
-    public boolean editCorners(@Nonnull Player editor, Vector loc_1, Vector loc_2) {
+    public CLAIM_ERRORS editCorners(@Nonnull Player editor, Vector loc_1, Vector loc_2) {
         if (!HelperEvent.claimResize(editor, this, editor, loc_1, loc_2).isCancelled()) {
             if (Pueblos.getInstance().getClaimHandler().canResize(editor, this, new BoundingBox(loc_1, loc_2))) {
                 getBoundingBox().editCorners(loc_1, loc_2);
                 updated();
-                return true;
-            } else
-                return false;
+                return CLAIM_ERRORS.NONE;
+            } else {
+                if (this instanceof ClaimMain)
+                    return CLAIM_ERRORS.RESIZE_OVERLAPPING_CHILD;
+                return CLAIM_ERRORS.RESIZE_OVERLAPPING_PARENT;
+            }
         } else
-            return false;
+            return CLAIM_ERRORS.CANCELLED;
     }
 
     public Location getLesserBoundaryCorner() {

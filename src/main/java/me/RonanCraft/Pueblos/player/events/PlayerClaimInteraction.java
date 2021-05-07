@@ -2,6 +2,7 @@ package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
+import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimChild;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
@@ -23,7 +24,7 @@ public class PlayerClaimInteraction {
     final List<Location> locations = new ArrayList<>();
     boolean locked = false;
     public CLAIM_MODE mode;
-    public ClaimMain editing;
+    public Claim editing;
 
     PlayerClaimInteraction(Player player, CLAIM_MODE mode) {
         this.player = player;
@@ -40,15 +41,28 @@ public class PlayerClaimInteraction {
                         if (claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
                             mode = CLAIM_MODE.EDIT;
                             //Show the claim we are editing
-                            Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.EDIT, player.getLocation()).apply(player);
+                            Visualization vis = Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.EDIT, player.getLocation());
+                            Visualization.fromLocation(vis, loc, player.getLocation().getBlockY(), p.getLocation()).apply(player);
                         } else {
-                            mode = CLAIM_MODE.SUBCLAIM;
+                            List<ClaimChild> children = Pueblos.getInstance().getClaimHandler().getClaimsChild(claim);
+                            for (ClaimChild child : children)
+                                if (child.getBoundingBox().isCorner(loc)) {
+                                    mode = CLAIM_MODE.EDIT;
+                                    editing = child;
+                                    Visualization vis = Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.EDIT, player.getLocation());
+                                    Visualization.fromLocation(vis, loc, player.getLocation().getBlockY(), p.getLocation()).apply(player);
+                                    break;
+                                }
+                            if (editing == null)
+                                mode = CLAIM_MODE.SUBCLAIM;
                         }
-                        editing = claim;
+                        if (editing == null)
+                            editing = claim;
                         break;
                     }
-                    if (editing == null || editing != claim) { //Not editing the current overlapping claim area
+                    if (editing == null || (editing != claim && (!(editing instanceof ClaimChild) || ((ClaimChild) editing).getParent() != claim))) { //Not editing the current overlapping claim area
                         Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
+                        //player.sendMessage("OVERLAPPING!");
                         return CLAIM_ERRORS.OVERLAPPING;
                     }
                 }
@@ -56,10 +70,18 @@ public class PlayerClaimInteraction {
                 lock();
                 return CLAIM_ERRORS.CANCELLED; //Another world was selected?
             }
-            if (!locations.isEmpty() && mode == CLAIM_MODE.SUBCLAIM)
-                if (!editing.contains(loc)) {
+            if (mode == CLAIM_MODE.SUBCLAIM)
+                if (!locations.isEmpty() && !editing.contains(loc)) { //Disallow child claims to go outside of parent claim
                     Visualization.fromClaim(editing, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
                     return CLAIM_ERRORS.OVERLAPPING;
+                } else {
+                    //Disallow making multiple children claims on top of each other
+                    List<ClaimChild> children = Pueblos.getInstance().getClaimHandler().getClaimsChild((ClaimMain) editing);
+                    for (ClaimChild child : children)
+                        if (child.contains(loc)) {
+                            //player.sendMessage("OVERLAPPING2!");
+                            return CLAIM_ERRORS.OVERLAPPING;
+                        }
                 }
             locations.add(loc);
         }
@@ -83,6 +105,7 @@ public class PlayerClaimInteraction {
     public void reset() {
         locked = false;
         locations.clear();
+        editing = null;
         if (mode != CLAIM_MODE.CREATE_ADMIN)
             mode = CLAIM_MODE.CREATE;
     }

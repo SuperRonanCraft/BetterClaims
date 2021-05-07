@@ -5,10 +5,7 @@ import me.RonanCraft.Pueblos.player.data.PlayerData;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_CORNER;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_TYPE;
+import me.RonanCraft.Pueblos.resources.claims.enums.*;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
@@ -22,6 +19,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -53,6 +51,9 @@ public class EventInteract implements PueblosEvents {
             return;
         if (!allowInteract(e.getPlayer(), e.getClickedBlock()))
             e.setCancelled(true);
+        if (e.getItem() != null && e.getItem().getType() == Material.STICK) {
+            HashMap<CLAIM_FLAG, Object> flags = Pueblos.getInstance().getClaimHandler().getFlagsAt(e.getClickedBlock().getLocation(), false);
+        }
     }
 
     //Create a claim
@@ -97,7 +98,11 @@ public class EventInteract implements PueblosEvents {
                     if (error != CLAIM_ERRORS.SIZE_SMALL && error != CLAIM_ERRORS.SIZE_LARGE) //Let the player select another second location if error
                         claimInteraction.lock(); //Lock us from using the same locations again
                 } else if (claimInteraction.mode != CLAIM_MODE.EDIT) { //If the player is editing the claim they have selected will visualize
-                    Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
+                    if (claimInteraction.mode == CLAIM_MODE.SUBCLAIM) {
+                        Visualization vis = Visualization.fromClaim(claimInteraction.editing, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation());
+                        Visualization.fromLocation(vis, loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
+                    } else
+                        Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
                 }
                 if (claimInteraction.locked)
                     resetInteraction(p, 2L);
@@ -111,7 +116,7 @@ public class EventInteract implements PueblosEvents {
         }
     }
 
-    private CLAIM_ERRORS resizeClaim(Player p, ClaimMain claim, List<Location> corners) {
+    private CLAIM_ERRORS resizeClaim(Player p, Claim claim, List<Location> corners) {
 
         BoundingBox position = claim.getBoundingBox();
         Vector start_location = corners.get(0).toVector();
@@ -130,11 +135,16 @@ public class EventInteract implements PueblosEvents {
         int min_z = Math.min(positionStiff.getBlockZ(), positionMovingCorner.getBlockZ());
         Location greater = new Location(claim.getWorld(), max_x, 0, max_z);
         Location lower = new Location(claim.getWorld(), min_x, 0, min_z);
-        CLAIM_ERRORS error = Pueblos.getInstance().getClaimHandler().isLocationValid(greater, lower, p, claim /*Ignored claim*/, null);
+        List<Claim> ignoredClaims = new ArrayList<>();
+        ignoredClaims.add(claim);
+        if (claim instanceof ClaimChild)
+            ignoredClaims.add(((ClaimChild) claim).getParent());
+        CLAIM_ERRORS error = Pueblos.getInstance().getClaimHandler().isLocationValid(greater, lower, p, ignoredClaims /*Ignored claim*/, null);
         if (error == CLAIM_ERRORS.NONE) {
             //Save new position
-            if (claim.editCorners(p, positionStiff, positionMovingCorner)) {
-                MessagesCore.CLAIM_RESIZED.send(p, claim);
+            error = claim.editCorners(p, positionStiff, positionMovingCorner);
+            if (error == CLAIM_ERRORS.NONE) {
+                MessagesCore.CLAIM_RESIZE_SUCCESS.send(p, claim);
                 Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
             }
         }// else

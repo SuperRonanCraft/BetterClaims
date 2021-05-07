@@ -11,6 +11,8 @@ import org.bukkit.command.CommandSender;
 public enum CLAIM_ERRORS {
     NONE(null),
     OVERLAPPING(MessagesCore.CLAIM_CREATE_FAILED_OTHERCLAIM), //Another claim is overlapping this area
+    RESIZE_OVERLAPPING_CHILD(MessagesCore.CLAIM_RESIZE_OVERLAPPING_CHILD), //Child would overlap parent
+    RESIZE_OVERLAPPING_PARENT(MessagesCore.CLAIM_RESIZE_OVERLAPPING_PARENT), //Parent would overlap child
     SIZE_SMALL(MessagesCore.CLAIM_CREATE_FAILED_SIZE), //Claim is too small
     SIZE_LARGE(MessagesCore.CLAIM_CREATE_FAILED_SIZELARGE), //Claim is too large
     DATABASE_ERROR(MessagesCore.CLAIM_CREATE_FAILED_DATABASE), //There was an error saving this claims information

@@ -102,7 +102,7 @@ public class HelperClaim {
         if (claimInteraction == null || type == CLAIM_TYPE.MAIN)
             claim = createClaimMain(world, box, creator.getUniqueId(), creator.getName(), claimInteraction != null && claimInteraction.mode == CLAIM_MODE.CREATE_ADMIN);
         else
-            claim = createClaimSub(box, claimInteraction.editing);
+            claim = createClaimSub(box, (ClaimMain) claimInteraction.editing);
         if (!HelperEvent.claimAttemptCreate(claim, creator).isCancelled()) {
             error = handler.uploadCreatedClaim(claim, creator, claimInteraction);
             switch (error) {

@@ -78,8 +78,10 @@ public class Visualization {
         //add subdivisions first
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
 
-        if (claim instanceof ClaimChild)
+        if (claim instanceof ClaimChild) {
             claim = ((ClaimChild) claim).parent;
+            visualizationType = VisualizationType.CLAIM;
+        }
 
         List<ClaimChild> children = handler.getClaimsChild((ClaimMain) claim);
         for (ClaimChild child : children) {
@@ -99,14 +101,15 @@ public class Visualization {
 
     //convenience method to build a visualization from a location
     //visualizationType determines the style (gold blocks, silver, red, diamond, etc)
-    public static Visualization fromLocation(Location location, int height, Location locality) {
-
-        Visualization visualization = new Visualization();
-
+    public static Visualization fromLocation(Visualization visualization, Location location, int height, Location locality) {
         //add top level last so that it takes precedence (it shows on top when the child claim boundaries overlap with its boundaries)
         visualization.addSides(location, location, locality, height, Material.EMERALD_BLOCK.createBlockData(), Material.EMERALD_BLOCK.createBlockData(), 1);
 
         return visualization;
+    }
+
+    public static Visualization fromLocation(Location location, int height, Location locality) {
+        return fromLocation(new Visualization(), location, height, locality);
     }
 
     public static Visualization fromLocation(Location min, Location max, int height, VisualizationType visualizationType, Location locality) {
