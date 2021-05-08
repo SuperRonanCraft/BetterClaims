@@ -52,7 +52,7 @@ public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv
                 || checkItems(e, itemInfo.get(p)))
             return;
 
-        ClaimMain claim = (ClaimMain) itemInfo.get(p).get(e.getSlot()).info;
+        Claim claim = (Claim) itemInfo.get(p).get(e.getSlot()).info;
         PueblosInventory.CLAIM.open(p, claim, false);
     }
 

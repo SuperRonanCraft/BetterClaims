@@ -78,8 +78,8 @@ public class Message {
     private static String getPlaceholder(String str, Object[] info) {
         if (info[0] instanceof ClaimMember && info[1] instanceof CLAIM_FLAG_MEMBER)
             str = member(str, (ClaimMember) info[0], (CLAIM_FLAG_MEMBER) info[1]);
-        else if (info[0] instanceof ClaimMain && info[1] instanceof CLAIM_FLAG)
-            str = claims(str, (ClaimMain) info[0], (CLAIM_FLAG) info[1]);
+        else if (info[0] instanceof Claim && info[1] instanceof CLAIM_FLAG)
+            str = claims(str, (Claim) info[0], (CLAIM_FLAG) info[1]);
         return str;
     }
 

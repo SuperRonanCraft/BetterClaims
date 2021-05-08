@@ -5,15 +5,14 @@
 
 package me.RonanCraft.Pueblos.resources.claims;
 
+import me.RonanCraft.Pueblos.Pueblos;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 public class ClaimMain extends Claim {
 
@@ -41,5 +40,9 @@ public class ClaimMain extends Claim {
                 members.remove(members.getMember(oldOwnerId), true);
         }
         updated();
+    }
+
+    public List<Claim> getChildren() {
+        return new ArrayList<>(Pueblos.getInstance().getClaimHandler().getClaimsChild(this));
     }
 }

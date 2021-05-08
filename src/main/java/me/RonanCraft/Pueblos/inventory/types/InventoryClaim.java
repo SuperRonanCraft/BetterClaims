@@ -33,6 +33,8 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         for (CLAIM_SETTINGS set : CLAIM_SETTINGS.values()) {
             if (!claim.checkPermLevel(p, set.claim_permission_level))
                 continue;
+            if (set == CLAIM_SETTINGS.CHILD_CLAIM && claim.isChild())
+                continue;
             ItemStack item = getItem(set.getItem(p, claim).section, p, claim);
             inv.setItem(set.slot, item);
             itemInfo.put(set.slot, new PueblosItem(item, ITEM_TYPE.NORMAL, set));
@@ -59,7 +61,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
             case TELEPORT: HelperClaim.teleportTo(p, claim); p.closeInventory(); break;
             case DELETE: PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_DELETE, p, claim), false); break;
             case STATS: HelperClaim.sendClaimInfo(p, claim); p.closeInventory(); break;
-            case CHILD_CLAIM:
+            case CHILD_CLAIM: PueblosInventory.CLAIM_SELECT.open(p, ((ClaimMain) claim).getChildren(), false); break;
             default:
                 if (setting.inv != null)
                     setting.inv.open(p, claim, false);
@@ -113,7 +115,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
 
         ITEMS getItem(Player p, Claim claim) {
             if (disallowed != null) {
-                if (inv.isAllowed(p, claim))
+                if (inv != null && inv.isAllowed(p, claim))
                     return allowed;
                 return disallowed;
             }

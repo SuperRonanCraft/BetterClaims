@@ -187,4 +187,8 @@ public abstract class Claim extends ClaimUpdates {
     public World getWorld() {
         return boundingBox.getWorld();
     }
+
+    public boolean isChild() {
+        return this instanceof ClaimChild;
+    }
 }
