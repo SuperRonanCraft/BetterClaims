@@ -13,7 +13,9 @@ public enum PueblosCommandType {
     CONVERT(new         CmdConvert()),
     ADMIN_CLAIM(new     CmdAdminclaim()),
     ADMIN_OVERRIDE(new  CmdAdminOverride()),
-    CLAIMITEM(new       CmdClaimItem());
+    CLAIMITEM(new       CmdClaimItem()),
+    ADDMEMBER(new       CmdAddMember()),
+    ;
 
     private final PueblosCommand cmd;
 

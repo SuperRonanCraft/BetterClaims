@@ -4,14 +4,19 @@ import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
+import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
 import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
+import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
+import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -62,6 +67,15 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
             case DELETE: PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_DELETE, p, claim), false); break;
             case STATS: HelperClaim.sendClaimInfo(p, claim); p.closeInventory(); break;
             case CHILD_CLAIM: PueblosInventory.CLAIM_SELECT.open(p, ((ClaimMain) claim).getChildren(), false); break;
+            case VISUALIZE:
+                Vector vector = claim.getBoundingBox().getCenter();
+                if (p.getLocation().distance(new Location(p.getLocation().getWorld(), vector.getX(), p.getLocation().getBlockY(), vector.getZ())) < 300) {
+                    Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
+                    MessagesCore.CLAIM_VISUALIZE.send(p, claim);
+                    p.closeInventory();
+                } else
+                    MessagesCore.TOOFAR.send(p, claim);
+                break;
             default:
                 if (setting.inv != null)
                     setting.inv.open(p, claim, false);
@@ -96,6 +110,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         DELETE(10,      CLAIM_PERMISSION_LEVEL.OWNER,   null, ITEMS.DELETE, null),
         STATS(28,       null,   null, ITEMS.STATS, null),
         CHILD_CLAIM(34, null,   null, ITEMS.CHILD_CLAIMS, null),
+        VISUALIZE(40,   null,   null, ITEMS.VISUALIZE, null),
         ;
 
         int slot;
@@ -133,6 +148,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         TELEPORT("Teleport"),
         DELETE("Delete"),
         CHILD_CLAIMS("SubClaim"),
+        VISUALIZE("Visualize"),
         ;
 
         String section;

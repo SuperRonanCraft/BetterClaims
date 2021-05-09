@@ -9,7 +9,7 @@ public class PueblosEvent_ClaimWalkedIn extends PueblosEventType_ClaimCancellabl
     private final Player player;
 
     public PueblosEvent_ClaimWalkedIn(ClaimMain claim, Player player) {
-        super(claim);
+        super(claim, false);
         this.player = player;
     }
 

@@ -54,8 +54,12 @@ public class Message {
                 if (p instanceof Player)
                     str = str.replaceAll("%player_uuid%", ((Player) p).getUniqueId().toString());
             //Placeholders based off info
-            if (info instanceof String && str.contains("%command%"))
-                str = str.replace("%command%", (String) info);
+            if (info instanceof String) {
+                if (str.contains("%command%"))
+                    str = str.replace("%command%", (String) info);
+                if (str.contains("%invalid_name%"))
+                    str = str.replace("%invalid_name%", (String) info);
+            }
             else if (info instanceof Claim)
                 str = claims(str, (Claim) info, null);
             else if (info instanceof ClaimMember)
@@ -98,11 +102,9 @@ public class Message {
         if (str.contains("%claim_requests%"))
             str = str.replace("%claim_requests%", String.valueOf(claim.getRequests().size()));
         if (str.contains("%claim_width%"))
-            str = str.replace("%claim_width%", String.valueOf(claim.getGreaterBoundaryCorner().getBlockX()
-                    - claim.getLesserBoundaryCorner().getBlockX()));
+            str = str.replace("%claim_width%", String.valueOf(claim.getBoundingBox().getWidth()));
         if (str.contains("%claim_length%"))
-            str = str.replace("%claim_length%", String.valueOf(claim.getGreaterBoundaryCorner().getBlockZ()
-                    - claim.getLesserBoundaryCorner().getBlockZ()));
+            str = str.replace("%claim_length%", String.valueOf(claim.getBoundingBox().getLength()));
         if (flag != null) {
             if (str.contains("%claim_flag%"))
                 str = str.replace("%claim_flag%", StringUtils.capitalize(flag.name().toLowerCase().replace("_", " ")));

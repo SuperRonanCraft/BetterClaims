@@ -6,6 +6,7 @@ public enum MessagesUsage {
 
     CONVERT("Convert"),
     AUCTION_CREATE("Auction.Create"),
+    CLAIM_ADDMEMBER("AddMember"),
     ;
 
     String section;

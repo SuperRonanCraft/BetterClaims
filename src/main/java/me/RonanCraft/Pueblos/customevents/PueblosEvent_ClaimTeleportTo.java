@@ -12,7 +12,7 @@ public class PueblosEvent_ClaimTeleportTo extends PueblosEventType_ClaimCancella
     private final Location from_loc;
 
     public PueblosEvent_ClaimTeleportTo(Claim claim, Player player, Location from_loc) {
-        super(claim);
+        super(claim, false);
         this.player = player;
         this.from_loc = from_loc;
     }

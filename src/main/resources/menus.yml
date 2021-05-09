@@ -80,6 +80,12 @@ Claim:
       Lore:
         - ''
         - '&7View/Edit sub divisions of this claim'
+    Visualize:
+      Name: '&eVisualize Claim'
+      Item: 'map'
+      Lore:
+        - ''
+        - '&7Visualize claim in the world'
 ClaimSelect:
   Title: '&7Select Claim'
   Items:

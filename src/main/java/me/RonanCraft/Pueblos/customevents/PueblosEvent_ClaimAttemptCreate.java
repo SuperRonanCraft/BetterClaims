@@ -18,7 +18,7 @@ public class PueblosEvent_ClaimAttemptCreate extends PueblosEventType_ClaimCance
      * @param creator The player who created this claim
      */
     public PueblosEvent_ClaimAttemptCreate(Claim claim, Player creator) {
-        super(claim);
+        super(claim, true);
         this.creator = creator;
     }
 

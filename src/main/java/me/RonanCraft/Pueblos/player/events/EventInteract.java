@@ -64,56 +64,58 @@ public class EventInteract implements PueblosEvents {
                 || !e.getItem().getType().equals(claim_item))
             return;
 
-        Block block = e.getClickedBlock();
-        if (block == null || block.getType() == Material.AIR) //Block aiming at distance
-            block = e.getPlayer().getTargetBlock(null, 64);
-        if (block.getType() == Material.AIR)
-            return;
-        Location loc = block.getLocation();
+        Bukkit.getScheduler().runTaskAsynchronously(Pueblos.getInstance(), () -> {
+            Block block = e.getClickedBlock();
+            if (block == null || block.getType() == Material.AIR) //Block aiming at distance
+                block = e.getPlayer().getTargetBlock(null, 64);
+            if (block.getType() == Material.AIR)
+                return;
+            Location loc = block.getLocation();
 
-        e.setCancelled(true);
-        Player p = e.getPlayer();
-        PlayerData data = listener.getPlayerData(p);
-        if (data.getClaimInteraction() == null)
-            data.setClaimInteraction(new PlayerClaimInteraction(p, CLAIM_MODE.CREATE));
-        PlayerClaimInteraction claimInteraction = data.getClaimInteraction();
-        if (!claimInteraction.locked) { //Are we NOT locked from doing anything?
-            Object errorInfo = null;
-            resetInteraction(p, 60L);
-            CLAIM_ERRORS error = claimInteraction.addLocation(p, loc);
-            if (error == CLAIM_ERRORS.NONE) {
-                List<Location> corners = claimInteraction.locations;
-                if (corners.size() >= 2) { //Create claim
-                    switch (claimInteraction.mode) {
-                        //Normal user claim
-                        case CREATE:
-                        //Create a claim with no owner, making it an admin claim
-                        case CREATE_ADMIN://Create a claim inside another claim
-                        case SUBCLAIM:
-                            error = HelperClaim.registerClaim(p, p.getWorld(), corners.get(0), corners.get(1), false,
-                                    claimInteraction, claimInteraction.mode == CLAIM_MODE.SUBCLAIM ? CLAIM_TYPE.CHILD : CLAIM_TYPE.MAIN); break; //MODE will handle the rest
-                        //Edit a claims size
-                        case EDIT: error = resizeClaim(p, claimInteraction); errorInfo = claimInteraction.editing; break;
+            e.setCancelled(true);
+            Player p = e.getPlayer();
+            PlayerData data = listener.getPlayerData(p);
+            if (data.getClaimInteraction() == null)
+                data.setClaimInteraction(new PlayerClaimInteraction(p, CLAIM_MODE.CREATE));
+            PlayerClaimInteraction claimInteraction = data.getClaimInteraction();
+            if (!claimInteraction.locked) { //Are we NOT locked from doing anything?
+                Object errorInfo = null;
+                resetInteraction(p, 60L);
+                CLAIM_ERRORS error = claimInteraction.addLocation(p, loc);
+                if (error == CLAIM_ERRORS.NONE) {
+                    List<Location> corners = claimInteraction.locations;
+                    if (corners.size() >= 2) { //Create claim
+                        switch (claimInteraction.mode) {
+                            //Normal user claim
+                            case CREATE:
+                            //Create a claim with no owner, making it an admin claim
+                            case CREATE_ADMIN://Create a claim inside another claim
+                            case SUBCLAIM:
+                                error = HelperClaim.registerClaim(p, p.getWorld(), corners.get(0), corners.get(1), false,
+                                        claimInteraction, claimInteraction.mode == CLAIM_MODE.SUBCLAIM ? CLAIM_TYPE.CHILD : CLAIM_TYPE.MAIN); break; //MODE will handle the rest
+                            //Edit a claims size
+                            case EDIT: error = resizeClaim(p, claimInteraction); errorInfo = claimInteraction.editing; break;
+                        }
+                        if (error != CLAIM_ERRORS.SIZE_SMALL && error != CLAIM_ERRORS.SIZE_LARGE) //Let the player select another second location if error
+                            claimInteraction.lock(); //Lock us from using the same locations again
+                    } else if (claimInteraction.mode != CLAIM_MODE.EDIT) { //If the player is editing the claim they have selected will visualize
+                        if (claimInteraction.mode == CLAIM_MODE.SUBCLAIM) {
+                            Visualization vis = Visualization.fromClaim(claimInteraction.editing, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation());
+                            Visualization.fromLocation(vis, loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
+                        } else
+                            Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
                     }
-                    if (error != CLAIM_ERRORS.SIZE_SMALL && error != CLAIM_ERRORS.SIZE_LARGE) //Let the player select another second location if error
-                        claimInteraction.lock(); //Lock us from using the same locations again
-                } else if (claimInteraction.mode != CLAIM_MODE.EDIT) { //If the player is editing the claim they have selected will visualize
-                    if (claimInteraction.mode == CLAIM_MODE.SUBCLAIM) {
-                        Visualization vis = Visualization.fromClaim(claimInteraction.editing, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation());
-                        Visualization.fromLocation(vis, loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
-                    } else
-                        Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
-                }
-                if (claimInteraction.locked)
+                    if (claimInteraction.locked)
+                        resetInteraction(p, 2L);
+                } else if (error == CLAIM_ERRORS.LOCATION_ALREADY_EXISTS) {
+                    Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
+                } else if (error == CLAIM_ERRORS.OVERLAPPING) {
+                    claimInteraction.lock();
                     resetInteraction(p, 2L);
-            } else if (error == CLAIM_ERRORS.LOCATION_ALREADY_EXISTS) {
-                Visualization.fromLocation(loc, p.getLocation().getBlockY(), p.getLocation()).apply(p);
-            } else if (error == CLAIM_ERRORS.OVERLAPPING) {
-                claimInteraction.lock();
-                resetInteraction(p, 2L);
+                }
+                error.sendMsg(p, errorInfo);
             }
-            error.sendMsg(p, errorInfo);
-        }
+        });
     }
 
     private CLAIM_ERRORS resizeClaim(Player p, PlayerClaimInteraction claimInteraction) {

@@ -8,7 +8,10 @@ Messages:
   InvalidFlag: '&cFlag is not valid! &7Please try again.'
   CannotEdit: '&cUnable to edit this while outside a claim!'
   UnknownID: '&cClaim id is not a valid. &7Please use `/pueblos list` to view claims you are allowed to edit!'
+  PlayerExist: '&cThe player `%invalid_name%` does not exist!'
+  TooFar: '&7You are too far to do this action!'
   Claim:
+    Visualize: '&7This claims borders will be highlighted for the next minute!'
     Auction:
       NotInside: '&7You are not inside any claim to auction off!'
       NotOwner: '&cYou cannot auction off another players claim! &8Duh...'
@@ -56,6 +59,7 @@ Messages:
       FlagEdit: '&fFlag &7%member_flag%&f for &7%member_name% &fwas set to &b%member_flag_value%'
       Removed: '&c%member_name% was removed from &b%claim_name%&c!'
       Leave: '&cYou have left &b%claim_name%&c!'
+      Added: '&fMember %member_name% has been added to this claim!'
       Notification:
         Removed: '&cYou were removed from &b%claim_name%&c! &7You can no longer visit here!'
         Leave: '&cMember &7%member_name% &chas left your pueblo!'
@@ -91,11 +95,13 @@ Help:
   AdminClaim: ' &7- &e/%command% adminclaim &7- Toggle claim-mode to admin claim'
   AdminOverride: ' &7- &e/%command% adminoverride &7- Enable the ability to edit in any claim'
   Auction: ' &7- &e/%command% auction <create/delete/sign> &7- Sell off claims to others for a price and time!'
+  AddMember: ' &7- &e/%command% addmember <player_name> &7- Add a member to the claim you are standing in'
 
 Usage:
   Convert: '&cUsage&7: /%command% convert <plugin_name>'
   Auction:
     Create: '&cUsage&7: /%command% auction create <price> <time_in_hours (0 = forever)>'
+  AddMember: '&cUsage&7: /%command% addmember <player_name>'
 
 ClaimInfo:
   - '&e&m------&6&l Pueblos &8| Claim Info &e&m------'

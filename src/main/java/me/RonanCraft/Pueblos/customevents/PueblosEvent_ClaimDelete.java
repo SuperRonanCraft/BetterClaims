@@ -6,6 +6,6 @@ import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 public class PueblosEvent_ClaimDelete extends PueblosEventType_Claim {
 
     public PueblosEvent_ClaimDelete(ClaimMain claim) {
-        super(claim);
+        super(claim, true);
     }
 }

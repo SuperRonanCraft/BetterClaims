@@ -15,7 +15,7 @@ public class PueblosEvent_ClaimCreate extends PueblosEventType_Claim {
      * @param creator The player who created this claim
      */
     public PueblosEvent_ClaimCreate(Claim claim, Player creator) {
-        super(claim);
+        super(claim, true);
         this.creator = creator;
     }
 

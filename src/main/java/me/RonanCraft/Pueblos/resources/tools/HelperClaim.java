@@ -124,12 +124,14 @@ public class HelperClaim {
 
     public static String getLocationString(Claim claim) {
         BoundingBox pos = claim.getBoundingBox();
-        return pos.getLeft() + "x, " + pos.getTop() + "z";
+        return "x: " + pos.getLeft() + " z: " + pos.getTop();
     }
 
     public static void teleportTo(Player p, Claim claim) {
         if (!HelperEvent.teleportToClaim(p, claim, p, p.getLocation()).isCancelled()) {
-            //p.teleport(claim.getBoundingBox().getGreaterBoundaryCorner());
+            Location loc = claim.getGreaterBoundaryCorner();
+            loc.setY(Objects.requireNonNull(loc.getWorld()).getHighestBlockYAt(loc.getBlockX(), loc.getBlockZ()) + 1);
+            p.teleport(loc);
             MessagesCore.CLAIM_TELEPORT.send(p, claim);
         }
     }

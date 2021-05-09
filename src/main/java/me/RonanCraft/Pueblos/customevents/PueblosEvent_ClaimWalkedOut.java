@@ -9,7 +9,7 @@ public class PueblosEvent_ClaimWalkedOut extends PueblosEventType_ClaimCancellab
     private final Player player;
 
     public PueblosEvent_ClaimWalkedOut(ClaimMain claim, Player player) {
-        super(claim);
+        super(claim, false);
         this.player = player;
     }
 

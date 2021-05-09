@@ -18,7 +18,7 @@ public class PueblosEvent_ClaimResize extends PueblosEventType_ClaimCancellable 
      * @param editor The player who is changing the size of this claim
      */
     public PueblosEvent_ClaimResize(Claim claim, Player editor, Vector loc_1, Vector loc_2) {
-        super(claim);
+        super(claim, true);
         this.editor = editor;
         this.newLoc_1 = loc_1;
         this.newLoc_2 = loc_2;

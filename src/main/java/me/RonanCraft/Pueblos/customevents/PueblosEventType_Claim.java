@@ -10,7 +10,8 @@ abstract class PueblosEventType_Claim extends Event {
 
     Claim claim;
 
-    PueblosEventType_Claim(Claim claim) {
+    PueblosEventType_Claim(Claim claim, boolean async) {
+        super(async);
         this.claim = claim;
     }
 

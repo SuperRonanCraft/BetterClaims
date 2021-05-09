@@ -9,7 +9,7 @@ public class PueblosEvent_MemberLeave extends PueblosEventType_ClaimCancellable 
     private final ClaimMember member;
 
     public PueblosEvent_MemberLeave(ClaimMember member) {
-        super(member.claim);
+        super(member.claim, true);
         this.member = member;
     }
 

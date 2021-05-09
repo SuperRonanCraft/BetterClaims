@@ -8,8 +8,8 @@ public abstract class PueblosEventType_ClaimCancellable extends PueblosEventType
     boolean cancelled;
     boolean sendCancelledMessage = true;
 
-    PueblosEventType_ClaimCancellable(Claim claim) {
-        super(claim);
+    PueblosEventType_ClaimCancellable(Claim claim, boolean async) {
+        super(claim, async);
     }
 
     public void setSendCancelledMessage(boolean b) {

@@ -114,7 +114,7 @@ public class ClaimHandler {
         //int y2 = greater.getBlockZ();
         for (ClaimMain _claim : mainClaims) {
             if (claimIgnored != null && claimIgnored.contains(_claim)) {
-                if (claimInteraction != null)
+                if (claimInteraction != null && claimInteraction.editing instanceof ClaimChild)
                     for (ClaimChild child : Pueblos.getInstance().getClaimHandler().getClaimsChild(_claim)) { //Dont allow overlapping children when resizing child
                         if (!claimIgnored.contains(child)) //Ignore the child being resized
                             if (child.getBoundingBox().intersects(new BoundingBox(greater, lower))) {

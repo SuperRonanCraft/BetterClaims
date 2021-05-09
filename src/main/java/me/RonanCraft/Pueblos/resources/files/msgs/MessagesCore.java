@@ -30,6 +30,7 @@ public enum MessagesCore {
     CLAIM_CREATE_FAILED_DATABASE("Claim.Create.Failed.Database"),
     CLAIM_MEMBER_REMOVED("Claim.Member.Removed"),
     CLAIM_MEMBER_LEAVE("Claim.Member.Leave"),
+    CLAIM_MEMBER_ADDED("Claim.Member.Added"),
     CLAIM_MEMBER_NOTIFICATION_REMOVED("Claim.Member.Notification.Removed"),
     CLAIM_MEMBER_NOTIFICATION_LEAVE("Claim.Member.Notification.Leave"),
     CLAIM_RESIZE_SUCCESS("Claim.Resize.Success"),
@@ -39,6 +40,7 @@ public enum MessagesCore {
     CLAIM_MODE_DISABLED_ADMIN("Claim.Mode.Disabled.Admin"),
     CLAIM_MODE_FAILED_ITEM("Claim.Mode.Failed.Item"),
     CLAIM_MODE_FAILED_LOCATION("Claim.Mode.Failed.Location"),
+    CLAIM_VISUALIZE("Claim.Visualize"),
     CLAIM_UNKNOWNID("Claim.UnknownID"),
     CLAIM_DELETE("Claim.Deleted"),
     AUCTION_NOTINSIDE("Claim.Auction.NotInside"),
@@ -58,6 +60,8 @@ public enum MessagesCore {
     REQUEST_REQUESTER_ALREADY("Request.Requester.Already"),
     REQUEST_REQUESTER_SENT("Request.Requester.Sent"),
     EVENT_DENIED("EventDenied"),
+    PLAYER_EXIST("PlayerExist"),
+    TOOFAR("TooFar");
     ;
 
     String section;
