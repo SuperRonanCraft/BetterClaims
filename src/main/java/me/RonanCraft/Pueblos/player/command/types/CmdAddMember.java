@@ -37,13 +37,19 @@ public class CmdAddMember implements PueblosCommand, PueblosCommandHelpable, Pue
             if (playerAdd != null) {
                 if (claim != null) {
                     if (claim.isOwner(p)) {
-                        ClaimMember member = new ClaimMember(playerAdd.getUniqueId(), playerAdd.getName(), HelperDate.getDate(), claim);
-                        claim.addMember(member, true);
-                        MessagesCore.CLAIM_MEMBER_ADDED.send(sendi, member);
+                        if (!playerAdd.equals(p)) {
+                            if (!claim.isMember(playerAdd)) {
+                                ClaimMember member = new ClaimMember(playerAdd.getUniqueId(), playerAdd.getName(), HelperDate.getDate(), claim);
+                                claim.addMember(member, true);
+                                MessagesCore.CLAIM_MEMBER_ADDED.send(sendi, member);
+                            } else
+                                MessagesCore.CLAIM_MEMBER_EXISTS.send(sendi);
+                        } else
+                            MessagesCore.CLAIM_MEMBER_SELF.send(sendi);
                     } else
                         MessagesCore.CLAIM_PERMISSION_CLAIM.send(sendi);
                 } else
-                    MessagesCore.CLAIM_NONE.send(sendi);
+                    MessagesCore.CLAIM_NOTINSIDE.send(sendi);
             } else {
                 MessagesCore.PLAYER_EXIST.send(sendi, args[1]);
             }

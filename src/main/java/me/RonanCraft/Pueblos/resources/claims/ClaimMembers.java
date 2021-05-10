@@ -20,8 +20,7 @@ public class ClaimMembers {
 
     public void addMember(ClaimMember member, boolean update) {
         members.add(member);
-        if (update)
-            claim.updated();
+        claim.updated(update);
     }
 
     public ClaimMember getMember(UUID id) {
@@ -47,7 +46,6 @@ public class ClaimMembers {
 
     public void remove(ClaimMember member, boolean update) {
         members.remove(member);
-        if (update)
-            claim.updated();
+        claim.updated(update);
     }
 }

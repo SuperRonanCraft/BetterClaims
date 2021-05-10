@@ -20,8 +20,7 @@ public class ClaimFlags {
 
     public void setFlag(CLAIM_FLAG flag, Object value, boolean update) {
         flags.put(flag, value);
-        if (update)
-            claim.updated();
+        claim.updated(update);
     }
 
     public Object getFlag(CLAIM_FLAG flag) {

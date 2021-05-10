@@ -219,4 +219,8 @@ public class HelperClaim {
             return null;
         }
     }
+
+    public static void rename(Claim c, String newName) {
+        c.setClaimName(newName, true);
+    }
 }

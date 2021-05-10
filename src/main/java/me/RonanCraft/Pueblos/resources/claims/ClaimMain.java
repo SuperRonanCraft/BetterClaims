@@ -39,7 +39,7 @@ public class ClaimMain extends Claim {
             if (members.isMember(oldOwnerId))
                 members.remove(members.getMember(oldOwnerId), true);
         }
-        updated();
+        updated(true);
     }
 
     public List<Claim> getChildren() {

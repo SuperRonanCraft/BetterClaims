@@ -10,6 +10,7 @@ import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_TYPE;
+import me.RonanCraft.Pueblos.resources.claims.selling.Auction;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -111,7 +112,7 @@ public abstract class Claim extends ClaimUpdates {
         if (member != null) {
             for (ClaimMember _member : members.getMembers()) //Duplicate Member, lets remove them from the database too
                 if (_member.uuid.equals(member.uuid)) {
-                    updated();
+                    updated(true);
                     return;
                 }
             members.addMember(member, update);
@@ -135,13 +136,12 @@ public abstract class Claim extends ClaimUpdates {
     }
 
     public void addRequest(ClaimRequest request, boolean update) {
-        if (update) updated();
+        updated(update);
         this.requests.add(request);
     }
 
     public void removeRequest(ClaimRequest request, boolean update) {
-        if (update)
-            updated();
+        updated(update);
         requests.remove(request);
     }
 
@@ -164,7 +164,7 @@ public abstract class Claim extends ClaimUpdates {
         if (!HelperEvent.claimResize(editor, this, editor, loc_1, loc_2).isCancelled()) {
             if (Pueblos.getInstance().getClaimHandler().canResize(editor, this, new BoundingBox(editor.getWorld(), loc_1, loc_2))) {
                 getBoundingBox().editCorners(loc_1, loc_2);
-                updated();
+                updated(true);
                 return CLAIM_ERRORS.NONE;
             } else {
                 if (this instanceof ClaimMain)
@@ -190,5 +190,14 @@ public abstract class Claim extends ClaimUpdates {
 
     public boolean isChild() {
         return this instanceof ClaimChild;
+    }
+
+    public Auction getAuction() {
+        return Pueblos.getInstance().getClaimHandler().getAuctionManager().getAuction(this);
+    }
+
+    public void setClaimName(String name, boolean update) {
+        updated(update);
+        this.claimName = name;
     }
 }

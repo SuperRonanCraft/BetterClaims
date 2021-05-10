@@ -85,7 +85,10 @@ public class Visualization {
 
         List<ClaimChild> children = handler.getClaimsChild((ClaimMain) claim);
         for (ClaimChild child : children) {
-            visualization.addElements(child.getLesserBoundaryCorner(), child.getGreaterBoundaryCorner(), height, VisualizationType.CLAIM_SUB, locality);
+            VisualizationType type = VisualizationType.CLAIM_SUB;
+            if (child.getAuction() != null)
+                type = VisualizationType.AUCTION;
+            visualization.addElements(child.getLesserBoundaryCorner(), child.getGreaterBoundaryCorner(), height, type, locality);
         }
 
         //special visualization for administrative land claims
@@ -135,6 +138,7 @@ public class Visualization {
             case ADMIN_CLAIM: accentBlockData = Material.COAL_BLOCK.createBlockData(); break;
             case CLAIM_SUB: accentBlockData = Material.WHITE_WOOL.createBlockData(); break;
             case EDIT: accentBlockData = Material.BONE_BLOCK.createBlockData(); break;
+            case AUCTION: accentBlockData = Material.GOLD_BLOCK.createBlockData(); break;
             default: //Errors
                 //((Lightable) cornerBlockData).setLit(true); //For redstone
                 accentBlockData = Material.NETHERRACK.createBlockData();

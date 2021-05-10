@@ -11,6 +11,7 @@ Messages:
   PlayerExist: '&cThe player `%invalid_name%` does not exist!'
   TooFar: '&7You are too far to do this action!'
   Claim:
+    NotInside: '&7You are unable to do this while outside a claim!'
     Visualize: '&7This claims borders will be highlighted for the next minute!'
     Auction:
       NotInside: '&7You are not inside any claim to auction off!'
@@ -56,6 +57,8 @@ Messages:
         OtherClaim: '&cError! &7This area is overlapping another claim!'
         Database: '&cError! &7Something really bad happened creating this claim, please report this!'
     Member:
+      Self: '&dYou can''t add your self as a member silly.'
+      Exists: '&7This player is already a member of this claim!'
       FlagEdit: '&fFlag &7%member_flag%&f for &7%member_name% &fwas set to &b%member_flag_value%'
       Removed: '&c%member_name% was removed from &b%claim_name%&c!'
       Leave: '&cYou have left &b%claim_name%&c!'

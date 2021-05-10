@@ -31,6 +31,8 @@ public enum MessagesCore {
     CLAIM_MEMBER_REMOVED("Claim.Member.Removed"),
     CLAIM_MEMBER_LEAVE("Claim.Member.Leave"),
     CLAIM_MEMBER_ADDED("Claim.Member.Added"),
+    CLAIM_MEMBER_SELF("Claim.Member.Self"),
+    CLAIM_MEMBER_EXISTS("Claim.Member.Exists"),
     CLAIM_MEMBER_NOTIFICATION_REMOVED("Claim.Member.Notification.Removed"),
     CLAIM_MEMBER_NOTIFICATION_LEAVE("Claim.Member.Notification.Leave"),
     CLAIM_RESIZE_SUCCESS("Claim.Resize.Success"),
@@ -61,7 +63,8 @@ public enum MessagesCore {
     REQUEST_REQUESTER_SENT("Request.Requester.Sent"),
     EVENT_DENIED("EventDenied"),
     PLAYER_EXIST("PlayerExist"),
-    TOOFAR("TooFar");
+    TOOFAR("TooFar"),
+    CLAIM_NOTINSIDE("Claim.NotInside"),
     ;
 
     String section;

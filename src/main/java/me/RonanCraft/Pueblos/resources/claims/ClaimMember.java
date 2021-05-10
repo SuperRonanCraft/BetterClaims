@@ -27,7 +27,7 @@ public class ClaimMember {
 
     public void setFlag(CLAIM_FLAG_MEMBER flag, Object value, boolean updated) {
         if (updated && flags.containsKey(flag) && !flags.get(flag).equals(value))
-            claim.updated();
+            claim.updated(true);
         flags.put(flag, value);
     }
 

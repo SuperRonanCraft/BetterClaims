@@ -9,8 +9,9 @@ class ClaimUpdates {
 
     boolean updated = false;
 
-    public void updated() {
-        updated = true;
+    public void updated(boolean update) {
+        if (update)
+            updated = true;
     }
 
     public boolean wasUpdated() {
