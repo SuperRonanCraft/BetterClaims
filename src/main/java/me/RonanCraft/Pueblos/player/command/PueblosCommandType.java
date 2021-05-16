@@ -6,14 +6,14 @@ public enum PueblosCommandType {
     CREATE(new          CmdCreate()),
     RELOAD(new          CmdReload()),
     HELP(new            CmdHelp()),
-    INFO(new CmdInfo()),
+    INFO(new            CmdInfo()),
     LIST(new            CmdList()),
     FLAG(new            CmdFlags()),
     REQUEST(new         CmdRequest()),
     CONVERT(new         CmdConvert()),
     ADMIN_CLAIM(new     CmdAdminclaim()),
     ADMIN_OVERRIDE(new  CmdAdminOverride()),
-    CLAIMITEM(new       CmdClaimItem()),
+    //CLAIMITEM(new       CmdClaimItem()),
     ADDMEMBER(new       CmdAddMember()),
     ;
 
