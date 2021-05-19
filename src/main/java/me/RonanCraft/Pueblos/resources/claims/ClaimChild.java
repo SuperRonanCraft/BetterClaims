@@ -5,14 +5,15 @@
 
 package me.RonanCraft.Pueblos.resources.claims;
 
-import javax.annotation.Nonnull;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClaimChild extends Claim {
     public final ClaimMain parent;
 
-    public ClaimChild(BoundingBox boundingBox, @Nonnull ClaimMain parent) {
+    public ClaimChild(BoundingBox boundingBox, @NotNull ClaimMain parent) {
         super(parent.ownerId, parent.ownerName, boundingBox);
         this.parent = parent;
     }
@@ -40,7 +41,7 @@ public class ClaimChild extends Claim {
         return list;
     }
 
-    @Nonnull
+    @NotNull
     public ClaimMain getParent() {
         return this.parent;
     }

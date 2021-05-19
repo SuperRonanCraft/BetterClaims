@@ -2,8 +2,8 @@ package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
 import me.RonanCraft.Pueblos.resources.tools.Confirmation;
@@ -17,8 +17,8 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -115,7 +115,6 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
 
         int slot;
         CLAIM_PERMISSION_LEVEL claim_permission_level;
-        @Nullable
         PueblosInventory inv;
         ITEMS allowed;
         ITEMS disallowed;

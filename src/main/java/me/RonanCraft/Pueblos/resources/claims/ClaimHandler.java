@@ -4,7 +4,10 @@ import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.Settings;
-import me.RonanCraft.Pueblos.resources.claims.enums.*;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG_MEMBER;
+import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_TYPE;
 import me.RonanCraft.Pueblos.resources.claims.selling.AuctionManager;
 import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
 import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
@@ -14,9 +17,9 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 public class ClaimHandler {
@@ -147,7 +150,7 @@ public class ClaimHandler {
         return CLAIM_ERRORS.NONE;
     }
 
-    public List<Claim> getClaims(@Nonnull UUID uuid) {
+    public List<Claim> getClaims(@NotNull UUID uuid) {
         List<Claim> claims = new ArrayList<>();
         for (Claim claim : this.mainClaims)
             if (claim.getOwnerID() != null && claim.getOwnerID().equals(uuid))
@@ -220,7 +223,7 @@ public class ClaimHandler {
         return claims;
     }
 
-    public boolean allowBreak(@Nonnull Player p, @Nonnull Location block_location) {
+    public boolean allowBreak(@NotNull Player p, @NotNull Location block_location) {
         Claim claim = getClaimAt(block_location, false); //Grab the parent or the child claim if one here
         if (claim == null)
             return true;

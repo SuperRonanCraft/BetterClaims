@@ -2,8 +2,8 @@ package me.RonanCraft.Pueblos.resources.tools;
 
 import me.RonanCraft.Pueblos.customevents.*;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import org.bukkit.Bukkit;
@@ -13,8 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class HelperEvent {
 

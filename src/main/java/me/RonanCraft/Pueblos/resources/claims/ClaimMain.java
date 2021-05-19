@@ -8,15 +8,17 @@ package me.RonanCraft.Pueblos.resources.claims;
 import me.RonanCraft.Pueblos.Pueblos;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.UUID;
 
 public class ClaimMain extends Claim {
 
-    public ClaimMain(UUID ownerId, String ownerName, @Nonnull BoundingBox boundingBox) {
+    public ClaimMain(UUID ownerId, String ownerName, @NotNull BoundingBox boundingBox) {
         super(ownerId, ownerName, boundingBox);
     }
 

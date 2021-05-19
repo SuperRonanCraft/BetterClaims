@@ -5,9 +5,9 @@ import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.database.DatabaseAuctions;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -32,7 +32,7 @@ public class AuctionManager {
         return Pueblos.getInstance().getDatabaseAuctions();
     }
 
-    public CLAIM_ERRORS deleteAuction(@Nonnull Auction auction) {
+    public CLAIM_ERRORS deleteAuction(@NotNull Auction auction) {
         if (this.auctions.containsKey(auction.claim) && getDatabase().deleteAuction(auction)) {
             this.auctions.remove(auction.claim);
             return CLAIM_ERRORS.NONE;
@@ -40,7 +40,7 @@ public class AuctionManager {
         return CLAIM_ERRORS.DATABASE_ERROR;
     }
 
-    public CLAIM_ERRORS createAuction(@Nonnull Claim claim, int price, long time) {
+    public CLAIM_ERRORS createAuction(@NotNull Claim claim, int price, long time) {
         if (auctions.containsKey(claim)) {
             return CLAIM_ERRORS.AUCTION_EXISTS;
         }
@@ -53,7 +53,7 @@ public class AuctionManager {
             return CLAIM_ERRORS.DATABASE_ERROR;
     }
 
-    public Auction loadAuction(@Nonnull ResultSet result) throws SQLException {
+    public Auction loadAuction(@NotNull ResultSet result) throws SQLException {
         try {
             Claim claim = claimHandler.getClaim(result.getInt(DatabaseAuctions.COLUMNS.CLAIM_ID.name));
             int price = result.getInt(DatabaseAuctions.COLUMNS.PRICE.name);

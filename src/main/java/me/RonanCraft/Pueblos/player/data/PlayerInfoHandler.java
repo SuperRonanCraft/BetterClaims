@@ -1,15 +1,14 @@
 package me.RonanCraft.Pueblos.player.data;
 
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 
 public class PlayerInfoHandler {
     private final HashMap<Player, PlayerData> data = new HashMap<>();
 
-    @Nonnull
+    @NotNull
     public PlayerData getData(Player p) {
         if (!data.containsKey(p))
             data.put(p, new PlayerData());

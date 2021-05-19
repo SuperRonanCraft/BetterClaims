@@ -18,9 +18,9 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 public abstract class Claim extends ClaimUpdates {
@@ -44,7 +44,7 @@ public abstract class Claim extends ClaimUpdates {
         this(null, null, boundingBox);
     }
 
-    Claim(UUID ownerId, String ownerName, @Nonnull BoundingBox boundingBox) {
+    Claim(UUID ownerId, String ownerName, @NotNull BoundingBox boundingBox) {
         this.ownerId = ownerId;
         this.ownerName = ownerName;
         this.boundingBox = boundingBox;
@@ -150,7 +150,7 @@ public abstract class Claim extends ClaimUpdates {
     }
 
     //Tools
-    public boolean checkPermLevel(@Nonnull Player p, CLAIM_PERMISSION_LEVEL level) {
+    public boolean checkPermLevel(@NotNull Player p, CLAIM_PERMISSION_LEVEL level) {
         if (level != null)
             switch (level) {
                 case OWNER: return isOwner(p) || (isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p));
@@ -160,7 +160,7 @@ public abstract class Claim extends ClaimUpdates {
         return true;
     }
 
-    public CLAIM_ERRORS editCorners(@Nonnull Player editor, Vector loc_1, Vector loc_2) {
+    public CLAIM_ERRORS editCorners(@NotNull Player editor, Vector loc_1, Vector loc_2) {
         if (!HelperEvent.claimResize(editor, this, editor, loc_1, loc_2).isCancelled()) {
             if (Pueblos.getInstance().getClaimHandler().canResize(editor, this, new BoundingBox(editor.getWorld(), loc_1, loc_2))) {
                 getBoundingBox().editCorners(loc_1, loc_2);
@@ -183,7 +183,7 @@ public abstract class Claim extends ClaimUpdates {
         return new Location(boundingBox.getWorld(), boundingBox.getRight(), 0, boundingBox.getTop());
     }
 
-    @Nonnull
+    @NotNull
     public World getWorld() {
         return boundingBox.getWorld();
     }

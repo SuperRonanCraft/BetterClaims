@@ -2,24 +2,22 @@ package me.RonanCraft.Pueblos.resources.tools;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
+import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
-import me.RonanCraft.Pueblos.resources.claims.*;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_TYPE;
 import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
 import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
@@ -82,7 +80,7 @@ public class HelperClaim {
         }
     }
 
-    public static ClaimMain createClaimMain(@Nonnull BoundingBox box, @Nullable UUID ownerID, @Nullable String ownerName, boolean admin_claim) {
+    public static ClaimMain createClaimMain(@NotNull BoundingBox box, @Nullable UUID ownerID, @Nullable String ownerName, boolean admin_claim) {
         if (ownerID != null && !admin_claim) //Is this an admin claim?
             return new ClaimMain(ownerID, ownerName, box);
         else
@@ -93,8 +91,8 @@ public class HelperClaim {
         return new ClaimChild(box, parent);
     }
 
-    public static CLAIM_ERRORS registerClaim(@Nonnull Player creator, @Nonnull World world, @Nonnull Location pos1,
-                                             @Nonnull Location pos2, boolean sendMsg,
+    public static CLAIM_ERRORS registerClaim(@NotNull Player creator, @NotNull World world, @NotNull Location pos1,
+                                             @NotNull Location pos2, boolean sendMsg,
                                              @Nullable PlayerClaimInteraction claimInteraction, CLAIM_TYPE type) {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();

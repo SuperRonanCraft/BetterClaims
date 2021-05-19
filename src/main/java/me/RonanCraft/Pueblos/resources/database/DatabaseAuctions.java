@@ -2,8 +2,8 @@ package me.RonanCraft.Pueblos.resources.database;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.claims.selling.Auction;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -55,7 +55,7 @@ public class DatabaseAuctions extends SQLite {
         return null;
     }
 
-    public boolean deleteAuction(@Nonnull Auction auction) {
+    public boolean deleteAuction(@NotNull Auction auction) {
         String pre = "DELETE FROM ";
         String sql = pre + table + " WHERE "
                 + COLUMNS.AUCTION_ID.name + " = ?";

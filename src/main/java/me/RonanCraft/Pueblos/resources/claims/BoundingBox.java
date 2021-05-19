@@ -7,9 +7,6 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 /**
  * Most credit for this class, the heart of Pueblos goes to `GriefPrevention` by BigScary
  * https://github.com/TechFortress/GriefPrevention/blob/master/src/main/java/me/ryanhamshire/GriefPrevention/util/BoundingBox.java
