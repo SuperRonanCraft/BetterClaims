@@ -9,6 +9,25 @@
     <packaging>jar</packaging>
     <version>2.0.0</version>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <!-- Local Server Building -->
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>3.2.0</version>
+                        <configuration>
+                            <outputDirectory>../../Java/plugins</outputDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <resources>
             <resource>
@@ -23,15 +42,6 @@
                 <version>3.8.0</version>
                 <configuration>
                     <release>11</release>
-                </configuration>
-            </plugin>
-            <plugin>
-                <!-- Local Server Building -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <outputDirectory>../../Java/plugins</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
