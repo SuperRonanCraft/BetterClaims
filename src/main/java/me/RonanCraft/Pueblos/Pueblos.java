@@ -25,6 +25,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -50,13 +51,13 @@ public class Pueblos extends JavaPlugin {
     }
 
     @Override
-    public boolean onCommand(CommandSender sendi, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sendi, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         commands.commandExecuted(sendi, label, args);
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sendi, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sendi, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         return commands.onTabComplete(sendi, args);
     }
 

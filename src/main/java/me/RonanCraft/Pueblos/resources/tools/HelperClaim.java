@@ -2,6 +2,7 @@ package me.RonanCraft.Pueblos.resources.tools;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
+import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.*;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
@@ -98,10 +99,22 @@ public class HelperClaim {
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         BoundingBox box = new BoundingBox(pos1, pos2);
         Claim claim;
+
+        //World Enabled
+        if (!worldEnabled(world)) return CLAIM_ERRORS.WORLD_DISABLED;
+
+        //Create claim
         if (claimInteraction == null || type == CLAIM_TYPE.MAIN)
             claim = createClaimMain(box, creator.getUniqueId(), creator.getName(), claimInteraction != null && claimInteraction.mode == CLAIM_MODE.CREATE_ADMIN);
         else
             claim = createClaimSub(box, (ClaimMain) claimInteraction.editing);
+
+        //Claim Max Count - on normal claim
+        if (claim.claimType == CLAIM_TYPE.MAIN && !claim.isAdminClaim() &&
+                Pueblos.getInstance().getClaimHandler().getClaims(creator.getUniqueId()).size() >= Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_COUNT))
+            return CLAIM_ERRORS.CLAIM_COUNT;
+
+        //Save claim/send error if any
         if (!HelperEvent.claimAttemptCreate(claim, creator).isCancelled()) {
             error = handler.uploadCreatedClaim(claim, creator, claimInteraction);
             switch (error) {
@@ -220,5 +233,9 @@ public class HelperClaim {
 
     public static void rename(Claim c, String newName) {
         c.setClaimName(newName, true);
+    }
+
+    public static boolean worldEnabled(World world) {
+        return Pueblos.getInstance().getSettings().getStringList(Settings.SETTING.CLAIM_WORLDS_ENABLED).contains(world.getName());
     }
 }

@@ -8,6 +8,9 @@ Claim: # Forced claim options
   Item: 'golden_shovel'
   MaxSize: 256
   MaxDepth: 32
+  WorldsEnabled:
+    - world
+  MaxClaims: 3
 Global: # Settings that affect the whole server, not just claims
   EndermenMoveBlocks: false
   SilverfishBreakBlocks: false

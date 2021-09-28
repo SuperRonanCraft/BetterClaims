@@ -104,15 +104,26 @@ public class DatabaseClaims extends SQLite {
         return sqlCreateClaim(sql, params, claim);
     }
 
-    //Create a claim
-    public boolean deleteClaim(ClaimMain claim) {
+    //Delete a main claim
+    public boolean deleteClaim(ClaimMain claim, List<ClaimChild> children) {
         String pre = "DELETE FROM ";
         String sql = pre + table + " WHERE "
                 + COLUMNS.CLAIM_ID.name + " = ?";
         List<Object> params = new ArrayList<>() {{
             add(claim.claimId);
         }};
-        return sqlUpdate(sql, params);
+        if (sqlUpdate(sql, params)) {
+            for (ClaimChild claimChild : children) {
+                sql = pre + table + " WHERE "
+                        + COLUMNS.CLAIM_ID.name + " = ?";
+                params = new ArrayList<>() {{
+                    add(claimChild.claimId);
+                }};
+                sqlUpdate(sql, params);
+            }
+        } else
+            return false;
+        return true;
     }
 
     //Update Members

@@ -3,6 +3,7 @@ package me.RonanCraft.Pueblos.resources.tools;
 import me.RonanCraft.Pueblos.customevents.*;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.resources.claims.ClaimChild;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
@@ -14,6 +15,8 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class HelperEvent {
 
@@ -28,8 +31,8 @@ public class HelperEvent {
         callEvent(executor, event);
     }
 
-    public static void claimDelete(CommandSender executor, ClaimMain claim) {
-        PueblosEvent_ClaimDelete event = new PueblosEvent_ClaimDelete(claim);
+    public static void claimDelete(CommandSender executor, ClaimMain claim, List<ClaimChild> children) {
+        PueblosEvent_ClaimDelete event = new PueblosEvent_ClaimDelete(claim, children);
         callEvent(executor, event);
     }
 

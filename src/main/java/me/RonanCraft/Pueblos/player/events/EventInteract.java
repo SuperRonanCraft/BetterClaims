@@ -61,7 +61,8 @@ public class EventInteract implements PueblosEvents {
         if (    e.getItem() == null
                 || (e.isCancelled() && e.getAction() != Action.RIGHT_CLICK_AIR)
                 || (e.getAction() != Action.RIGHT_CLICK_BLOCK && e.getAction() != Action.RIGHT_CLICK_AIR)
-                || !e.getItem().getType().equals(claim_item))
+                || !e.getItem().getType().equals(claim_item)
+                || !HelperClaim.worldEnabled(e.getPlayer().getWorld()))
             return;
 
         Bukkit.getScheduler().runTaskAsynchronously(Pueblos.getInstance(), () -> {

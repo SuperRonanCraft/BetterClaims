@@ -80,14 +80,12 @@ public class ClaimHandler {
 
     public CLAIM_ERRORS deleteClaim(Player deletor, ClaimMain claim) {
         CLAIM_ERRORS error = CLAIM_ERRORS.NONE;
-        List<ClaimChild> childrenClaims = new ArrayList<>();
-        for (ClaimChild child : this.childClaims)
-            if (child.getParent() == claim)
-                childrenClaims.add(child);
+        List<ClaimChild> childrenClaims = getClaimsChild(claim);
         //DELETE ALL THESE CHILDREN TOO!
-        if (getDatabase().deleteClaim(claim)) {
-            mainClaims.remove(claim);
-            HelperEvent.claimDelete(deletor, claim);
+        if (getDatabase().deleteClaim(claim, childrenClaims)) {
+            this.mainClaims.remove(claim);
+            this.childClaims.removeAll(childrenClaims);
+            HelperEvent.claimDelete(deletor, claim, childrenClaims);
         } else
             error = CLAIM_ERRORS.DATABASE_ERROR;
         return error;

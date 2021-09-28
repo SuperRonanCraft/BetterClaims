@@ -10,6 +10,7 @@ Messages:
   UnknownID: '&cClaim id is not a valid. &7Please use `/pueblos list` to view claims you are allowed to edit!'
   PlayerExist: '&cThe player `%invalid_name%` does not exist!'
   TooFar: '&7You are too far to do this action!'
+  WorldDisabled: '&cThis world has claims disabled!'
   Claim:
     NotInside: '&7You are unable to do this while outside a claim!'
     Visualize: '&7This claims borders will be highlighted for the next minute!'
@@ -56,6 +57,7 @@ Messages:
         SizeLarge: '&cError! &7This claim is too big now! Please make it smaller than %max%x%max%!'
         OtherClaim: '&cError! &7This area is overlapping another claim!'
         Database: '&cError! &7Something really bad happened creating this claim, please report this!'
+        Count: '&cError! &7You got too many claims... how many do you need mate?'
     Member:
       Self: '&dYou can''t add your self as a member silly.'
       Exists: '&7This player is already a member of this claim!'

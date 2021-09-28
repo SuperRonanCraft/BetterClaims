@@ -28,6 +28,7 @@ public enum MessagesCore {
     CLAIM_CREATE_FAILED_SIZELARGE("Claim.Create.Failed.SizeLarge"),
     CLAIM_CREATE_FAILED_OTHERCLAIM("Claim.Create.Failed.OtherClaim"),
     CLAIM_CREATE_FAILED_DATABASE("Claim.Create.Failed.Database"),
+    CLAIM_CREATE_FAILED_COUNT("Claim.Create.Failed.Count"),
     CLAIM_MEMBER_REMOVED("Claim.Member.Removed"),
     CLAIM_MEMBER_LEAVE("Claim.Member.Leave"),
     CLAIM_MEMBER_ADDED("Claim.Member.Added"),
@@ -65,6 +66,7 @@ public enum MessagesCore {
     PLAYER_EXIST("PlayerExist"),
     TOOFAR("TooFar"),
     CLAIM_NOTINSIDE("Claim.NotInside"),
+    WORLD_DISABLED("WorldDisabled"),
     ;
 
     String section;

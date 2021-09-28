@@ -19,6 +19,8 @@ public enum CLAIM_ERRORS {
     LOCATION_ALREADY_EXISTS(null), //Location was the same as the prior, making just a block protection instead of box
     CANCELLED(null), //The event error cancelled this action
     AUCTION_EXISTS(null), //An auction already exists for this claim
+    WORLD_DISABLED(MessagesCore.WORLD_DISABLED),
+    CLAIM_COUNT(MessagesCore.CLAIM_CREATE_FAILED_COUNT),
     ;
 
     private final MessagesCore msg;
