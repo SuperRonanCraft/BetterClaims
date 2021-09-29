@@ -49,7 +49,8 @@ public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv
         Player p = (Player) e.getWhoClicked();
         if (    !this.itemInfo.containsKey(p)
                 || !this.claims.containsKey(p)
-                || checkItems(e, itemInfo.get(p)))
+                || checkItems(e, itemInfo.get(p))
+                || !itemInfo.get(p).containsKey(e.getSlot()))
             return;
 
         Claim claim = (Claim) itemInfo.get(p).get(e.getSlot()).info;

@@ -38,7 +38,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         for (CLAIM_SETTINGS set : CLAIM_SETTINGS.values()) {
             if (!claim.checkPermLevel(p, set.claim_permission_level))
                 continue;
-            if (set == CLAIM_SETTINGS.CHILD_CLAIM && claim.isChild())
+            if (set == CLAIM_SETTINGS.CHILD_CLAIM && (claim.isChild() || ((ClaimMain) claim).getChildren().isEmpty()))
                 continue;
             ItemStack item = getItem(set.getItem(p, claim).section, p, claim);
             inv.setItem(set.slot, item);
@@ -54,7 +54,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     @Override
     public void clickEvent(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (!this.itemInfo.containsKey(p)
+        if (    !this.itemInfo.containsKey(p)
                 || !this.claim.containsKey(p)
                 || checkItems(e, itemInfo.get(p))
                 || !itemInfo.get(p).containsKey(e.getSlot()))

@@ -7,6 +7,7 @@ import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
+import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
 import org.bukkit.Bukkit;
@@ -28,6 +29,8 @@ public class EventItemChange implements PueblosEvents {
 
     //Show claiming message when claim item is equipped and start a `claimInteraction`
     void onItemChange(PlayerItemHeldEvent e) {
+        if (!HelperClaim.worldEnabled(e.getPlayer().getWorld()))
+            return;
         PlayerData data = listener.getPlayerData(e.getPlayer());
         data.removeClaimInteraction();
         if (claimShowing.containsKey(e.getPlayer()))

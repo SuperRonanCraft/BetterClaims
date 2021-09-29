@@ -13,6 +13,7 @@ import me.RonanCraft.Pueblos.resources.files.msgs.Message;
 import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
 import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
 import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -93,8 +94,7 @@ public class HelperClaim {
     }
 
     public static CLAIM_ERRORS registerClaim(@NotNull Player creator, @NotNull World world, @NotNull Location pos1,
-                                             @NotNull Location pos2, boolean sendMsg,
-                                             @Nullable PlayerClaimInteraction claimInteraction, CLAIM_TYPE type) {
+                                             @NotNull Location pos2, @Nullable PlayerClaimInteraction claimInteraction, CLAIM_TYPE type) {
         CLAIM_ERRORS error;
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         BoundingBox box = new BoundingBox(pos1, pos2);
@@ -126,8 +126,8 @@ public class HelperClaim {
                 case OVERLAPPING:
                     break;
             }
-            if (sendMsg)
-                error.sendMsg(creator, claim);
+            //if (sendMsg)
+            //    error.sendMsg(creator, claim);
         } else
             error = CLAIM_ERRORS.CANCELLED;
         return error;
@@ -148,12 +148,14 @@ public class HelperClaim {
     }
 
     public static void deleteClaim(Player p, ClaimMain claim) {
-        ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
-        CLAIM_ERRORS error = handler.deleteClaim(p, claim);
-        if (error == CLAIM_ERRORS.NONE)
-            MessagesCore.CLAIM_DELETE.send(p, claim);
-        else
-            error.sendMsg(p, claim);
+        Bukkit.getScheduler().runTaskAsynchronously(Pueblos.getInstance(), () -> {
+            ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
+            CLAIM_ERRORS error = handler.deleteClaim(p, claim);
+            if (error == CLAIM_ERRORS.NONE)
+                MessagesCore.CLAIM_DELETE.send(p, claim);
+            else
+                error.sendMsg(p, claim);
+        });
     }
 
     public static void sendClaimInfo(Player p, Claim claim) {

@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
@@ -57,7 +58,7 @@ public class EventItems implements Listener, PueblosEvents {
 
     //(Added v1.1.0)
     //Disallow other players from picking up dead players items
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     private void onDrop(PlayerDeathEvent e) {
         List<ItemStack> items = e.getDrops();
         for (ItemStack item : items) {
