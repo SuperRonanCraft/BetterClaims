@@ -1,0 +1,119 @@
+Messages:
+  Prefix: '&7[&6Pueblos&7] '
+  InvalidCommand: '&c参数错误! 请使用 &7/%command% help'
+  NoPermission: '&c抱歉! &7您没有权限这么做!'
+  Reload: '&e配置和语言文件已重载.'
+  InvalidFlagValue: '&cFlag 值不可用! &7请重试.'
+  InvalidFlag: '&cFlag 不可用! &7请重试.'
+  CannotEdit: '&c您不能在领地外编辑此项!'
+  UnknownID: '&c错误的领地 ID. &7请使用 `/pueblos list` 来查看您可以编辑的领地!'
+  PlayerExist: '&c玩家 `%invalid_name%` 不存在!'
+  TooFar: '&7距离执行此操作的对象太远!'
+  WorldDisabled: '&c此世界不能创造领地!'
+  Claim:
+    NotInside: '&7您不能在领地外这么做!'
+    Visualize: '&7此领地的边界将被高亮一分钟!'
+    Auction:
+      NotInside: '&7您不在任何需要拍卖的领地内!'
+      NotOwner: '&c您不能拍卖别的玩家的领地! &8哼......'
+      Created: '&a领地 #%claim_id% 现正以 $%auction_price% 的价格拍卖! &7使用 `/pueblos auction sign` 制作一个告示牌以展示此拍卖'
+      Deleted: '&c领地 #%claim_id% 已停止拍卖!'
+    Override:
+      Enabled: '&7超级权限 &a开启&7, 您现在可以编辑任何领地! &8当心, 权力越大, 责任越大!'
+      Disabled: '&7超级权限 &c关闭&7, 您不再拥有编辑其他玩家领地的权限!'
+    Deleted: '&c领地删除成功! &8原区域将不再受保护.'
+    Resize:
+      Success: '&7领地大小成功更改成 &f%claim_width% x %claim_length%'
+      OverlappingChild: '&c更改的区域未包含子领地!'
+      OverlappingParent: '&c更改的区域未包含父领地!'
+    Teleport: '&7成功传送到 &f%claim_name% 的 &7家!'
+    None: '&7您不是该领地的所有者或成员!'
+    Permission:
+      Claim: '&7您不是 &f%claim_owner%&7 的 pueblo 的成员之一!'
+      AdminClaim: '&7您不可以在此处这么做!'
+    Flag: '&7领地 flag &f%claim_flag% &7成功更改成 &f%claim_flag_value%'
+    Mode:
+      Enabled:
+        Admin: '&f管理员模式 &a开启&f, 从现在开始任何您创建的新领地都会成为管理员领地'
+      Disabled:
+        Admin: '&f管理员模式 &c关闭&f, 从现在开始任何您创建的新领地都会成为普通用户的领地'
+      Failed:
+        Item: '&f您不被允许切换领地创建模式! &7现在为您装备领地工具!'
+        Location: '&f您不被允许切换领地创建模式! &8现在为您重置领地工具!'
+    Item:
+      InClaim: '&7右键此领地的一个边角以更改领地大小!'
+      NoClaim: '&7右键两个边角以创建领地!'
+      NotOwner: '&7您正处于一个您不能编辑的领地之中!'
+      Wand:
+        Normal: '&7正在创建一个新的领地, 右键另一个边角以确认创建'
+        SubClaim: '&7正在创建一个 &f子领地&7! 在其父领地中右键另一个边角以确认创建'
+        Admin: '&7正在创建一个 &f管理员 &7领地, 右键另一个边角以确认创建'
+        Edit: '&c正在编辑领地! &7右键另一个边角以更改领地大小!'
+    Create:
+      Success: '&a成功! &7大小为 &f%claim_width% x %claim_length% &7的领地现归您所有!'
+      Failed:
+        Size: '&c错误! &7领地不够大! 请确保其大小大于 10x10!'
+        SizeLarge: '&c错误! &7领地过大! 请确保其大小小于 %max%x%max%!'
+        OtherClaim: '&c错误! &7选择的区域与另一个领地冲突!'
+        Database: '&c错误! &7创建此领地时发生致命错误, 请报告此错误!'
+        Count: '&c错误! &7您创建了太多领地了...... 朋友, 你需要多少个领地才足够?'
+    Member:
+      Self: '&d笨蛋, 您不能将您自己设置为此领地的成员之一.'
+      Exists: '&7此玩家已经是此领地的成员了!'
+      FlagEdit: '&7%member_name% 的 &fFlag &7%member_flag%&f &f现已设置成 &b%member_flag_value%'
+      Removed: '&c玩家 %member_name% 已从 &b%claim_name%&c 中被移除!'
+      Leave: '&c您离开了领地 &b%claim_name%&c!'
+      Added: '&f成员 %member_name% 已被添加到此领地中!'
+      Notification:
+        Removed: '&c您已被领地 &b%claim_name%&c 移出! &7您不能再访问该领地了!'
+        Leave: '&c成员 &7%member_name% &c离开了您的 pueblo!'
+  Convert:
+    Started: '&7%plugin% &f插件的转换已开始......'
+    Finished: '&7%plugin% &f插件的转换已结束!'
+    Failed: '&fID 为 &7%claim%&f 的领地从 &7%plugin% &f插件转换&c成功&f! &7查看后台获取更多信息'
+    Success: '&fID 为 &7%claim%&f 的领地从 &7%plugin% &f插件转换&a成功&f!'
+    Unknown: '&7未知插件 %plugin%, 请从此列表中选择 &f%list%'
+  Request:
+    New: '&a新&f: &7%request_name% &f申请加入您的 pueblo!'
+    Reminder: '&f您有 %claim_requests% 条申请待处理!'
+    Accepted: '&f您通过了 &7%request_name% 的 &f申请!'
+    Denied: '&f您拒绝了&7%request_name% 的 &c申请!'
+    Requester:
+      Accepted: '&a您加入 &b%claim_name% &a领地的申请已通过!'
+      Denied: '&c您加入 &b%claim_name% &c领地的申请被拒绝!'
+      Already: '&c您已发送申请加入此领地的申请! &8请...... 冷静'
+      Sent: '&f您加入 &b%claim_name% &f领地的申请已发送!'
+  EventDenied: '&c某些外部机制拒绝了本次操作!'
+
+Help:
+  Prefix: '&e&m-----&6&l Pueblos &8| 帮助 &e&m-----'
+  Help: ' &7- &e/%command% help &7- 显示帮助'
+  Reload: ' &7- &e/%command% reload &7- 重载插件'
+  Create: ' &7- &e/%command% create &7- 创建一个领地'
+  Info: ' &7- &e/%command% info &7- 查看领地信息'
+  List: ' &7- &e/%command% list &7- 列出所有您可以编辑的领地'
+  Request: ' &7- &e/%command% request &7- 申请加入一个领地'
+  Flags: ' &7- &e/%command% flags &7- 更改领地的 flags'
+  Convert: ' &7- &e/%command% convert <plugin_name> &7- 转换该插件的数据到 Pueblos claims'
+  ClaimItem: ' &7- &e/%command% claimitem &7- 获取一个领地工具'
+  AdminClaim: ' &7- &e/%command% adminclaim &7- 切换领地模式到管理员模式'
+  AdminOverride: ' &7- &e/%command% adminoverride &7- 启用能编辑所有领地的超级权限'
+  Auction: ' &7- &e/%command% auction <create/delete/sign> &7- 拍卖领地并设置价格和时间!'
+  AddMember: ' &7- &e/%command% addmember <player_name> &7- 为您当前所在领地添加成员'
+
+Usage:
+  Convert: '&c用法&7: /%command% convert <插件名称>'
+  Auction:
+    Create: '&c用法&7: /%command% auction create <价格> <撤销时间 (0 = 永不撤销)>'
+  AddMember: '&c用法&7: /%command% addmember <插件名称>'
+
+ClaimInfo:
+  - '&e&m------&6&l Pueblos &8| 领地信息 &e&m------'
+  - ''
+  - '&f领地名称&7: &r%claim_name%'
+  - '&f所有者&7: %claim_owner%'
+  - '&fID&7: %claim_id%'
+  - '&f成员&7: %claim_members%'
+  - '&f大小&7: %claim_width% x %claim_length%'
+  - '&7位置&7: %claim_location%'
+  - '&7世界&7: %claim_location_world%'
