@@ -93,7 +93,7 @@ public class DatabaseClaims extends SQLite {
                 + COLUMNS.POSITION.name + ", "
                 + COLUMNS.PARENT.name + ""
                 + ") VALUES(?, ?, ?, ?, ?, ?)";
-        List<Object> params = new ArrayList<>() {{
+        List<Object> params = new ArrayList<Object>() {{
                 add(getClaimOwnerID(claim));
                 add(getClaimOwnerName(claim));
                 add(claim.isAdminClaim());
@@ -109,14 +109,14 @@ public class DatabaseClaims extends SQLite {
         String pre = "DELETE FROM ";
         String sql = pre + table + " WHERE "
                 + COLUMNS.CLAIM_ID.name + " = ?";
-        List<Object> params = new ArrayList<>() {{
+        List<Object> params = new ArrayList<Object>() {{
             add(claim.claimId);
         }};
         if (sqlUpdate(sql, params)) {
             for (ClaimChild claimChild : children) {
                 sql = pre + table + " WHERE "
                         + COLUMNS.CLAIM_ID.name + " = ?";
-                params = new ArrayList<>() {{
+                params = new ArrayList<Object>() {{
                     add(claimChild.claimId);
                 }};
                 sqlUpdate(sql, params);
@@ -145,7 +145,7 @@ public class DatabaseClaims extends SQLite {
                 + COLUMNS.REQUESTS.name + " = ?, "
                 + COLUMNS.FLAGS.name + " = ? "
                 + " WHERE " + COLUMNS.CLAIM_ID.name + " = ?";
-        List<Object> params = new ArrayList<>() {{
+        List<Object> params = new ArrayList<Object>() {{
             add(getClaimOwnerID(claim));
             add(getClaimOwnerName(claim));
             add(getBoundingBoxJSON(claim));

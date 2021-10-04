@@ -59,7 +59,7 @@ public class DatabaseAuctions extends SQLite {
         String pre = "DELETE FROM ";
         String sql = pre + table + " WHERE "
                 + COLUMNS.AUCTION_ID.name + " = ?";
-        List<Object> params = new ArrayList<>() {{
+        List<Object> params = new ArrayList<Object>() {{
             add(auction.auctionId);
         }};
         return sqlUpdate(sql, params);
@@ -73,7 +73,7 @@ public class DatabaseAuctions extends SQLite {
                 + COLUMNS.PRICE.name + ", "
                 + COLUMNS.HOURS.name + ""
                 + ") VALUES(?, ?, ?)";
-        List<Object> params = new ArrayList<>() {{
+        List<Object> params = new ArrayList<Object>() {{
             add(auction.claim.claimId);
             add(auction.price);
             add(auction.time);
