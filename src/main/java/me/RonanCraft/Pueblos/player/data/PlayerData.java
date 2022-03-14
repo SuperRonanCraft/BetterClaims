@@ -1,5 +1,7 @@
 package me.RonanCraft.Pueblos.player.data;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
@@ -11,23 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerData {
-    private Visualization visualization;
-    private boolean overriding;
-    private Inventory inventory;
+    @Getter @Setter private @Nullable Visualization visualization;
+    @Getter private boolean overriding;
+    @Getter private @Nullable Inventory inventory;
     private List<PueblosInventory> previous = new ArrayList<>();
-    private PueblosInventory pueblosInventory;
-    private PlayerClaimInteraction claimInteraction;
-    private ClaimMain insideClaim;
-
-    //Visualization
-    @Nullable
-    public Visualization getVisualization() {
-        return visualization;
-    }
-
-    public void setVisualization(Visualization visualization) {
-        this.visualization = visualization;
-    }
+    @Getter private @Nullable PueblosInventory currentInventory;
+    @Getter @Setter private @Nullable PlayerClaimInteraction claimInteraction;
+    @Getter @Setter private ClaimMain insideClaim;
 
     public void removeVisualization() {
         visualization = null;
@@ -38,7 +30,7 @@ public class PlayerData {
         if (from_command)
             clear();
         inventory = inv;
-        pueblosInventory = pinv;
+        currentInventory = pinv;
         addPrevious(pinv);
     }
 
@@ -59,16 +51,6 @@ public class PlayerData {
     }
 
     @Nullable
-    public Inventory getInventory() {
-        return inventory;
-    }
-
-    @Nullable
-    public PueblosInventory getCurrent() {
-        return pueblosInventory;
-    }
-
-    @Nullable
     public PueblosInventory getPrevious(PueblosInventory pinv) {
         PueblosInventory previous = null;
         if (!this.previous.isEmpty())
@@ -80,7 +62,7 @@ public class PlayerData {
 
     public void clearInventory() {
         inventory = null;
-        pueblosInventory = null;
+        currentInventory = null;
     }
 
     //Overrides
@@ -88,39 +70,15 @@ public class PlayerData {
         overriding = !overriding;
     }
 
-    //Claim Interaction
-    public void setClaimInteraction(PlayerClaimInteraction claimInteraction) {
-        this.claimInteraction = claimInteraction;
-    }
-
-    @Nullable
-    public PlayerClaimInteraction getClaimInteraction() {
-        return claimInteraction;
-    }
-
     public void removeClaimInteraction() {
         claimInteraction = null;
-    }
-
-    public boolean isOverriding() {
-        return overriding;
     }
 
     public void clear() {
         visualization = null;
         overriding = false;
         inventory = null;
-        pueblosInventory = null;
-    }
-
-    //inside Claim
-    @Nullable
-    public ClaimMain getInsideClaim() {
-        return insideClaim;
-    }
-
-    public void setInsideClaim(ClaimMain claim) {
-        insideClaim = claim;
+        currentInventory = null;
     }
 
     public void removeInsideClaim() {
