@@ -19,10 +19,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class EventInteract implements PueblosEvents {
 
@@ -39,9 +36,14 @@ public class EventInteract implements PueblosEvents {
         try {
             claim_item = Material.valueOf(item.toUpperCase());
         } catch (IllegalArgumentException e) {
-            Pueblos.getInstance().getLogger().severe("The item `" + item + "` is not a valid item, changed back to golden_shovel! " +
+            Pueblos.getInstance().getLogger().severe("The item `" + item + "` is not a valid item, changed back to a golden shovel! " +
                     "Please change the claim `Item` in the config!");
-            claim_item = Material.GOLDEN_SHOVEL;
+            claim_item = null;
+            try {
+                claim_item = Material.valueOf("GOLD_SPADE");//.GOLD_SPADE;
+            } catch (IllegalArgumentException ec) {
+                claim_item = Material.valueOf("GOLDEN_SHOVEL");
+            }
         }
     }
 
@@ -68,7 +70,7 @@ public class EventInteract implements PueblosEvents {
         Bukkit.getScheduler().runTaskAsynchronously(Pueblos.getInstance(), () -> {
             Block block = e.getClickedBlock();
             if (block == null || block.getType() == Material.AIR) //Block aiming at distance
-                block = e.getPlayer().getTargetBlock(null, 64);
+                block = e.getPlayer().getTargetBlock((Set<Material>) null, 64);
             if (block.getType() == Material.AIR)
                 return;
             Location loc = block.getLocation();

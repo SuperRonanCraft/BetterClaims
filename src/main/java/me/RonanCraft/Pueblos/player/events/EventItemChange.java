@@ -48,7 +48,7 @@ public class EventItemChange implements PueblosEvents {
     private void showClaimLater(Claim claim, Player p) {
         claimShowing.put(p,
             Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
-                ItemStack item = p.getInventory().getItemInMainHand();
+                ItemStack item = p.getInventory().getItemInHand();//.getItemInMainHand();
                 if (item.getType().equals(getClaimItem())) {
                     if (claim != null) {
                         VisualizationType visType = VisualizationType.ERROR;

@@ -16,6 +16,7 @@ public enum PermissionNodes {
     ADMIN_CONVERT("admin.convert"),
     ADMIN_OVERRIDE("admin.override"),
     CLAIM_WORLD("world.%world%"),
+    TELEPORT("teleport"),
     ;
 
     public final String node;

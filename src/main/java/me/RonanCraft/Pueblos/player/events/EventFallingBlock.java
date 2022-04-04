@@ -37,7 +37,7 @@ public class EventFallingBlock implements PueblosEvents {
             Claim claim = getClaimAt(event.getBlock().getLocation(), true);
             if (claim == null)
                 event.setCancelled(true);
-        } else if (event.getTo() == Material.DIRT && event.getBlock().getType() == Material.FARMLAND) { //don't allow crops to be trampled, except by a player with build permission
+        } else if (event.getTo() == Material.DIRT ) {//&& event.getBlock().getType() == Material.FARMLAND) { //don't allow crops to be trampled, except by a player with build permission
             if (event.getEntityType() != EntityType.PLAYER) {
                 event.setCancelled(true);
             } else {
@@ -48,8 +48,8 @@ public class EventFallingBlock implements PueblosEvents {
             }
         }
         //Prevent breaking lilypads via collision with a boat.
-        else if (event.getEntity() instanceof Vehicle && !event.getEntity().getPassengers().isEmpty()) {
-            Entity driver = event.getEntity().getPassengers().get(0);
+        else if (event.getEntity() instanceof Vehicle && !event.getEntity().getPassenger().isEmpty()) {
+            Entity driver = event.getEntity().getPassenger();//.getPassengers().get(0);
             if (driver instanceof Player) {
                 Block block = event.getBlock();
                 if (allowBreak((Player) driver, block.getLocation()))
@@ -88,7 +88,7 @@ public class EventFallingBlock implements PueblosEvents {
                     //when not allowed, drop as item instead of forming a block
                     event.setCancelled(true);
 
-                    ItemStack itemStack = new ItemStack(entity.getBlockData().getMaterial(), 1);
+                    ItemStack itemStack = new ItemStack(entity.getMaterial(), 1);
                     Item item = block.getWorld().dropItem(entity.getLocation(), itemStack);
                     item.setVelocity(new Vector());
                 }

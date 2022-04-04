@@ -32,7 +32,7 @@ public class HelperItem {
                 lore.forEach(str -> lore.set(lore.indexOf(str), Message.placeholder(p, str, info)));
                 PueblosInv.setLore(item, p, lore);
             }
-            if (item.getType() == Material.PLAYER_HEAD) {
+            /*if (item.getType() == Material.PLAYER_HEAD) {
                 SkullMeta meta = (SkullMeta) item.getItemMeta();
                 if (info instanceof ClaimMember)
                     meta.setOwningPlayer(((ClaimMember) info).getPlayer());
@@ -43,7 +43,7 @@ public class HelperItem {
                 //else //Laggy code
                 //    meta.setOwningPlayer(Bukkit.getOfflinePlayers()[ThreadLocalRandom.current().nextInt(0, Bukkit.getOfflinePlayers().length)]);
                 item.setItemMeta(meta);
-            }
+            }*/
         }
 
         return item;

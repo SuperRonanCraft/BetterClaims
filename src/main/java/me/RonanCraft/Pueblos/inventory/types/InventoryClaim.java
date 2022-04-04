@@ -1,6 +1,7 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
+import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
 import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
@@ -35,14 +36,16 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         addBorder(inv);
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
-        for (CLAIM_SETTINGS set : CLAIM_SETTINGS.values()) {
-            if (!claim.checkPermLevel(p, set.claim_permission_level))
+        for (CLAIM_SETTINGS setting : CLAIM_SETTINGS.values()) {
+            if (!claim.checkPermLevel(p, setting.claim_permission_level))
                 continue;
-            if (set == CLAIM_SETTINGS.CHILD_CLAIM && (claim.isChild() || ((ClaimMain) claim).getChildren().isEmpty()))
+            if (!setting.permission.check(p))
                 continue;
-            ItemStack item = getItem(set.getItem(p, claim).section, p, claim);
-            inv.setItem(set.slot, item);
-            itemInfo.put(set.slot, new PueblosItem(item, ITEM_TYPE.NORMAL, set));
+            if (setting == CLAIM_SETTINGS.CHILD_CLAIM && (claim.isChild() || ((ClaimMain) claim).getChildren().isEmpty()))
+                continue;
+            ItemStack item = getItem(setting.getItem(p, claim).section, p, claim);
+            inv.setItem(setting.slot, item);
+            itemInfo.put(setting.slot, new PueblosItem(item, ITEM_TYPE.NORMAL, setting));
         }
 
         this.itemInfo.put(p, itemInfo);
@@ -103,14 +106,14 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     }
 
     private enum CLAIM_SETTINGS {
-        MEMBERS(20,     null,   PueblosInventory.MEMBERS, ITEMS.MEMBERS, null),
+        MEMBERS(20,     null,   PueblosInventory.MEMBERS, ITEMS.MEMBERS),
         FLAGS(22,       null,   PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
         REQUESTS(24,    null,   PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
-        TELEPORT(16,    null,   null, ITEMS.TELEPORT, null),
-        DELETE(10,      CLAIM_PERMISSION_LEVEL.OWNER,   null, ITEMS.DELETE, null),
-        STATS(28,       null,   null, ITEMS.STATS, null),
-        CHILD_CLAIM(34, null,   null, ITEMS.CHILD_CLAIMS, null),
-        VISUALIZE(40,   null,   null, ITEMS.VISUALIZE, null),
+        TELEPORT(16,    null,   null, ITEMS.TELEPORT, null, PermissionNodes.TELEPORT),
+        DELETE(10,      CLAIM_PERMISSION_LEVEL.OWNER, null, ITEMS.DELETE),
+        STATS(28,       null,   null, ITEMS.STATS),
+        CHILD_CLAIM(34, null,   null, ITEMS.CHILD_CLAIMS),
+        VISUALIZE(40,   null,   null, ITEMS.VISUALIZE),
         ;
 
         int slot;
@@ -118,13 +121,23 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         PueblosInventory inv;
         ITEMS allowed;
         ITEMS disallowed;
+        PermissionNodes permission;
 
-        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_permission_level, @Nullable PueblosInventory inv, ITEMS allowed, ITEMS disallowed) {
+        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_per_level, @Nullable PueblosInventory inv, ITEMS allowed, ITEMS disallowed, PermissionNodes per) {
             this.slot = slot;
-            this.claim_permission_level = claim_permission_level;
+            this.claim_permission_level = claim_per_level;
             this.inv = inv;
             this.allowed = allowed;
             this.disallowed = disallowed;
+            this.permission = per;
+        }
+
+        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_per_level, @Nullable PueblosInventory inv, ITEMS allowed, ITEMS disallowed) {
+            this(slot, claim_per_level, inv, allowed, disallowed, null);
+        }
+
+        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_per_level, @Nullable PueblosInventory inv, ITEMS allowed) {
+            this(slot, claim_per_level, inv, allowed, null);
         }
 
         ITEMS getItem(Player p, Claim claim) {

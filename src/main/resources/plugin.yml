@@ -27,6 +27,9 @@ permissions:
     pueblos.item:
         description: 'Grab a copy of the claim creation item'
         default: op
+    pueblos.teleport:
+        description: 'Teleport to a claim via the gui'
+        default: op
     pueblos.admin.claim:
         description: 'Create & Edit admin claims, toggled with "/pueblos adminclaim"'
         default: op

@@ -1,7 +1,6 @@
 package me.RonanCraft.Pueblos.resources.tools.visual;
 
 import org.bukkit.Location;
-import org.bukkit.block.data.BlockData;
 
 public class VisualizationElement {
 

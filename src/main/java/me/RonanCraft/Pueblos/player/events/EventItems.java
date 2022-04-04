@@ -3,17 +3,15 @@ package me.RonanCraft.Pueblos.player.events;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.Settings;
 import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -39,20 +37,21 @@ public class EventItems implements Listener, PueblosEvents {
         remove(e.getEntity().getUniqueId());
     }
 
+
     //(Added v1.1.0)
     //Stop picking up items from other claims
     @EventHandler
-    private void onPickup(EntityPickupItemEvent e) {
+    private void onPickup(PlayerPickupItemEvent e) {
         if (e.isCancelled())
             return;
-        if (e.getEntity() instanceof Player && items.containsKey(e.getItem().getUniqueId())) { //This item is a death item
-            if (!e.getEntity().getUniqueId().equals(items.get(e.getItem().getUniqueId()))) //Player who died matches this items owner
+        if (items.containsKey(e.getItem().getUniqueId())) { //This item is a death item
+            if (!e.getPlayer().getUniqueId().equals(items.get(e.getItem().getUniqueId()))) //Player who died matches this items owner
                 e.setCancelled(true);
             remove(e.getItem().getUniqueId());
             return; //Let players who died in another claim pick up their items
         }
         Claim claim = getClaimMain(e.getItem().getLocation());
-        if (claim != null && (!(e.getEntity() instanceof Player) || !claim.isMember((Player) e.getEntity())))
+        if (claim != null && !claim.isMember(e.getPlayer()))
             e.setCancelled(true);
     }
 
