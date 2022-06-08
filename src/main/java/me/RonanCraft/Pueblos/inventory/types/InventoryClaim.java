@@ -39,7 +39,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         for (CLAIM_SETTINGS setting : CLAIM_SETTINGS.values()) {
             if (!claim.checkPermLevel(p, setting.claim_permission_level))
                 continue;
-            if (!setting.permission.check(p))
+            if (setting.permission != null && !setting.permission.check(p))
                 continue;
             if (setting == CLAIM_SETTINGS.CHILD_CLAIM && (claim.isChild() || ((ClaimMain) claim).getChildren().isEmpty()))
                 continue;
@@ -123,7 +123,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         ITEMS disallowed;
         PermissionNodes permission;
 
-        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_per_level, @Nullable PueblosInventory inv, ITEMS allowed, ITEMS disallowed, PermissionNodes per) {
+        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_per_level, @Nullable PueblosInventory inv, ITEMS allowed, ITEMS disallowed, @Nullable PermissionNodes per) {
             this.slot = slot;
             this.claim_permission_level = claim_per_level;
             this.inv = inv;
