@@ -1,10 +1,9 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
+import me.RonanCraft.Pueblos.claims.ClaimData;
+import me.RonanCraft.Pueblos.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.resources.helper.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,17 +17,17 @@ import java.util.List;
 public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_Claim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, Claim> claim = new HashMap<>();
+    private final HashMap<Player, ClaimData> claim = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, Claim claim) {
-        Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claim));
+    public Inventory open(Player p, ClaimData claimData) {
+        Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claimData));
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
 
         addBorder(inv);
 
-        addButtonBack(inv, p, itemInfo, PueblosInventory.FLAGS, claim);
+        addButtonBack(inv, p, itemInfo, PueblosInventory.FLAGS, claimData);
 
         int slot = 18;
         for (CLAIM_FLAG flag : CLAIM_FLAG.values()) {
@@ -36,15 +35,15 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
             if (slot == -1)
                 break;
             ItemStack item;
-            if ((Boolean) claim.getFlags().getFlag(flag))
-                item = getItem(ITEMS.FLAG_ENABLED.section, p, new Object[]{claim, flag});
+            if ((Boolean) claimData.getFlags().getFlag(flag))
+                item = getItem(ITEMS.FLAG_ENABLED.section, p, new Object[]{claimData, flag});
             else
-                item = getItem(ITEMS.FLAG_DISABLED.section, p, new Object[]{claim, flag});
+                item = getItem(ITEMS.FLAG_DISABLED.section, p, new Object[]{claimData, flag});
             inv.setItem(slot, item);
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, flag));
         }
         this.itemInfo.put(p, itemInfo);
-        this.claim.put(p, claim);
+        this.claim.put(p, claimData);
         p.openInventory(inv);
         return inv;
     }
@@ -59,9 +58,9 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
             return;
 
         CLAIM_FLAG flag = (CLAIM_FLAG) itemInfo.get(p).get(e.getSlot()).info;
-        Claim claim = this.claim.get(p);
-        HelperClaim.toggleFlag(p, claim, flag);
-        PueblosInventory.FLAGS.open(p, claim, false);
+        ClaimData claimData = this.claim.get(p);
+        HelperClaim.toggleFlag(p, claimData, flag);
+        PueblosInventory.FLAGS.open(p, claimData, false);
         //this.itemInfo.remove(p);
     }
 

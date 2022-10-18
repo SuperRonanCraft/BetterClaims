@@ -1,6 +1,6 @@
 package me.RonanCraft.Pueblos.customevents;
 
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.claims.ClaimData;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
@@ -8,15 +8,15 @@ abstract class PueblosEventType_Claim extends Event {
 
     private static final HandlerList handler = new HandlerList();
 
-    Claim claim;
+    ClaimData claimData;
 
-    PueblosEventType_Claim(Claim claim, boolean async) {
+    PueblosEventType_Claim(ClaimData claimData, boolean async) {
         super(async);
-        this.claim = claim;
+        this.claimData = claimData;
     }
 
-    public Claim getClaim() {
-        return claim;
+    public ClaimData getClaim() {
+        return claimData;
     }
 
     //Default Stuff

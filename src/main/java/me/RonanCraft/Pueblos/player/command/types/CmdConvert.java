@@ -6,13 +6,10 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.resources.dependencies.ConverterGriefPrevention;
-import me.RonanCraft.Pueblos.resources.files.msgs.Message;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesUsage;
-import org.bukkit.Bukkit;
+import me.RonanCraft.Pueblos.resources.messages.MessagesCore;
+import me.RonanCraft.Pueblos.resources.messages.MessagesHelp;
+import me.RonanCraft.Pueblos.resources.messages.MessagesUsage;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;

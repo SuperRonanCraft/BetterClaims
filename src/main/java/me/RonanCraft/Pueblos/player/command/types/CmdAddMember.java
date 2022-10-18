@@ -1,21 +1,18 @@
 package me.RonanCraft.Pueblos.player.command.types;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesUsage;
-import me.RonanCraft.Pueblos.resources.tools.HelperDate;
+import me.RonanCraft.Pueblos.claims.ClaimHandler;
+import me.RonanCraft.Pueblos.claims.Claim;
+import me.RonanCraft.Pueblos.claims.data.members.Member;
+import me.RonanCraft.Pueblos.resources.messages.MessagesCore;
+import me.RonanCraft.Pueblos.resources.messages.MessagesHelp;
+import me.RonanCraft.Pueblos.resources.messages.MessagesUsage;
+import me.RonanCraft.Pueblos.resources.helper.HelperDate;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -31,7 +28,7 @@ public class CmdAddMember implements PueblosCommand, PueblosCommandHelpable, Pue
     public void execute(CommandSender sendi, String label, String[] args) {
         ClaimHandler handler = Pueblos.getInstance().getClaimHandler();
         Player p = (Player) sendi;
-        ClaimMain claim = handler.getClaimMain(p.getLocation());
+        Claim claim = handler.getClaimMain(p.getLocation());
         if (args.length >= 2) {
             Player playerAdd = Bukkit.getPlayer(args[1]);
             if (playerAdd != null) {
@@ -39,7 +36,7 @@ public class CmdAddMember implements PueblosCommand, PueblosCommandHelpable, Pue
                     if (claim.isOwner(p)) {
                         if (!playerAdd.equals(p)) {
                             if (!claim.isMember(playerAdd)) {
-                                ClaimMember member = new ClaimMember(playerAdd.getUniqueId(), playerAdd.getName(), HelperDate.getDate(), claim);
+                                Member member = new Member(playerAdd.getUniqueId(), playerAdd.getName(), HelperDate.getDate(), claim);
                                 claim.addMember(member, true);
                                 MessagesCore.CLAIM_MEMBER_ADDED.send(sendi, member);
                             } else

@@ -1,11 +1,10 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
-import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
-import me.RonanCraft.Pueblos.resources.tools.Confirmation;
+import me.RonanCraft.Pueblos.claims.ClaimData;
+import me.RonanCraft.Pueblos.claims.data.members.Member;
+import me.RonanCraft.Pueblos.inventory.confirmation.CONFIRMATION_TYPE;
+import me.RonanCraft.Pueblos.inventory.confirmation.Confirmation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,11 +18,11 @@ import java.util.List;
 public class InventoryClaimMembers extends PueblosInvLoader implements PueblosInv_Claim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, Claim> claim = new HashMap<>();
+    private final HashMap<Player, ClaimData> claim = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, Claim claim) {
-        Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claim));
+    public Inventory open(Player p, ClaimData claimData) {
+        Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claimData));
 
         addBorder(inv);
 
@@ -33,19 +32,19 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
         for (ITEMS i : ITEMS.values()) {
             if (i.slot == 0) //Slot 0 = Disabled
                 continue;
-            if (i == ITEMS.LEAVE && claim.isOwner(p))
+            if (i == ITEMS.LEAVE && claimData.isOwner(p))
                 continue;
-            ItemStack _item = getItem(i.section, p, claim);
+            ItemStack _item = getItem(i.section, p, claimData);
             inv.setItem(i.slot, _item);
             itemInfo.put(i.slot, new PueblosItem(_item, ITEM_TYPE.NORMAL, i));
         }
 
-        addButtonBack(inv, p, itemInfo, PueblosInventory.MEMBERS, claim);
+        addButtonBack(inv, p, itemInfo, PueblosInventory.MEMBERS, claimData);
 
         int slot = 18;
 
-        ITEMS _i = claim.isOwner(p) ? ITEMS.MEMBER_EDIT : ITEMS.MEMBER_DISALLOWED;
-        for (ClaimMember member : claim.getMembers()) {
+        ITEMS _i = claimData.isOwner(p) ? ITEMS.MEMBER_EDIT : ITEMS.MEMBER_DISALLOWED;
+        for (Member member : claimData.getMembers()) {
             slot = getNextSlot(slot, inv);
             if (slot == -1)
                 break;
@@ -54,7 +53,7 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, member));
         }
         this.itemInfo.put(p, itemInfo);
-        this.claim.put(p, claim);
+        this.claim.put(p, claimData);
         p.openInventory(inv);
         return inv;
     }
@@ -76,8 +75,8 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
                 case LEAVE:
                     PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_LEAVE, p, claim.get(p).getMember(p)), false);
             }
-        } else if (itemInfo.get(p).get(e.getSlot()).info instanceof ClaimMember) {
-            ClaimMember member = (ClaimMember) itemInfo.get(p).get(e.getSlot()).info;
+        } else if (itemInfo.get(p).get(e.getSlot()).info instanceof Member) {
+            Member member = (Member) itemInfo.get(p).get(e.getSlot()).info;
             //this.itemInfo.remove(p);
             PueblosInventory.MEMBER.open(p, member, false);
         }

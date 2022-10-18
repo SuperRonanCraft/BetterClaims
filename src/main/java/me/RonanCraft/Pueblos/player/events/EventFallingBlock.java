@@ -1,7 +1,7 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.resources.Settings;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.claims.ClaimData;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -34,8 +34,8 @@ public class EventFallingBlock implements PueblosEvents {
             if (!getSetting(Settings.SETTING.GLOBAL_RABBITS_EATCROPS))
                 event.setCancelled(true);
         } else if (event.getEntityType() == EntityType.WITHER) { //Allow withers to destroy blocks OUTSIDE claims
-            Claim claim = getClaimAt(event.getBlock().getLocation(), true);
-            if (claim == null)
+            ClaimData claimData = getClaimAt(event.getBlock().getLocation(), true);
+            if (claimData == null)
                 event.setCancelled(true);
         } else if (event.getTo() == Material.DIRT ) {//&& event.getBlock().getType() == Material.FARMLAND) { //don't allow crops to be trampled, except by a player with build permission
             if (event.getEntityType() != EntityType.PLAYER) {
@@ -83,8 +83,8 @@ public class EventFallingBlock implements PueblosEvents {
             assert originalLocation != null;
             if (originalLocation.getBlockX() != newLocation.getBlockX() || originalLocation.getBlockZ() != newLocation.getBlockZ()) {
                 //in other worlds, if landing in land claim, only allow if source was also in the land claim
-                Claim claim = getClaimAt(newLocation, true);
-                if (claim != null && !claim.contains(originalLocation)) {
+                ClaimData claimData = getClaimAt(newLocation, true);
+                if (claimData != null && !claimData.contains(originalLocation)) {
                     //when not allowed, drop as item instead of forming a block
                     event.setCancelled(true);
 

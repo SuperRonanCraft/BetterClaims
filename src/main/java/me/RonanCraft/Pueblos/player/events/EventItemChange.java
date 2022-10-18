@@ -3,13 +3,12 @@ package me.RonanCraft.Pueblos.player.events;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.data.PlayerData;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
-import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
-import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
+import me.RonanCraft.Pueblos.claims.ClaimData;
+import me.RonanCraft.Pueblos.claims.enums.CLAIM_MODE;
+import me.RonanCraft.Pueblos.resources.messages.MessagesCore;
+import me.RonanCraft.Pueblos.resources.helper.HelperClaim;
+import me.RonanCraft.Pueblos.resources.visualization.Visualization;
+import me.RonanCraft.Pueblos.resources.visualization.VisualizationType;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -38,27 +37,27 @@ public class EventItemChange implements PueblosEvents {
         ItemStack item = e.getPlayer().getInventory().getItem(e.getNewSlot());
         if (item != null && item.getType().equals(getClaimItem()) && data.getClaimInteraction() == null) {
             data.setClaimInteraction(new PlayerClaimInteraction(e.getPlayer(), CLAIM_MODE.CREATE));
-            Claim claim = getClaimAt(e.getPlayer().getLocation(), true);
-            showClaimLater(claim, e.getPlayer());
+            ClaimData claimData = getClaimAt(e.getPlayer().getLocation(), true);
+            showClaimLater(claimData, e.getPlayer());
         } else
             data.removeClaimInteraction();
     }
 
     //Delay showing the claim and message to not spam player scrolling through inventory
-    private void showClaimLater(Claim claim, Player p) {
+    private void showClaimLater(ClaimData claimData, Player p) {
         claimShowing.put(p,
             Bukkit.getScheduler().scheduleSyncDelayedTask(Pueblos.getInstance(), () -> {
                 ItemStack item = p.getInventory().getItemInHand();//.getItemInMainHand();
                 if (item.getType().equals(getClaimItem())) {
-                    if (claim != null) {
+                    if (claimData != null) {
                         VisualizationType visType = VisualizationType.ERROR;
                         Visualization vis = new Visualization();
-                        if (claim.isMember(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) {
+                        if (claimData.isMember(p) || (claimData.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p))) {
                             MessagesCore.CLAIM_ITEM_INCLAIM.send(p);
                             visType = VisualizationType.CLAIM;
                         } else
                             MessagesCore.CLAIM_ITEM_NOTOWNER.send(p);
-                        Visualization.fromClaim(claim, p.getLocation().getBlockY(), visType, p.getLocation()).apply(p);
+                        Visualization.fromClaim(claimData, p.getLocation().getBlockY(), visType, p.getLocation()).apply(p);
                     } else {
                         MessagesCore.CLAIM_ITEM_NOCLAIM.send(p);
                     }

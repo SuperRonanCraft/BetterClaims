@@ -55,12 +55,12 @@ public class FileLanguage {
     }
 
     private final String[] defaultLangs = {
-            "en.yml"
+            "en.yml",
             /*"fr.yml", //French
             "ja.yml", //Japanese
-            "ru.yml", //Russian
-            "chs.yml", //Chinese Simplified
-            "cht.yml", //Chinese
+            "ru.yml", //Russian*/
+            "chs.yml" //Chinese Simplified | @katorly on GitHub
+            /*"cht.yml", //Chinese
             "du.yml", //Dutch
             "es.yml", //Spanish
             "cs.yml", //Czech

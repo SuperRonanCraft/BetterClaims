@@ -6,11 +6,10 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.files.msgs.Message;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
+import me.RonanCraft.Pueblos.claims.ClaimData;
+import me.RonanCraft.Pueblos.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.resources.messages.Message;
+import me.RonanCraft.Pueblos.resources.messages.MessagesHelp;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -25,25 +24,25 @@ public class CmdRequest implements PueblosCommand, PueblosCommandHelpable, Puebl
 
     public void execute(CommandSender sendi, String label, String[] args) {
         Player p = (Player) sendi;
-        List<Claim> requestable = getRequestable(p);
+        List<ClaimData> requestable = getRequestable(p);
         if (!requestable.isEmpty()) {
             PueblosInventory.REQUESTING.open(p, requestable, true);
         } else
             Message.sms(p, "No claims to join!", null);
     }
 
-    public static List<Claim> getRequestable(Player p) { //Get all claims a player can request to be in
-        List<Claim> claims = new ArrayList<>();
-        for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaimsMain())
+    public static List<ClaimData> getRequestable(Player p) { //Get all claims a player can request to be in
+        List<ClaimData> claimData = new ArrayList<>();
+        for (ClaimData claim : Pueblos.getInstance().getClaimHandler().getClaimsMain())
             //Not the owner or member and claim is accepting requests
             if (    !claim.isAdminClaim() //Not an admin Claim
                     && claim.getOwnerID() != null //Owners UUID isnt trash
                     && !claim.isOwner(p) //Not an owner of this claim
                     && !claim.isMember(p) //Is not already a member
                     && (Boolean) claim.getFlags().getFlag(CLAIM_FLAG.ALLOW_REQUESTS)) { //Claim is accepting requests
-                claims.add(claim);
+                claimData.add(claim);
             }
-        return claims;
+        return claimData;
     }
 
     public boolean permission(CommandSender sendi) {

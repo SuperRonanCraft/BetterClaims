@@ -1,12 +1,12 @@
 package me.RonanCraft.Pueblos.resources.dependencies;
 
 import me.RonanCraft.Pueblos.Pueblos;
-import me.RonanCraft.Pueblos.resources.claims.BoundingBox;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_ERRORS;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
+import me.RonanCraft.Pueblos.claims.data.BoundingBox;
+import me.RonanCraft.Pueblos.claims.ClaimData;
+import me.RonanCraft.Pueblos.claims.ClaimHandler;
+import me.RonanCraft.Pueblos.claims.enums.CLAIM_ERRORS;
+import me.RonanCraft.Pueblos.resources.messages.MessagesCore;
+import me.RonanCraft.Pueblos.resources.helper.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
@@ -38,14 +38,14 @@ public class ConverterGriefPrevention {
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(f);
                 BoundingBox position = getPosition(config);
                 UUID uuid = getID(config);
-                Claim claim;
-                claim = HelperClaim.createClaimMain(position, uuid, null, uuid == null);
-                CLAIM_ERRORS error = claimHandler.uploadCreatedClaim(claim, null, null);
+                ClaimData claimData;
+                claimData = HelperClaim.createClaimMain(position, uuid, null, uuid == null);
+                CLAIM_ERRORS error = claimHandler.uploadCreatedClaim(claimData, null, null);
                 if (error != CLAIM_ERRORS.NONE) {
-                    Pueblos.getInstance().getLogger().warning(error.getMsg(claim));
+                    Pueblos.getInstance().getLogger().warning(error.getMsg(claimData));
                     //error.sendMsg(converter, claim);
                     converter.sendMessage(MessagesCore.CONVERT_FAILED.get(null).replace("%claim%", f.getName()).replace("%plugin%", "GriefPrevention"));
-                    Pueblos.getInstance().getLogger().severe(error.getMsg(claim));
+                    Pueblos.getInstance().getLogger().severe(error.getMsg(claimData));
                 } else {
                     converter.sendMessage(MessagesCore.CONVERT_SUCCESS.get(null).replace("%claim%", f.getName()).replace("%plugin%", "GriefPrevention"));
                 }

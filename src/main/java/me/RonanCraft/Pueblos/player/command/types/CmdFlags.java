@@ -5,13 +5,13 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.claims.*;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG;
-import me.RonanCraft.Pueblos.resources.files.msgs.Message;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesHelp;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
+import me.RonanCraft.Pueblos.claims.Claim;
+import me.RonanCraft.Pueblos.claims.ClaimHandler;
+import me.RonanCraft.Pueblos.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.resources.messages.Message;
+import me.RonanCraft.Pueblos.resources.messages.MessagesCore;
+import me.RonanCraft.Pueblos.resources.messages.MessagesHelp;
+import me.RonanCraft.Pueblos.resources.helper.HelperClaim;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -49,7 +49,7 @@ public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, Pueblos
                 MessagesCore.INVALIDFLAG.send(sendi);
                 return;
             }
-            ClaimMain claim = handler.getClaimMain(p.getLocation());
+            Claim claim = handler.getClaimMain(p.getLocation());
             if (claim != null) {
                 if (claim.isOwner(p)) {
                     HelperClaim.setFlag(p, claim, flag, value);

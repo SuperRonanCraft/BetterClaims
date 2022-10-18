@@ -2,7 +2,7 @@ package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.Settings;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
+import me.RonanCraft.Pueblos.claims.ClaimData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
@@ -50,8 +50,8 @@ public class EventItems implements Listener, PueblosEvents {
             remove(e.getItem().getUniqueId());
             return; //Let players who died in another claim pick up their items
         }
-        Claim claim = getClaimMain(e.getItem().getLocation());
-        if (claim != null && !claim.isMember(e.getPlayer()))
+        ClaimData claimData = getClaimMain(e.getItem().getLocation());
+        if (claimData != null && !claimData.isMember(e.getPlayer()))
             e.setCancelled(true);
     }
 

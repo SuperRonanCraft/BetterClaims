@@ -2,15 +2,15 @@ package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
-import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
-import me.RonanCraft.Pueblos.resources.tools.Confirmation;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
-import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
-import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
+import me.RonanCraft.Pueblos.claims.ClaimData;
+import me.RonanCraft.Pueblos.claims.Claim;
+import me.RonanCraft.Pueblos.claims.enums.CLAIM_PERMISSION_LEVEL;
+import me.RonanCraft.Pueblos.resources.messages.MessagesCore;
+import me.RonanCraft.Pueblos.inventory.confirmation.CONFIRMATION_TYPE;
+import me.RonanCraft.Pueblos.inventory.confirmation.Confirmation;
+import me.RonanCraft.Pueblos.resources.helper.HelperClaim;
+import me.RonanCraft.Pueblos.resources.visualization.Visualization;
+import me.RonanCraft.Pueblos.resources.visualization.VisualizationType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -27,29 +27,29 @@ import java.util.List;
 public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, Claim> claim = new HashMap<>();
+    private final HashMap<Player, ClaimData> claim = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, Claim claim) {
-        Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claim));
+    public Inventory open(Player p, ClaimData claimData) {
+        Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claimData));
 
         addBorder(inv);
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
         for (CLAIM_SETTINGS setting : CLAIM_SETTINGS.values()) {
-            if (!claim.checkPermLevel(p, setting.claim_permission_level))
+            if (!claimData.checkPermLevel(p, setting.claim_permission_level))
                 continue;
             if (setting.permission != null && !setting.permission.check(p))
                 continue;
-            if (setting == CLAIM_SETTINGS.CHILD_CLAIM && (claim.isChild() || ((ClaimMain) claim).getChildren().isEmpty()))
+            if (setting == CLAIM_SETTINGS.CHILD_CLAIM && (claimData.isChild() || ((Claim) claimData).getChildren().isEmpty()))
                 continue;
-            ItemStack item = getItem(setting.getItem(p, claim).section, p, claim);
+            ItemStack item = getItem(setting.getItem(p, claimData).section, p, claimData);
             inv.setItem(setting.slot, item);
             itemInfo.put(setting.slot, new PueblosItem(item, ITEM_TYPE.NORMAL, setting));
         }
 
         this.itemInfo.put(p, itemInfo);
-        this.claim.put(p, claim);
+        this.claim.put(p, claimData);
         p.openInventory(inv);
         return inv;
     }
@@ -64,24 +64,24 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
             return;
 
         CLAIM_SETTINGS setting = (CLAIM_SETTINGS) itemInfo.get(p).get(e.getSlot()).info;
-        Claim claim = this.claim.get(p);
+        ClaimData claimData = this.claim.get(p);
         switch (setting) {
-            case TELEPORT: HelperClaim.teleportTo(p, claim); p.closeInventory(); break;
-            case DELETE: PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_DELETE, p, claim), false); break;
-            case STATS: HelperClaim.sendClaimInfo(p, claim); p.closeInventory(); break;
-            case CHILD_CLAIM: PueblosInventory.CLAIM_SELECT.open(p, ((ClaimMain) claim).getChildren(), false); break;
+            case TELEPORT: HelperClaim.teleportTo(p, claimData); p.closeInventory(); break;
+            case DELETE: PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_DELETE, p, claimData), false); break;
+            case STATS: HelperClaim.sendClaimInfo(p, claimData); p.closeInventory(); break;
+            case CHILD_CLAIM: PueblosInventory.CLAIM_SELECT.open(p, ((Claim) claimData).getChildren(), false); break;
             case VISUALIZE:
-                Vector vector = claim.getBoundingBox().getCenter();
+                Vector vector = claimData.getBoundingBox().getCenter();
                 if (p.getLocation().distance(new Location(p.getLocation().getWorld(), vector.getX(), p.getLocation().getBlockY(), vector.getZ())) < 300) {
-                    Visualization.fromClaim(claim, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
-                    MessagesCore.CLAIM_VISUALIZE.send(p, claim);
+                    Visualization.fromClaim(claimData, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
+                    MessagesCore.CLAIM_VISUALIZE.send(p, claimData);
                     p.closeInventory();
                 } else
-                    MessagesCore.TOOFAR.send(p, claim);
+                    MessagesCore.TOOFAR.send(p, claimData);
                 break;
             default:
                 if (setting.inv != null)
-                    setting.inv.open(p, claim, false);
+                    setting.inv.open(p, claimData, false);
                 else
                     p.sendMessage("Not Yet Implemented!");
         }
@@ -140,9 +140,9 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
             this(slot, claim_per_level, inv, allowed, null);
         }
 
-        ITEMS getItem(Player p, Claim claim) {
+        ITEMS getItem(Player p, ClaimData claimData) {
             if (disallowed != null) {
-                if (inv != null && inv.isAllowed(p, claim))
+                if (inv != null && inv.isAllowed(p, claimData))
                     return allowed;
                 return disallowed;
             }

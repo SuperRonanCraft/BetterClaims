@@ -4,9 +4,9 @@ import me.RonanCraft.Pueblos.inventory.GlobalItems;
 import me.RonanCraft.Pueblos.player.data.PlayerData;
 import me.RonanCraft.Pueblos.player.data.PlayerInfoHandler;
 import me.RonanCraft.Pueblos.player.events.EventListener;
-import me.RonanCraft.Pueblos.resources.claims.ClaimHandler;
-import me.RonanCraft.Pueblos.resources.database.DatabaseAuctions;
-import me.RonanCraft.Pueblos.resources.database.DatabaseClaims;
+import me.RonanCraft.Pueblos.claims.ClaimHandler;
+import me.RonanCraft.Pueblos.database.DatabaseAuctions;
+import me.RonanCraft.Pueblos.database.DatabaseClaims;
 import org.bukkit.entity.Player;
 
 public class Systems {

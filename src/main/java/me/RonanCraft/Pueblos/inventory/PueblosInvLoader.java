@@ -1,8 +1,8 @@
 package me.RonanCraft.Pueblos.inventory;
 
 import me.RonanCraft.Pueblos.resources.files.FileOther;
-import me.RonanCraft.Pueblos.resources.files.msgs.Message;
-import me.RonanCraft.Pueblos.resources.tools.HelperItem;
+import me.RonanCraft.Pueblos.resources.messages.Message;
+import me.RonanCraft.Pueblos.resources.helper.HelperItem;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

@@ -1,7 +1,6 @@
 package me.RonanCraft.Pueblos.customevents;
 
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import org.bukkit.Location;
+import me.RonanCraft.Pueblos.claims.ClaimData;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -14,11 +13,11 @@ public class PueblosEvent_ClaimResize extends PueblosEventType_ClaimCancellable 
 
     /**
      * Broadcasts this new claim that was created
-     * @param claim The claim that was just created
+     * @param claimData The claim that was just created
      * @param editor The player who is changing the size of this claim
      */
-    public PueblosEvent_ClaimResize(Claim claim, Player editor, Vector loc_1, Vector loc_2) {
-        super(claim, true);
+    public PueblosEvent_ClaimResize(ClaimData claimData, Player editor, Vector loc_1, Vector loc_2) {
+        super(claimData, true);
         this.editor = editor;
         this.newLoc_1 = loc_1;
         this.newLoc_2 = loc_2;

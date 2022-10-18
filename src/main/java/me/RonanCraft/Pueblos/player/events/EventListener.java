@@ -2,8 +2,8 @@ package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.player.data.PlayerData;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_MODE;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
+import me.RonanCraft.Pueblos.claims.enums.CLAIM_MODE;
+import me.RonanCraft.Pueblos.resources.messages.MessagesCore;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;

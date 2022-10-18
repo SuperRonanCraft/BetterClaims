@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.events.PlayerClaimInteraction;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
+import me.RonanCraft.Pueblos.claims.Claim;
+import me.RonanCraft.Pueblos.resources.visualization.Visualization;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +19,7 @@ public class PlayerData {
     private List<PueblosInventory> previous = new ArrayList<>();
     @Getter private @Nullable PueblosInventory currentInventory;
     @Getter @Setter private @Nullable PlayerClaimInteraction claimInteraction;
-    @Getter @Setter private ClaimMain insideClaim;
+    @Getter @Setter private Claim insideClaim;
 
     public void removeVisualization() {
         visualization = null;

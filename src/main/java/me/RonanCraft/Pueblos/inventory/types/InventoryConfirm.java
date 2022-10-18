@@ -1,11 +1,11 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
-import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
-import me.RonanCraft.Pueblos.resources.tools.Confirmation;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
+import me.RonanCraft.Pueblos.claims.Claim;
+import me.RonanCraft.Pueblos.claims.data.members.Member;
+import me.RonanCraft.Pueblos.claims.data.Claim_Request;
+import me.RonanCraft.Pueblos.inventory.confirmation.Confirmation;
+import me.RonanCraft.Pueblos.resources.helper.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -61,16 +61,16 @@ public class InventoryConfirm extends PueblosInvLoader implements PueblosInv_Con
                 //p.sendMessage("Accepted!");
                 switch (confirmation.type) {
                     case CLAIM_LEAVE:
-                        HelperClaim.leaveClaim(p, (ClaimMember) confirmation.info);
+                        HelperClaim.leaveClaim(p, (Member) confirmation.info);
                         break;
                     case MEMBER_REMOVE:
-                        HelperClaim.removeMember(p, (ClaimMember) confirmation.info);
+                        HelperClaim.removeMember(p, (Member) confirmation.info);
                         break;
                     case REQUEST_DECLINE:
-                        HelperClaim.requestAction(false, p, (ClaimRequest) confirmation.info);
+                        HelperClaim.requestAction(false, p, (Claim_Request) confirmation.info);
                         break;
                     case CLAIM_DELETE:
-                        HelperClaim.deleteClaim(p, (ClaimMain) confirmation.info);
+                        HelperClaim.deleteClaim(p, (Claim) confirmation.info);
                         p.closeInventory();
                         return;
                 }

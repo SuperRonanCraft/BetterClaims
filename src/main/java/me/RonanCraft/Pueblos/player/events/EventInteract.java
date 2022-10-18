@@ -1,15 +1,15 @@
 package me.RonanCraft.Pueblos.player.events;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.claims.data.BoundingBox;
 import me.RonanCraft.Pueblos.player.data.PlayerData;
 import me.RonanCraft.Pueblos.resources.Settings;
-import me.RonanCraft.Pueblos.resources.claims.*;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.claims.enums.*;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
-import me.RonanCraft.Pueblos.resources.tools.visual.Visualization;
-import me.RonanCraft.Pueblos.resources.tools.visual.VisualizationType;
+import me.RonanCraft.Pueblos.claims.*;
+import me.RonanCraft.Pueblos.claims.enums.*;
+import me.RonanCraft.Pueblos.resources.messages.MessagesCore;
+import me.RonanCraft.Pueblos.resources.helper.HelperClaim;
+import me.RonanCraft.Pueblos.resources.visualization.Visualization;
+import me.RonanCraft.Pueblos.resources.visualization.VisualizationType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -140,11 +140,11 @@ public class EventInteract implements PueblosEvents {
         int min_z = Math.min(positionStiff.getBlockZ(), positionMovingCorner.getBlockZ());
         Location greater = new Location(claimInteraction.editing.getWorld(), max_x, 0, max_z);
         Location lower = new Location(claimInteraction.editing.getWorld(), min_x, 0, min_z);
-        List<Claim> ignoredClaims = new ArrayList<>();
-        ignoredClaims.add(claimInteraction.editing);
-        if (claimInteraction.editing instanceof ClaimChild)
-            ignoredClaims.add(((ClaimChild) claimInteraction.editing).getParent());
-        CLAIM_ERRORS error = Pueblos.getInstance().getClaimHandler().isLocationValid(greater, lower, p, ignoredClaims /*Ignored claim*/, claimInteraction);
+        List<ClaimData> ignoredClaimData = new ArrayList<>();
+        ignoredClaimData.add(claimInteraction.editing);
+        if (claimInteraction.editing instanceof Claim_Child)
+            ignoredClaimData.add(((Claim_Child) claimInteraction.editing).getParent());
+        CLAIM_ERRORS error = Pueblos.getInstance().getClaimHandler().isLocationValid(greater, lower, p, ignoredClaimData /*Ignored claim*/, claimInteraction);
         if (error == CLAIM_ERRORS.NONE) {
             //Save new position
             error = claimInteraction.editing.editCorners(p, positionStiff, positionMovingCorner);

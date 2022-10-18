@@ -3,11 +3,11 @@ package me.RonanCraft.Pueblos.inventory;
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.inventory.types.*;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_PERMISSION_LEVEL;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
-import me.RonanCraft.Pueblos.resources.tools.Confirmation;
+import me.RonanCraft.Pueblos.claims.ClaimData;
+import me.RonanCraft.Pueblos.claims.enums.CLAIM_PERMISSION_LEVEL;
+import me.RonanCraft.Pueblos.claims.Claim;
+import me.RonanCraft.Pueblos.claims.data.members.Member;
+import me.RonanCraft.Pueblos.inventory.confirmation.Confirmation;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -33,25 +33,25 @@ public enum PueblosInventory {
         this.claimLevel = claimLevel;
     }
 
-    public void open(Player p, Claim claim, boolean from_command) {
-        if (isAllowed(p, claim))
+    public void open(Player p, ClaimData claimData, boolean from_command) {
+        if (isAllowed(p, claimData))
             if (inv instanceof PueblosInv_Claim)
-                Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_Claim) inv).open(p, claim), this, from_command);
+                Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_Claim) inv).open(p, claimData), this, from_command);
             else
                 Pueblos.getInstance().getLogger().severe(this.name() + " is not a claim type!");
     }
 
-    public void open(Player p, ClaimMember member, boolean from_command) {
-        if (isAllowed(p, member.claim))
+    public void open(Player p, Member member, boolean from_command) {
+        if (isAllowed(p, member.claimData))
             if (inv instanceof PueblosInv_Member)
                 Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_Member) inv).open(p, member), this, from_command);
             else
                 Pueblos.getInstance().getLogger().severe(this.name() + " is not a member type!");
     }
 
-    public void open(Player p, List<Claim> claims, boolean from_command) {
+    public void open(Player p, List<ClaimData> claimData, boolean from_command) {
         if (inv instanceof PueblosInv_MultiClaim)
-            Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_MultiClaim) inv).open(p, claims), this, from_command);
+            Pueblos.getInstance().getPlayerData(p).setInventory(((PueblosInv_MultiClaim) inv).open(p, claimData), this, from_command);
         else
             Pueblos.getInstance().getLogger().severe(this.name() + " is not a request type!");
     }
@@ -64,20 +64,20 @@ public enum PueblosInventory {
     }
 
     public void openCasted(Player p, Object obj) {
-        if (obj instanceof ClaimMember)
-            open(p, (ClaimMember) obj, false);
-        else if (obj instanceof ClaimMain)
-            open(p, (ClaimMain) obj, false);
+        if (obj instanceof Member)
+            open(p, (Member) obj, false);
+        else if (obj instanceof Claim)
+            open(p, (Claim) obj, false);
         else if (obj instanceof Confirmation)
             open(p, (Confirmation) obj, false);
         else
             p.sendMessage("A wrong inventory happened!");
     }
 
-    public boolean isAllowed(Player p, Claim claim) {
+    public boolean isAllowed(Player p, ClaimData claimData) {
         //p.sendMessage("Not allowed!");
         return Pueblos.getInstance().getPermissions().checkPerm(permNode.node, p)
-                && claim.checkPermLevel(p, claimLevel);
+                && claimData.checkPermLevel(p, claimLevel);
     }
 
     public void click(InventoryClickEvent e) {

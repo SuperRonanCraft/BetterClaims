@@ -2,10 +2,9 @@ package me.RonanCraft.Pueblos.player.command;
 
 import me.RonanCraft.Pueblos.Pueblos;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
-import me.RonanCraft.Pueblos.resources.Permissions;
-import me.RonanCraft.Pueblos.resources.files.msgs.Message;
-import me.RonanCraft.Pueblos.resources.files.msgs.MessagesCore;
-import me.RonanCraft.Pueblos.resources.tools.HelperEvent;
+import me.RonanCraft.Pueblos.resources.messages.Message;
+import me.RonanCraft.Pueblos.resources.messages.MessagesCore;
+import me.RonanCraft.Pueblos.resources.helper.HelperEvent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 

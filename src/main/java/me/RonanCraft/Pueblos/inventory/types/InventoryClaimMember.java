@@ -1,10 +1,10 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
-import me.RonanCraft.Pueblos.resources.claims.enums.CLAIM_FLAG_MEMBER;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMember;
-import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
-import me.RonanCraft.Pueblos.resources.tools.Confirmation;
+import me.RonanCraft.Pueblos.claims.enums.CLAIM_FLAG_MEMBER;
+import me.RonanCraft.Pueblos.claims.data.members.Member;
+import me.RonanCraft.Pueblos.inventory.confirmation.CONFIRMATION_TYPE;
+import me.RonanCraft.Pueblos.inventory.confirmation.Confirmation;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -18,16 +18,16 @@ import java.util.List;
 public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv_Member {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, ClaimMember> member = new HashMap<>();
+    private final HashMap<Player, Member> member = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, ClaimMember member) {
+    public Inventory open(Player p, Member member) {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, member));
 
         addBorder(inv);
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
 
-        addButtonBack(inv, p, itemInfo, PueblosInventory.MEMBER, member.claim);
+        addButtonBack(inv, p, itemInfo, PueblosInventory.MEMBER, member.claimData);
 
         for (ITEMS i : ITEMS.values()) {
             int slot = i.slot;
@@ -68,7 +68,7 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
                 || !itemInfo.get(p).containsKey(e.getSlot()))
             return;
 
-        ClaimMember member = this.member.get(p);
+        Member member = this.member.get(p);
         if (itemInfo.get(p).get(e.getSlot()).info instanceof ITEMS) {
             ITEMS item = (ITEMS) itemInfo.get(p).get(e.getSlot()).info;
             switch (item) {

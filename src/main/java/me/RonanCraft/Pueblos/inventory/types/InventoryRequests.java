@@ -1,12 +1,11 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
-import me.RonanCraft.Pueblos.resources.claims.ClaimRequest;
-import me.RonanCraft.Pueblos.resources.tools.CONFIRMATION_TYPE;
-import me.RonanCraft.Pueblos.resources.tools.Confirmation;
-import me.RonanCraft.Pueblos.resources.tools.HelperClaim;
+import me.RonanCraft.Pueblos.claims.ClaimData;
+import me.RonanCraft.Pueblos.claims.data.Claim_Request;
+import me.RonanCraft.Pueblos.inventory.confirmation.CONFIRMATION_TYPE;
+import me.RonanCraft.Pueblos.inventory.confirmation.Confirmation;
+import me.RonanCraft.Pueblos.resources.helper.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -20,20 +19,20 @@ import java.util.List;
 public class InventoryRequests extends PueblosInvLoader implements PueblosInv_Claim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, Claim> claim = new HashMap<>();
+    private final HashMap<Player, ClaimData> claim = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, Claim claim) {
-        Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claim));
+    public Inventory open(Player p, ClaimData claimData) {
+        Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claimData));
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
 
         addBorder(inv);
 
-        addButtonBack(inv, p, itemInfo, PueblosInventory.REQUESTS, claim);
+        addButtonBack(inv, p, itemInfo, PueblosInventory.REQUESTS, claimData);
 
         int slot = 18;
-        for (ClaimRequest request : claim.getRequests()) {
+        for (Claim_Request request : claimData.getRequests()) {
             slot = getNextSlot(slot, inv);
             if (slot == -1)
                 break;
@@ -42,7 +41,7 @@ public class InventoryRequests extends PueblosInvLoader implements PueblosInv_Cl
             itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, request));
         }
         this.itemInfo.put(p, itemInfo);
-        this.claim.put(p, claim);
+        this.claim.put(p, claimData);
         p.openInventory(inv);
         return inv;
     }
@@ -56,7 +55,7 @@ public class InventoryRequests extends PueblosInvLoader implements PueblosInv_Cl
         if (!itemInfo.get(p).containsKey(e.getSlot())) //Not an item we care about
             return;
 
-        ClaimRequest request = (ClaimRequest) itemInfo.get(p).get(e.getSlot()).info;
+        Claim_Request request = (Claim_Request) itemInfo.get(p).get(e.getSlot()).info;
         if (e.getClick().isLeftClick()) { //Accept
             HelperClaim.requestAction(true, p, request);
             PueblosInventory.REQUESTS.open(p, claim.get(p), false);

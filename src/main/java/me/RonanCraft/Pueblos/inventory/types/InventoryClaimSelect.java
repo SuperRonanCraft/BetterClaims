@@ -1,8 +1,7 @@
 package me.RonanCraft.Pueblos.inventory.types;
 
 import me.RonanCraft.Pueblos.inventory.*;
-import me.RonanCraft.Pueblos.resources.claims.Claim;
-import me.RonanCraft.Pueblos.resources.claims.ClaimMain;
+import me.RonanCraft.Pueblos.claims.ClaimData;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,17 +15,17 @@ import java.util.List;
 public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv_MultiClaim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
-    private final HashMap<Player, List<Claim>> claims = new HashMap<>();
+    private final HashMap<Player, List<ClaimData>> claims = new HashMap<>();
 
     @Override
-    public Inventory open(Player p, List<Claim> claims) {
-        Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claims));
+    public Inventory open(Player p, List<ClaimData> claimData) {
+        Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claimData));
 
         addBorder(inv);
 
         HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
         int slot = 0;
-        for (Claim claim : claims) {
+        for (ClaimData claim : claimData) {
             slot = getNextSlot(slot, inv);
             if (slot == -1)
                 break;
@@ -39,7 +38,7 @@ public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv
         }
 
         this.itemInfo.put(p, itemInfo);
-        this.claims.put(p, claims);
+        this.claims.put(p, claimData);
         p.openInventory(inv);
         return inv;
     }
@@ -53,8 +52,8 @@ public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv
                 || !itemInfo.get(p).containsKey(e.getSlot()))
             return;
 
-        Claim claim = (Claim) itemInfo.get(p).get(e.getSlot()).info;
-        PueblosInventory.CLAIM.open(p, claim, false);
+        ClaimData claimData = (ClaimData) itemInfo.get(p).get(e.getSlot()).info;
+        PueblosInventory.CLAIM.open(p, claimData, false);
     }
 
     @Override
