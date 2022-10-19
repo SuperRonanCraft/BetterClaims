@@ -95,7 +95,7 @@ public class EventInteract implements PueblosEvents {
                             case CREATE_ADMIN://Create a claim inside another claim
                             case SUBCLAIM:
                                 error = HelperClaim.registerClaim(p, p.getWorld(), corners.get(0), corners.get(1),
-                                        claimInteraction, claimInteraction.mode == CLAIM_MODE.SUBCLAIM ? CLAIM_TYPE.CHILD : CLAIM_TYPE.MAIN); break; //MODE will handle the rest
+                                        claimInteraction, claimInteraction.mode == CLAIM_MODE.SUBCLAIM ? CLAIM_TYPE.CHILD : CLAIM_TYPE.PARENT); break; //MODE will handle the rest
                             //Edit a claims size
                             case EDIT: error = resizeClaim(p, claimInteraction); errorInfo = claimInteraction.editing; break;
                         }

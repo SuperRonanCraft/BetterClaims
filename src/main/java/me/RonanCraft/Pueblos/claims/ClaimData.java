@@ -55,7 +55,7 @@ public abstract class ClaimData {
         this.ownerName = ownerName;
         this.boundingBox = boundingBox;
         this.adminClaim = this.ownerId == null;
-        claimType = this instanceof Claim ? CLAIM_TYPE.MAIN : CLAIM_TYPE.CHILD;
+        claimType = this instanceof Claim ? CLAIM_TYPE.PARENT : CLAIM_TYPE.CHILD;
     }
 
     public boolean contains(Location loc) {

@@ -43,8 +43,8 @@ public class ClaimHandler {
         mainClaims.clear();
         childClaims.clear();
         HashMap<CLAIM_TYPE, List<ClaimData>> databaseClaims = getDatabase().getClaims();
-        if (databaseClaims.get(CLAIM_TYPE.MAIN) != null)
-            for (ClaimData claimData : databaseClaims.get(CLAIM_TYPE.MAIN))
+        if (databaseClaims.get(CLAIM_TYPE.PARENT) != null)
+            for (ClaimData claimData : databaseClaims.get(CLAIM_TYPE.PARENT))
                 this.mainClaims.add((Claim) claimData);
         if (databaseClaims.get(CLAIM_TYPE.CHILD) != null)
             for (ClaimData claimData : databaseClaims.get(CLAIM_TYPE.CHILD))

@@ -56,7 +56,7 @@ public class DatabaseClaims extends SQLite {
             rs = ps.executeQuery();
             //Load all Claims
             while (rs.next()) {
-                ClaimData claimData = HelperClaim.loadClaim(rs, CLAIM_TYPE.MAIN, null);
+                ClaimData claimData = HelperClaim.loadClaim(rs, CLAIM_TYPE.PARENT, null);
                 if (claimData != null && claimData.getBoundingBox() != null)
                     claimDataMains.add(claimData);
             }
@@ -71,7 +71,7 @@ public class DatabaseClaims extends SQLite {
             }
             //Organize claims
             HashMap<CLAIM_TYPE, List<ClaimData>> hash = new HashMap<>();
-            hash.put(CLAIM_TYPE.MAIN, claimDataMains);
+            hash.put(CLAIM_TYPE.PARENT, claimDataMains);
             hash.put(CLAIM_TYPE.CHILD, claimDataChildren);
             return hash;
         } catch (SQLException ex) {

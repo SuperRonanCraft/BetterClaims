@@ -113,13 +113,13 @@ public class HelperClaim {
         if (!worldEnabled(world)) return CLAIM_ERRORS.WORLD_DISABLED;
 
         //Create claim
-        if (claimInteraction == null || type == CLAIM_TYPE.MAIN)
+        if (claimInteraction == null || type == CLAIM_TYPE.PARENT)
             claimData = createClaimMain(box, creator.getUniqueId(), creator.getName(), claimInteraction != null && claimInteraction.mode == CLAIM_MODE.CREATE_ADMIN);
         else
             claimData = createClaimSub(box, (Claim) claimInteraction.editing);
 
         //Claim Max Count - on normal claim
-        if (claimData.claimType == CLAIM_TYPE.MAIN && !claimData.isAdminClaim() &&
+        if (claimData.claimType == CLAIM_TYPE.PARENT && !claimData.isAdminClaim() &&
                 Pueblos.getInstance().getClaimHandler().getClaims(creator.getUniqueId()).size() >= Pueblos.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_COUNT))
             return CLAIM_ERRORS.CLAIM_COUNT;
 
@@ -173,7 +173,7 @@ public class HelperClaim {
     }
 
     @Nullable
-    public static ClaimData loadClaim(ResultSet result, CLAIM_TYPE toLoad, List<ClaimData> current_claimData) throws SQLException {
+    public static ClaimData loadClaim(ResultSet result, CLAIM_TYPE toLoad, List<ClaimData> parent_claims) throws SQLException {
         UUID id = null;
         try {
             id = UUID.fromString(result.getString(DatabaseClaims.COLUMNS.OWNER_UUID.name));
@@ -189,7 +189,7 @@ public class HelperClaim {
                 Pueblos.getInstance().getLogger().severe("Claim " + _claim_id + " does not have a valid location! Claim was not registered!");
                 return null;
             }
-            if (toLoad == CLAIM_TYPE.MAIN) { //Loading main parent claims
+            if (toLoad == CLAIM_TYPE.PARENT) { //Loading main parent claims
                 if (result.getLong(DatabaseClaims.COLUMNS.PARENT.name) == -1) {
                     if (result.getBoolean(DatabaseClaims.COLUMNS.ADMIN_CLAIM.name) || id == null)
                         claimData = new Claim(position);
@@ -201,7 +201,7 @@ public class HelperClaim {
                 if (result.getLong(DatabaseClaims.COLUMNS.PARENT.name) > -1) {
                     int _parent_id = result.getInt(DatabaseClaims.COLUMNS.PARENT.name);
                     Claim parent = null;
-                    for (ClaimData _pclaim : current_claimData)
+                    for (ClaimData _pclaim : parent_claims)
                         if (_pclaim.claimId == _parent_id) {
                             parent = (Claim) _pclaim;
                             break;

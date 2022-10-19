@@ -6,6 +6,6 @@
 package me.RonanCraft.Pueblos.claims.enums;
 
 public enum CLAIM_TYPE {
-    MAIN,
+    PARENT,
     CHILD
 }

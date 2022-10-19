@@ -23,7 +23,7 @@ public class CmdCreate implements PueblosCommand, PueblosCommandHelpable {
         Bukkit.getScheduler().runTaskAsynchronously(getPl(), () -> {
             CLAIM_ERRORS error = HelperClaim.registerClaim(p,
                     p.getWorld(), p.getLocation().clone().add(-7, 0, -8),
-                    p.getLocation().clone().add(8, 0, 8), null, CLAIM_TYPE.MAIN);
+                    p.getLocation().clone().add(8, 0, 8), null, CLAIM_TYPE.PARENT);
             error.sendMsg(sendi, null);
         });
     }

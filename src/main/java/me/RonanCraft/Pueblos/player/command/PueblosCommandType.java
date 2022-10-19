@@ -11,7 +11,7 @@ public enum PueblosCommandType {
     FLAG(new            CmdFlags()),
     REQUEST(new         CmdRequest()),
     CONVERT(new         CmdConvert()),
-    ADMIN_CLAIM(new     CmdAdminclaim()),
+    ADMIN_CLAIM(new CmdAdminClaim()),
     ADMIN_OVERRIDE(new  CmdAdminOverride()),
     //CLAIMITEM(new       CmdClaimItem()),
     ADDMEMBER(new       CmdAddMember()),

@@ -71,8 +71,7 @@ public class Pueblos extends JavaPlugin {
     private void loadAll(boolean reload) {
         registerDependencies();
         files.loadAll();
-        systems.load();
-        systems.getEvents().load(reload);
+        systems.load(reload);
         commands.load();
         permissions.register();
         for (PueblosInventory inv : PueblosInventory.values())

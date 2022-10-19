@@ -19,13 +19,14 @@ public class Systems {
     private final PlayerInfoHandler playerInfo = new PlayerInfoHandler();
     private final GlobalItems globalItems = new GlobalItems();
 
-    public void load() {
+    public void load(boolean reload) {
         settings.load(); //Load first
         databaseClaims.load();
         databaseAuctions.load();
         claim.load();
         playerInfo.clear();
         globalItems.load();
+        events.load(reload);
     }
 
     public DatabaseClaims getDatabaseClaims() {

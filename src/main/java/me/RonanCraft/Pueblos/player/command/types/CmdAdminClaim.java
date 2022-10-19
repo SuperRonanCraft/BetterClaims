@@ -7,7 +7,7 @@ import me.RonanCraft.Pueblos.resources.messages.MessagesHelp;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CmdAdminclaim implements PueblosCommand, PueblosCommandHelpable {
+public class CmdAdminClaim implements PueblosCommand, PueblosCommandHelpable {
 
     public String getName() {
         return "adminclaim";
