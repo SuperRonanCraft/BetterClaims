@@ -29,22 +29,14 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
         Claim claim = handler.getClaimMain(p.getLocation());
         if (claim != null) {
             if (claim.isMember(p)) {
-                //---- JUNK CLAIM MEMBER
-                /*if (claim.getMembers().size() == 0) {
-                    ClaimMember member = new ClaimMember(p.getUniqueId(), p.getName(), Calendar.getInstance().getTime(), false, claim);
-                    member.setFlag(CLAIM_FLAG_MEMBER.ALLOW_BED, true, true);
-                    claim.addMember(member, true);
-                    Pueblos.getInstance().getSystems().getClaimDatabase().updateMembers(claim);
-                }*/
-                //----
                 PueblosInventory.CLAIM.open(p, claim, true);
             } else {
-                if (claim.isAdminClaim())
+                if (claim.isAdminClaim()) {
                     if (PermissionNodes.ADMIN_CLAIM.check(sendi))
                         PueblosInventory.CLAIM.open(p, claim, true);
                     else
                         MessagesCore.CLAIM_PERMISSION_ADMINCLAIM.send(sendi, claim);
-                else
+                } else
                     MessagesCore.CLAIM_PERMISSION_CLAIM.send(sendi, claim);
             }
         } else {

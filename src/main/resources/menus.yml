@@ -11,7 +11,7 @@ Global:
       - ''
       - '&8Click to go back a page'
 Claim:
-  Title: '&7Claim | %claim_name%'
+  Title: '&8Claim | %claim_name%'
   Items:
     Members:
       Name: '&eMembers'
@@ -87,7 +87,7 @@ Claim:
         - ''
         - '&7Visualize claim in the world'
 ClaimSelect:
-  Title: '&7Select Claim'
+  Title: '&8Select Claim'
   Items:
     Owner:
       Name: '&d%claim_name%'
@@ -113,7 +113,7 @@ ClaimSelect:
         - ''
         - '&fClick to view this claim!'
 Members:
-  Title: '&7Members | %claim_name%'
+  Title: '&8Members | %claim_name%'
   Items:
     Member:
       Edit:
@@ -153,7 +153,7 @@ Members:
         - ''
         - '&7Leave this cruel land &8(confirm)'
 Member:
-  Title: '&7Member | %member_name% | %claim_name%'
+  Title: '&8Member | %member_name% | %claim_name%'
   Items:
     Member:
       Name: '&eEditting Member'
@@ -183,7 +183,7 @@ Member:
         - ''
         - '&fClick to remove &7%member_name% &8(confirm)'
 Requesting:
-  Title: '&7Request to Join'
+  Title: '&8Request to Join'
   Items:
     New:
       Name: '&e%claim_name%'
@@ -199,7 +199,7 @@ Requesting:
         - '&7We see you really want to join this claim'
         - '&7Unfortunately, &a%claim_owner% &7hasn''t responded'
 Requests:
-  Title: '&7Join Requests | %claim_name%'
+  Title: '&8Join Requests | %claim_name%'
   Items:
     Request:
       Name: '&e%request_name%'
@@ -209,7 +209,7 @@ Requests:
         - '&fLeft-Click: &aAccept'
         - '&fRight-Click: &cDecline'
 Flags:
-  Title: '&7Claim | Flags'
+  Title: '&8Claim | Flags'
   Items:
     Enabled:
       Name: '&e%claim_flag%'
@@ -228,7 +228,7 @@ Flags:
         - ''
         - '&fClick to toggle flag'
 Confirm:
-  Title: '&7Confirm | %confirm_type%'
+  Title: '&8Confirm | %confirm_type%'
   Items:
     Accept:
       Name: '&e&lConfirm Action'

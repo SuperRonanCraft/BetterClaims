@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryRequesting extends PueblosInvLoader implements PueblosInv_MultiClaim {
+public class InventoryRequesting_Player extends PueblosInvLoader implements PueblosInv_MultiClaim {
 
     private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, List<ClaimData>> claims = new HashMap<>();

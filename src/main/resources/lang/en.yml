@@ -116,5 +116,5 @@ ClaimInfo:
   - '&fID&7: %claim_id%'
   - '&fMembers&7: %claim_members%'
   - '&fSize&7: %claim_width% x %claim_length%'
-  - '&7Location&7: %claim_location%'
-  - '&7World&7: %claim_location_world%'
+  - '&fLocation&7: %claim_location%'
+  - '&fWorld&7: %claim_location_world%'

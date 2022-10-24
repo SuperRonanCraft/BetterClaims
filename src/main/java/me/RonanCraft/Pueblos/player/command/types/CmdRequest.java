@@ -1,6 +1,8 @@
 package me.RonanCraft.Pueblos.player.command.types;
 
 import me.RonanCraft.Pueblos.Pueblos;
+import me.RonanCraft.Pueblos.claims.Claim;
+import me.RonanCraft.Pueblos.claims.enums.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.Pueblos.inventory.PueblosInventory;
 import me.RonanCraft.Pueblos.player.command.PueblosCommand;
 import me.RonanCraft.Pueblos.player.command.PueblosCommandHelpable;
@@ -8,10 +10,13 @@ import me.RonanCraft.Pueblos.player.command.PueblosCommandTabComplete;
 import me.RonanCraft.Pueblos.resources.PermissionNodes;
 import me.RonanCraft.Pueblos.claims.ClaimData;
 import me.RonanCraft.Pueblos.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.Pueblos.resources.helper.HelperClaim;
 import me.RonanCraft.Pueblos.resources.messages.Message;
 import me.RonanCraft.Pueblos.resources.messages.MessagesHelp;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,25 +29,32 @@ public class CmdRequest implements PueblosCommand, PueblosCommandHelpable, Puebl
 
     public void execute(CommandSender sendi, String label, String[] args) {
         Player p = (Player) sendi;
-        List<ClaimData> requestable = getRequestable(p);
+        List<ClaimData> requestable = getRequestable(p, args.length >= 2 ? Bukkit.getPlayer(args[1]) : null);
         if (!requestable.isEmpty()) {
-            PueblosInventory.REQUESTING.open(p, requestable, true);
+            PueblosInventory.REQUESTING_ALL.open(p, requestable, true);
         } else
             Message.sms(p, "No claims to join!", null);
     }
 
-    public static List<ClaimData> getRequestable(Player p) { //Get all claims a player can request to be in
-        List<ClaimData> claimData = new ArrayList<>();
-        for (ClaimData claim : Pueblos.getInstance().getClaimHandler().getClaimsMain())
-            //Not the owner or member and claim is accepting requests
-            if (    !claim.isAdminClaim() //Not an admin Claim
-                    && claim.getOwnerID() != null //Owners UUID isnt trash
-                    && !claim.isOwner(p) //Not an owner of this claim
-                    && !claim.isMember(p) //Is not already a member
-                    && (Boolean) claim.getFlags().getFlag(CLAIM_FLAG.ALLOW_REQUESTS)) { //Claim is accepting requests
-                claimData.add(claim);
+    public static List<ClaimData> getRequestable(Player p, @Nullable Player target) { //Get all claims a player can request to be in
+        List<ClaimData> requestable = new ArrayList<>();
+        if (target == null) {
+            for (Claim claim : Pueblos.getInstance().getClaimHandler().getClaimsMain())
+                //Not the owner or member and claim is accepting requests
+                if (!claim.isAdminClaim() //Not an admin Claim
+                        && claim.getOwnerID() != null //Owners UUID isnt trash
+                        && !claim.isOwner(p) //Not an owner of this claim
+                        && !claim.isMember(p) //Is not already a member
+                        && (Boolean) claim.getFlags().getFlag(CLAIM_FLAG.ALLOW_REQUESTS)) { //Claim is accepting requests
+                    requestable.add(claim);
+                }
+        } else {
+            for (ClaimData claim : Pueblos.getInstance().getClaimHandler().getClaims(target.getUniqueId())) {
+                if (claim.checkPermLevel(target, CLAIM_PERMISSION_LEVEL.OWNER))
+                    requestable.add(claim);
             }
-        return claimData;
+        }
+        return requestable;
     }
 
     public boolean permission(CommandSender sendi) {

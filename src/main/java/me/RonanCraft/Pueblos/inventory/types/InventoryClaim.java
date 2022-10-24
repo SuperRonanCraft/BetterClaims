@@ -43,6 +43,13 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
                 continue;
             if (setting == CLAIM_SETTINGS.CHILD_CLAIM && (claimData.isChild() || ((Claim) claimData).getChildren().isEmpty()))
                 continue;
+            if (claimData.isAdminClaim()) {
+                switch (setting) {
+                    case FLAGS:
+                    case REQUESTS:
+                    case MEMBERS: continue;
+                }
+            }
             ItemStack item = getItem(setting.getItem(p, claimData).section, p, claimData);
             inv.setItem(setting.slot, item);
             itemInfo.put(setting.slot, new PueblosItem(item, ITEM_TYPE.NORMAL, setting));

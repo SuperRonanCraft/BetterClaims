@@ -160,7 +160,7 @@ public abstract class ClaimData {
         if (level != null)
             switch (level) {
                 case OWNER: return isOwner(p) || (isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p));
-                case MEMBER: return isMember(p);
+                case MEMBER: return isMember(p) || checkPermLevel(p, CLAIM_PERMISSION_LEVEL.OWNER);
                 default: return true;
             }
         return true;

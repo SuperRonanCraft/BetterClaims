@@ -18,7 +18,8 @@ public enum PueblosInventory {
     MEMBER(new InventoryClaimMember(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
     CLAIM(new InventoryClaim(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.MEMBER),
     CLAIM_SELECT(new InventoryClaimSelect(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
-    REQUESTING(new InventoryRequesting(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.NONE),
+    REQUESTING_ALL(new InventoryRequesting_Player(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.NONE),
+    REQUESTING_PLAYER(new InventoryRequesting_Player(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.NONE),
     REQUESTS(new InventoryRequests(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
     FLAGS(new InventoryClaimFlags(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
     CONFIRM(new InventoryConfirm(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.NONE);

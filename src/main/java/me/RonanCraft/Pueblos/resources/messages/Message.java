@@ -106,6 +106,8 @@ public class Message {
             str = str.replace("%claim_width%", String.valueOf(claimData.getBoundingBox().getWidth()));
         if (str.contains("%claim_length%"))
             str = str.replace("%claim_length%", String.valueOf(claimData.getBoundingBox().getLength()));
+        if (str.contains("%claim_id%"))
+            str = str.replace("%claim_id%", String.valueOf(claimData.claimId));
         if (flag != null) {
             if (str.contains("%claim_flag%"))
                 str = str.replace("%claim_flag%", StringUtils.capitalize(flag.name().toLowerCase().replace("_", " ")));
