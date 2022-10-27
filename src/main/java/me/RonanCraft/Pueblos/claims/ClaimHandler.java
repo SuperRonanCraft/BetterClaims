@@ -156,9 +156,13 @@ public class ClaimHandler {
     }
 
     public List<ClaimData> getClaims(@NotNull UUID uuid) {
+        return getClaims(uuid, false);
+    }
+
+    public List<ClaimData> getClaims(@NotNull UUID uuid, boolean admin) {
         List<ClaimData> claimData = new ArrayList<>();
         for (ClaimData claim : this.mainClaims)
-            if (claim.getOwnerID() != null && claim.getOwnerID().equals(uuid))
+            if (admin ? claim.isAdminClaim() : claim.getOwnerID() != null && claim.getOwnerID().equals(uuid))
                 claimData.add(claim);
         return claimData;
     }
