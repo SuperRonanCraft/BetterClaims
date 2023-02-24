@@ -4,11 +4,11 @@ import me.RonanCraft.BetterClaims.claims.Claim;
 import org.bukkit.entity.Player;
 
 //Called when a player walks OUT of a claim
-public class PueblosEvent_ClaimWalkedOut extends PueblosEventType_ClaimCancellable {
+public class ClaimEvent_ClaimWalkedOut extends ClaimEventType_ClaimCancellable {
 
     private final Player player;
 
-    public PueblosEvent_ClaimWalkedOut(Claim claim, Player player) {
+    public ClaimEvent_ClaimWalkedOut(Claim claim, Player player) {
         super(claim, false);
         this.player = player;
     }

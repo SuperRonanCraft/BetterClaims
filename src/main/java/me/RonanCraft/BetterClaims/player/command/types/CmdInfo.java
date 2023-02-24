@@ -1,9 +1,9 @@
 package me.RonanCraft.BetterClaims.player.command.types;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
-import me.RonanCraft.BetterClaims.inventory.PueblosInventory;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommand;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandHelpable;
+import me.RonanCraft.BetterClaims.inventory.ClaimInventory;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommand;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandHelpable;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.claims.*;
 import me.RonanCraft.BetterClaims.claims.Claim;
@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 
 import java.util.*;
 
-public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
+public class CmdInfo implements ClaimCommand, ClaimCommandHelpable {
 
     //Opens a GUI to view claim information
 
@@ -29,11 +29,11 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
         Claim claim = handler.getClaimMain(p.getLocation());
         if (claim != null) {
             if (claim.isMember(p)) {
-                PueblosInventory.CLAIM.open(p, claim, true);
+                ClaimInventory.CLAIM.open(p, claim, true);
             } else {
                 if (claim.isAdminClaim()) {
                     if (PermissionNodes.ADMIN_CLAIM.check(sendi))
-                        PueblosInventory.CLAIM.open(p, claim, true);
+                        ClaimInventory.CLAIM.open(p, claim, true);
                     else
                         MessagesCore.CLAIM_PERMISSION_ADMINCLAIM.send(sendi, claim);
                 } else
@@ -43,9 +43,9 @@ public class CmdInfo implements PueblosCommand, PueblosCommandHelpable {
             List<ClaimData> claimData = handler.getClaims(p.getUniqueId());
             if (!claimData.isEmpty()) {
                 if (claimData.size() == 1)
-                    PueblosInventory.CLAIM.open(p, claimData.get(0), true);
+                    ClaimInventory.CLAIM.open(p, claimData.get(0), true);
                 else
-                    PueblosInventory.CLAIM_SELECT.open(p, claimData, true);
+                    ClaimInventory.CLAIM_SELECT.open(p, claimData, true);
             } else
                 MessagesCore.CLAIM_NONE.send(sendi);
         }

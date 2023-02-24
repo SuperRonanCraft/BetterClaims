@@ -4,7 +4,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.List;
 
-public interface PueblosCommandTabComplete {
+public interface ClaimCommandTabComplete {
 
     List<String> tabComplete(CommandSender sendi, String[] args);
 }

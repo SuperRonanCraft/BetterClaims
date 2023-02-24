@@ -1,9 +1,9 @@
 package me.RonanCraft.BetterClaims.player.command.types;
 
-import me.RonanCraft.BetterClaims.player.command.PueblosCommand;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandEnableable;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandHelpable;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandTabComplete;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommand;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandEnableable;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandHelpable;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandTabComplete;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.resources.dependencies.ConverterGriefPrevention;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesCore;
@@ -14,7 +14,7 @@ import org.bukkit.command.CommandSender;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CmdConvert implements PueblosCommand,PueblosCommandHelpable, PueblosCommandEnableable, PueblosCommandTabComplete {
+public class CmdConvert implements ClaimCommand, ClaimCommandHelpable, ClaimCommandEnableable, ClaimCommandTabComplete {
 
     public String getName() {
         return "convert";

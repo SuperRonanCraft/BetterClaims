@@ -1,9 +1,9 @@
 package me.RonanCraft.BetterClaims.player.command.types;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommand;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandHelpable;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandTabComplete;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommand;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandHelpable;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandTabComplete;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.claims.ClaimHandler;
 import me.RonanCraft.BetterClaims.claims.Claim;
@@ -19,7 +19,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CmdAddMember implements PueblosCommand, PueblosCommandHelpable, PueblosCommandTabComplete {
+public class CmdAddMember implements ClaimCommand, ClaimCommandHelpable, ClaimCommandTabComplete {
 
     public String getName() {
         return "addMember";

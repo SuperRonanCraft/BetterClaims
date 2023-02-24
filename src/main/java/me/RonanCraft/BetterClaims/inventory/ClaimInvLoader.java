@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public abstract class PueblosInvLoader {
+public abstract class ClaimInvLoader {
 
     String title = null;
     HashMap<String, ItemStack> items = new HashMap<>();

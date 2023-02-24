@@ -14,7 +14,7 @@ import org.bukkit.util.Vector;
 
 import java.util.List;
 
-public class EventFallingBlock implements PueblosEvents {
+public class EventFallingBlock implements ClaimEvents {
 
     private boolean getSetting(Settings.SETTING set) {
         return getPl().getSettings().getBoolean(set);
@@ -67,11 +67,11 @@ public class EventFallingBlock implements PueblosEvents {
 
         //if changing a block TO air, this is when the falling block formed.  note its original location
         if (event.getTo() == Material.AIR) {
-            entity.setMetadata("PUEBLOS_FALLINGBLOCK", new FixedMetadataValue(getPl(), block.getLocation()));
+            entity.setMetadata("BETTERCLAIMS_FALLINGBLOCK", new FixedMetadataValue(getPl(), block.getLocation()));
         }
         //otherwise, the falling block is forming a block.  compare new location to original source
         else {
-            List<MetadataValue> values = entity.getMetadata("PUEBLOS_FALLINGBLOCK");
+            List<MetadataValue> values = entity.getMetadata("BETTERCLAIMS_FALLINGBLOCK");
             //if we're not sure where this entity came from (maybe another plugin didn't follow the standard?), allow the block to form
             //Or if entity fell through an end portal, allow it to form, as the event is erroneously fired twice in this scenario.
             if (values.size() < 1) return;

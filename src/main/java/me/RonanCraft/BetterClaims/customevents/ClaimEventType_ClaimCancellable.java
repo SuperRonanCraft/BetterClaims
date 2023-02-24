@@ -3,12 +3,12 @@ package me.RonanCraft.BetterClaims.customevents;
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import org.bukkit.event.Cancellable;
 
-public abstract class PueblosEventType_ClaimCancellable extends PueblosEventType_Claim implements Cancellable {
+public abstract class ClaimEventType_ClaimCancellable extends ClaimEventType_Claim implements Cancellable {
 
     boolean cancelled;
     boolean sendCancelledMessage = true;
 
-    PueblosEventType_ClaimCancellable(ClaimData claimData, boolean async) {
+    ClaimEventType_ClaimCancellable(ClaimData claimData, boolean async) {
         super(claimData, async);
     }
 

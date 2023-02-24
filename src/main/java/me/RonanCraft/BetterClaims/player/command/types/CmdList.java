@@ -1,10 +1,10 @@
 package me.RonanCraft.BetterClaims.player.command.types;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
-import me.RonanCraft.BetterClaims.inventory.PueblosInventory;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommand;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandHelpable;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandTabComplete;
+import me.RonanCraft.BetterClaims.inventory.ClaimInventory;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommand;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandHelpable;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandTabComplete;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.ClaimHandler;
@@ -16,7 +16,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CmdList implements PueblosCommand, PueblosCommandHelpable, PueblosCommandTabComplete {
+public class CmdList implements ClaimCommand, ClaimCommandHelpable, ClaimCommandTabComplete {
 
     public String getName() {
         return "list";
@@ -29,9 +29,9 @@ public class CmdList implements PueblosCommand, PueblosCommandHelpable, PueblosC
         List<ClaimData> claimData = handler.getClaims(p.getUniqueId(), admin);
         if (!claimData.isEmpty()) {
             if (claimData.size() == 1)
-                PueblosInventory.CLAIM.open(p, claimData.get(0), true);
+                ClaimInventory.CLAIM.open(p, claimData.get(0), true);
             else
-                PueblosInventory.CLAIM_SELECT.open(p, claimData, true);
+                ClaimInventory.CLAIM_SELECT.open(p, claimData, true);
         } else
             MessagesCore.CLAIM_NONE.send(sendi);
     }

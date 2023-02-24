@@ -2,7 +2,7 @@ package me.RonanCraft.BetterClaims.player.data;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.RonanCraft.BetterClaims.inventory.PueblosInventory;
+import me.RonanCraft.BetterClaims.inventory.ClaimInventory;
 import me.RonanCraft.BetterClaims.player.events.PlayerClaimInteraction;
 import me.RonanCraft.BetterClaims.claims.Claim;
 import me.RonanCraft.BetterClaims.resources.visualization.Visualization;
@@ -16,8 +16,8 @@ public class PlayerData {
     @Getter @Setter private @Nullable Visualization visualization;
     @Getter private boolean overriding;
     @Getter private @Nullable Inventory inventory;
-    private List<PueblosInventory> previous = new ArrayList<>();
-    @Getter private @Nullable PueblosInventory currentInventory;
+    private List<ClaimInventory> previous = new ArrayList<>();
+    @Getter private @Nullable ClaimInventory currentInventory;
     @Getter @Setter private @Nullable PlayerClaimInteraction claimInteraction;
     @Getter @Setter private Claim insideClaim;
 
@@ -26,7 +26,7 @@ public class PlayerData {
     }
 
     //Inventory Menus
-    public void setInventory(Inventory inv, PueblosInventory pinv, boolean from_command) {
+    public void setInventory(Inventory inv, ClaimInventory pinv, boolean from_command) {
         if (from_command)
             clear();
         inventory = inv;
@@ -34,8 +34,8 @@ public class PlayerData {
         addPrevious(pinv);
     }
 
-    private void addPrevious(PueblosInventory pinv) {
-        List<PueblosInventory> invs = previous;
+    private void addPrevious(ClaimInventory pinv) {
+        List<ClaimInventory> invs = previous;
         if (!invs.contains(pinv))
             invs.add(pinv);
         previous = invs;
@@ -43,7 +43,7 @@ public class PlayerData {
 
     public void removePrevious() {
         if (!previous.isEmpty()) {
-            List<PueblosInventory> invs = previous;
+            List<ClaimInventory> invs = previous;
             invs.remove(invs.size() - 1);
             invs.remove(invs.size() - 1);
             previous = invs;
@@ -51,8 +51,8 @@ public class PlayerData {
     }
 
     @Nullable
-    public PueblosInventory getPrevious(PueblosInventory pinv) {
-        PueblosInventory previous = null;
+    public ClaimInventory getPrevious(ClaimInventory pinv) {
+        ClaimInventory previous = null;
         if (!this.previous.isEmpty())
             previous = this.previous.get(this.previous.size() - 1);
         if (previous == pinv && this.previous.size() > 1)

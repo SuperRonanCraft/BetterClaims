@@ -4,7 +4,7 @@ import me.RonanCraft.BetterClaims.claims.ClaimData;
 import org.bukkit.entity.Player;
 
 //Called when a claim has successfully uploaded to the database and is now being protected
-public class PueblosEvent_ClaimCreate extends PueblosEventType_Claim {
+public class ClaimEvent_ClaimCreate extends ClaimEventType_Claim {
 
     private final Player creator;
 
@@ -13,7 +13,7 @@ public class PueblosEvent_ClaimCreate extends PueblosEventType_Claim {
      * @param claimData The claim that was just created
      * @param creator The player who created this claim
      */
-    public PueblosEvent_ClaimCreate(ClaimData claimData, Player creator) {
+    public ClaimEvent_ClaimCreate(ClaimData claimData, Player creator) {
         super(claimData, true);
         this.creator = creator;
     }

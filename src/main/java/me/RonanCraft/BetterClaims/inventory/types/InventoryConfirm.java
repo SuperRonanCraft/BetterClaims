@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryConfirm extends PueblosInvLoader implements PueblosInv_Confirming {
+public class InventoryConfirm extends ClaimInvLoader implements ClaimInv_Confirming {
 
-    private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
+    private final HashMap<Player, HashMap<Integer, ClaimItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, Confirmation> confirmation = new HashMap<>();
 
     @Override
@@ -27,16 +27,16 @@ public class InventoryConfirm extends PueblosInvLoader implements PueblosInv_Con
 
         addBorder(inv);
 
-        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
+        HashMap<Integer, ClaimItem> itemInfo = new HashMap<>();
 
-        addButtonBack(inv, p, itemInfo, PueblosInventory.CONFIRM, confirmation.info);
+        addButtonBack(inv, p, itemInfo, ClaimInventory.CONFIRM, confirmation.info);
 
         for (ITEMS i : ITEMS.values()) {
             //Accept button
             ItemStack item = getItem(i.section, p, confirmation);
             int slot = i.slot;
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, i));
+            itemInfo.put(slot, new ClaimItem(item, ITEM_TYPE.NORMAL, i));
         }
 
         this.itemInfo.put(p, itemInfo);

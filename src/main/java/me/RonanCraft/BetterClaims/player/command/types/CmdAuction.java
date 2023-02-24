@@ -1,8 +1,8 @@
 package me.RonanCraft.BetterClaims.player.command.types;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommand;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandHelpable;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommand;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandHelpable;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.ClaimHandler;
@@ -16,7 +16,7 @@ import me.RonanCraft.BetterClaims.resources.visualization.VisualizationType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CmdAuction implements PueblosCommand, PueblosCommandHelpable {
+public class CmdAuction implements ClaimCommand, ClaimCommandHelpable {
 
     //Auctions off a claim
 

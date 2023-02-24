@@ -14,20 +14,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_Claim {
+public class InventoryClaimFlags extends ClaimInvLoader implements ClaimInv_Claim {
 
-    private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
+    private final HashMap<Player, HashMap<Integer, ClaimItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, ClaimData> claim = new HashMap<>();
 
     @Override
     public Inventory open(Player p, ClaimData claimData) {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claimData));
 
-        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
+        HashMap<Integer, ClaimItem> itemInfo = new HashMap<>();
 
         addBorder(inv);
 
-        addButtonBack(inv, p, itemInfo, PueblosInventory.FLAGS, claimData);
+        addButtonBack(inv, p, itemInfo, ClaimInventory.FLAGS, claimData);
 
         int slot = 18;
         for (CLAIM_FLAG flag : CLAIM_FLAG.values()) {
@@ -40,7 +40,7 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
             else
                 item = getItem(ITEMS.FLAG_DISABLED.section, p, new Object[]{claimData, flag});
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, flag));
+            itemInfo.put(slot, new ClaimItem(item, ITEM_TYPE.NORMAL, flag));
         }
         this.itemInfo.put(p, itemInfo);
         this.claim.put(p, claimData);
@@ -60,7 +60,7 @@ public class InventoryClaimFlags extends PueblosInvLoader implements PueblosInv_
         CLAIM_FLAG flag = (CLAIM_FLAG) itemInfo.get(p).get(e.getSlot()).info;
         ClaimData claimData = this.claim.get(p);
         HelperClaim.toggleFlag(p, claimData, flag);
-        PueblosInventory.FLAGS.open(p, claimData, false);
+        ClaimInventory.FLAGS.open(p, claimData, false);
         //this.itemInfo.remove(p);
     }
 

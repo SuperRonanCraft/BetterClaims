@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-public class EventItems implements Listener, PueblosEvents {
+public class EventItems implements Listener, ClaimEvents {
 
                         //Item, Player
     private final HashMap<UUID, UUID> items = new HashMap<>();

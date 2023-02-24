@@ -1,7 +1,7 @@
 Global:
   Border:
     Enabled: true
-    Name: '&8-&6&lPueblos&8-'
+    Name: '&8-&6&lBetterClaims&8-'
     Item: 'ORANGE_STAINED_GLASS_PANE'
     Lore: []
   Back:

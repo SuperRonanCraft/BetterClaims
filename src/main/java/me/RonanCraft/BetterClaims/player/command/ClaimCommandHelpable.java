@@ -1,6 +1,6 @@
 package me.RonanCraft.BetterClaims.player.command;
 
-public interface PueblosCommandHelpable {
+public interface ClaimCommandHelpable {
 
     String getHelp();
 }

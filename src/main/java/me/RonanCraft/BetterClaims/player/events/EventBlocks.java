@@ -5,7 +5,7 @@ import me.RonanCraft.BetterClaims.resources.messages.MessagesCore;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.*;
 
-public class EventBlocks implements PueblosEvents {
+public class EventBlocks implements ClaimEvents {
 
     //Player Block Break
     void onBreak(BlockBreakEvent e) {

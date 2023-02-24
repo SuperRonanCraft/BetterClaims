@@ -7,7 +7,7 @@ import org.bukkit.event.world.PortalCreateEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventPortal implements PueblosEvents {
+public class EventPortal implements ClaimEvents {
     //(Added v1.2.0)
     //Stop portal creations when target is inside a claim
     void onPortal(PortalCreateEvent e) {

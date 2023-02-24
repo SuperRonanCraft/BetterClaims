@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim {
+public class InventoryClaim extends ClaimInvLoader implements ClaimInv_Claim {
 
-    private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
+    private final HashMap<Player, HashMap<Integer, ClaimItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, ClaimData> claim = new HashMap<>();
 
     @Override
@@ -35,7 +35,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
 
         addBorder(inv);
 
-        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
+        HashMap<Integer, ClaimItem> itemInfo = new HashMap<>();
         for (CLAIM_SETTINGS setting : CLAIM_SETTINGS.values()) {
             if (!claimData.checkPermLevel(p, setting.claim_permission_level))
                 continue;
@@ -52,7 +52,7 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
             }
             ItemStack item = getItem(setting.getItem(p, claimData).section, p, claimData);
             inv.setItem(setting.slot, item);
-            itemInfo.put(setting.slot, new PueblosItem(item, ITEM_TYPE.NORMAL, setting));
+            itemInfo.put(setting.slot, new ClaimItem(item, ITEM_TYPE.NORMAL, setting));
         }
 
         this.itemInfo.put(p, itemInfo);
@@ -74,9 +74,9 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
         ClaimData claimData = this.claim.get(p);
         switch (setting) {
             case TELEPORT: HelperClaim.teleportTo(p, claimData); p.closeInventory(); break;
-            case DELETE: PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_DELETE, p, claimData), false); break;
+            case DELETE: ClaimInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_DELETE, p, claimData), false); break;
             case STATS: HelperClaim.sendClaimInfo(p, claimData); p.closeInventory(); break;
-            case CHILD_CLAIM: PueblosInventory.CLAIM_SELECT.open(p, ((Claim) claimData).getChildren(), false); break;
+            case CHILD_CLAIM: ClaimInventory.CLAIM_SELECT.open(p, ((Claim) claimData).getChildren(), false); break;
             case VISUALIZE:
                 Vector vector = claimData.getBoundingBox().getCenter();
                 if (p.getLocation().distance(new Location(p.getLocation().getWorld(), vector.getX(), p.getLocation().getBlockY(), vector.getZ())) < 300) {
@@ -113,9 +113,9 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
     }
 
     private enum CLAIM_SETTINGS {
-        MEMBERS(20,     null,   PueblosInventory.MEMBERS, ITEMS.MEMBERS),
-        FLAGS(22,       null,   PueblosInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
-        REQUESTS(24,    null,   PueblosInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
+        MEMBERS(20,     null,   ClaimInventory.MEMBERS, ITEMS.MEMBERS),
+        FLAGS(22,       null,   ClaimInventory.FLAGS, ITEMS.FLAGS_ALLOWED, ITEMS.FLAGS_DISALLOWED),
+        REQUESTS(24,    null,   ClaimInventory.REQUESTS, ITEMS.REQUESTS_ALLOWED, ITEMS.REQUESTS_DISALLOWED),
         TELEPORT(16,    null,   null, ITEMS.TELEPORT, null, PermissionNodes.TELEPORT),
         DELETE(10,      CLAIM_PERMISSION_LEVEL.OWNER, null, ITEMS.DELETE),
         STATS(28,       null,   null, ITEMS.STATS),
@@ -125,12 +125,12 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
 
         int slot;
         CLAIM_PERMISSION_LEVEL claim_permission_level;
-        PueblosInventory inv;
+        ClaimInventory inv;
         ITEMS allowed;
         ITEMS disallowed;
         PermissionNodes permission;
 
-        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_per_level, @Nullable PueblosInventory inv, ITEMS allowed, ITEMS disallowed, @Nullable PermissionNodes per) {
+        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_per_level, @Nullable ClaimInventory inv, ITEMS allowed, ITEMS disallowed, @Nullable PermissionNodes per) {
             this.slot = slot;
             this.claim_permission_level = claim_per_level;
             this.inv = inv;
@@ -139,11 +139,11 @@ public class InventoryClaim extends PueblosInvLoader implements PueblosInv_Claim
             this.permission = per;
         }
 
-        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_per_level, @Nullable PueblosInventory inv, ITEMS allowed, ITEMS disallowed) {
+        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_per_level, @Nullable ClaimInventory inv, ITEMS allowed, ITEMS disallowed) {
             this(slot, claim_per_level, inv, allowed, disallowed, null);
         }
 
-        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_per_level, @Nullable PueblosInventory inv, ITEMS allowed) {
+        CLAIM_SETTINGS(int slot, CLAIM_PERMISSION_LEVEL claim_per_level, @Nullable ClaimInventory inv, ITEMS allowed) {
             this(slot, claim_per_level, inv, allowed, null);
         }
 

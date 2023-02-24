@@ -17,7 +17,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
-public class EventItemChange implements PueblosEvents {
+public class EventItemChange implements ClaimEvents {
 
     private final EventListener listener;
     private final HashMap<Player, Integer> claimShowing = new HashMap<>();

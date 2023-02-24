@@ -1,13 +1,13 @@
 #Translated by @katorly on GitHub
 Messages:
-  Prefix: '&7[&6Pueblos&7] '
+  Prefix: '&7[&6BetterClaims&7] '
   InvalidCommand: '&c参数错误! 请使用 &7/%command% help'
   NoPermission: '&c抱歉! &7您没有权限这么做!'
   Reload: '&e配置和语言文件已重载.'
   InvalidFlagValue: '&cFlag 值不可用! &7请重试.'
   InvalidFlag: '&cFlag 不可用! &7请重试.'
   CannotEdit: '&c您不能在领地外编辑此项!'
-  UnknownID: '&c错误的领地 ID. &7请使用 `/pueblos list` 来查看您可以编辑的领地!'
+  UnknownID: '&c错误的领地 ID. &7请使用 `/claims list` 来查看您可以编辑的领地!'
   PlayerExist: '&c玩家 `%invalid_name%` 不存在!'
   TooFar: '&7距离执行此操作的对象太远!'
   WorldDisabled: '&c此世界不能创造领地!'
@@ -17,7 +17,7 @@ Messages:
     Auction:
       NotInside: '&7您不在任何需要拍卖的领地内!'
       NotOwner: '&c您不能拍卖别的玩家的领地! &8哼......'
-      Created: '&a领地 #%claim_id% 现正以 $%auction_price% 的价格拍卖! &7使用 `/pueblos auction sign` 制作一个告示牌以展示此拍卖'
+      Created: '&a领地 #%claim_id% 现正以 $%auction_price% 的价格拍卖! &7使用 `/claims auction sign` 制作一个告示牌以展示此拍卖'
       Deleted: '&c领地 #%claim_id% 已停止拍卖!'
     Override:
       Enabled: '&7超级权限 &a开启&7, 您现在可以编辑任何领地! &8当心, 权力越大, 责任越大!'
@@ -30,7 +30,7 @@ Messages:
     Teleport: '&7成功传送到 &f%claim_name% 的 &7家!'
     None: '&7您不是该领地的所有者或成员!'
     Permission:
-      Claim: '&7您不是 &f%claim_owner%&7 的 pueblo 的成员之一!'
+      Claim: '&7您不是 &f%claim_owner%&7 的 claims 的成员之一!'
       AdminClaim: '&7您不可以在此处这么做!'
     Flag: '&7领地 flag &f%claim_flag% &7成功更改成 &f%claim_flag_value%'
     Mode:
@@ -67,7 +67,7 @@ Messages:
       Added: '&f成员 %member_name% 已被添加到此领地中!'
       Notification:
         Removed: '&c您已被领地 &b%claim_name%&c 移出! &7您不能再访问该领地了!'
-        Leave: '&c成员 &7%member_name% &c离开了您的 pueblo!'
+        Leave: '&c成员 &7%member_name% &c离开了您的 claims!'
   Convert:
     Started: '&7%plugin% &f插件的转换已开始......'
     Finished: '&7%plugin% &f插件的转换已结束!'
@@ -75,7 +75,7 @@ Messages:
     Success: '&fID 为 &7%claim%&f 的领地从 &7%plugin% &f插件转换&a成功&f!'
     Unknown: '&7未知插件 %plugin%, 请从此列表中选择 &f%list%'
   Request:
-    New: '&a新&f: &7%request_name% &f申请加入您的 pueblo!'
+    New: '&a新&f: &7%request_name% &f申请加入您的 claims!'
     Reminder: '&f您有 %claim_requests% 条申请待处理!'
     Accepted: '&f您通过了 &7%request_name% 的 &f申请!'
     Denied: '&f您拒绝了&7%request_name% 的 &c申请!'
@@ -87,7 +87,7 @@ Messages:
   EventDenied: '&c某些外部机制拒绝了本次操作!'
 
 Help:
-  Prefix: '&e&m-----&6&l Pueblos &8| 帮助 &e&m-----'
+  Prefix: '&e&m-----&6&l BetterClaims &8| 帮助 &e&m-----'
   Help: ' &7- &e/%command% help &7- 显示帮助'
   Reload: ' &7- &e/%command% reload &7- 重载插件'
   Create: ' &7- &e/%command% create &7- 创建一个领地'
@@ -95,7 +95,7 @@ Help:
   List: ' &7- &e/%command% list &7- 列出所有您可以编辑的领地'
   Request: ' &7- &e/%command% request &7- 申请加入一个领地'
   Flags: ' &7- &e/%command% flags &7- 更改领地的 flags'
-  Convert: ' &7- &e/%command% convert <plugin_name> &7- 转换该插件的数据到 Pueblos claims'
+  Convert: ' &7- &e/%command% convert <plugin_name> &7- 转换该插件的数据到 BetterClaims claims'
   ClaimItem: ' &7- &e/%command% claimitem &7- 获取一个领地工具'
   AdminClaim: ' &7- &e/%command% adminclaim &7- 切换领地模式到管理员模式'
   AdminOverride: ' &7- &e/%command% adminoverride &7- 启用能编辑所有领地的超级权限'
@@ -109,7 +109,7 @@ Usage:
   AddMember: '&c用法&7: /%command% addmember <插件名称>'
 
 ClaimInfo:
-  - '&e&m------&6&l Pueblos &8| 领地信息 &e&m------'
+  - '&e&m------&6&l BetterClaims &8| 领地信息 &e&m------'
   - ''
   - '&f领地名称&7: &r%claim_name%'
   - '&f所有者&7: %claim_owner%'

@@ -1,13 +1,13 @@
 # Help translate this file into more languages!
 Messages:
-  Prefix: '&7[&6Pueblos&7] '
+  Prefix: '&7[&6BetterClaims&7] '
   InvalidCommand: '&cInvalid argument! Try &7/%command% help'
   NoPermission: '&cSorry! &7You don''t have permission to do this!'
   Reload: '&eReloaded config and language file.'
   InvalidFlagValue: '&cFlag value is not valid! &7Please try again.'
   InvalidFlag: '&cFlag is not valid! &7Please try again.'
   CannotEdit: '&cUnable to edit this while outside a claim!'
-  UnknownID: '&cClaim id is not a valid. &7Please use `/pueblos list` to view claims you are allowed to edit!'
+  UnknownID: '&cClaim id is not a valid. &7Please use `/claim list` to view claims you are allowed to edit!'
   PlayerExist: '&cThe player `%invalid_name%` does not exist!'
   TooFar: '&7You are too far to do this action!'
   WorldDisabled: '&cThis world has claims disabled!'
@@ -17,7 +17,7 @@ Messages:
     Auction:
       NotInside: '&7You are not inside any claim to auction off!'
       NotOwner: '&cYou cannot auction off another players claim! &8Duh...'
-      Created: '&aAuction is now live for claim #%claim_id% at $%auction_price%! &7Make an auction sign with `/pueblos auction sign`'
+      Created: '&aAuction is now live for claim #%claim_id% at $%auction_price%! &7Make an auction sign with `/claim auction sign`'
       Deleted: '&cAuction deleted for claim #%claim_id%!'
     Override:
       Enabled: '&7Override &aEnabled&7, you are now able to edit any claim! &8Watch it, with great power comes great responsibility!'
@@ -30,7 +30,7 @@ Messages:
     Teleport: '&7Teleported to &f%claim_name%''s &7home!'
     None: '&7You are not an owner or member of any claim!'
     Permission:
-      Claim: '&7You are not a member of &f%claim_owner%&7''s pueblo!'
+      Claim: '&7You are not a member of &f%claim_owner%&7''s claim!'
       AdminClaim: '&7You are unable to do this here!'
     Flag: '&7Claim flag &f%claim_flag% &7changed to &f%claim_flag_value%'
     Mode:
@@ -67,7 +67,7 @@ Messages:
       Added: '&fMember %member_name% has been added to this claim!'
       Notification:
         Removed: '&cYou were removed from &b%claim_name%&c! &7You can no longer visit here!'
-        Leave: '&cMember &7%member_name% &chas left your pueblo!'
+        Leave: '&cMember &7%member_name% &chas left your claim!'
   Convert:
     Started: '&fConversion for the plugin &7%plugin% &fhas begun...'
     Finished: '&fConversion for the plugin &7%plugin% &fhas finished!'
@@ -75,7 +75,7 @@ Messages:
     Success: '&fConversion for the claim id &7%claim%&f for the plugin &7%plugin% &aSUCCESSFULLY &fto converted!'
     Unknown: '&7Unknown plugin %plugin% given, please choose from this list &f%list%'
   Request:
-    New: '&aNew &frequest from &7%request_name% &fto join your pueblo!'
+    New: '&aNew &frequest from &7%request_name% &fto join your claim!'
     Reminder: '&fYou have %claim_requests% request(s) pending!'
     Accepted: '&7%request_name%''s &frequest accepted!'
     Denied: '&7%request_name%''s &crequest was denied!'
@@ -87,7 +87,7 @@ Messages:
   EventDenied: '&cSome external force denied this action!'
 
 Help:
-  Prefix: '&e&m-----&6&l Pueblos &8| Help &e&m-----'
+  Prefix: '&e&m-----&6&l BetterClaims &8| Help &e&m-----'
   Help: ' &7- &e/%command% help &7- Shows help list'
   Reload: ' &7- &e/%command% reload &7- Reload the plugin'
   Create: ' &7- &e/%command% create &7- Create a claim'
@@ -95,7 +95,7 @@ Help:
   List: ' &7- &e/%command% list &7- List all claims you are allowed to edit in'
   Request: ' &7- &e/%command% request &7- Request to join a claim'
   Flags: ' &7- &e/%command% flags &7- Change claim flags'
-  Convert: ' &7- &e/%command% convert <plugin_name> &7- Convert the plugins claims into Pueblos claims'
+  Convert: ' &7- &e/%command% convert <plugin_name> &7- Convert the plugins claims into a Better Claim'
   ClaimItem: ' &7- &e/%command% claimitem &7- Get a copy of the claiming item'
   AdminClaim: ' &7- &e/%command% adminclaim &7- Toggle claim-mode to admin claim'
   AdminOverride: ' &7- &e/%command% adminoverride &7- Enable the ability to edit in any claim'
@@ -109,7 +109,7 @@ Usage:
   AddMember: '&cUsage&7: /%command% addmember <player_name>'
 
 ClaimInfo:
-  - '&e&m------&6&l Pueblos &8| Claim Info &e&m------'
+  - '&e&m------&6&l BetterClaims &8| Claim Info &e&m------'
   - ''
   - '&fClaim Name&7: &r%claim_name%'
   - '&fOwner&7: %claim_owner%'

@@ -1,7 +1,7 @@
 package me.RonanCraft.BetterClaims.player.command.types;
 
-import me.RonanCraft.BetterClaims.player.command.PueblosCommand;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandHelpable;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommand;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandHelpable;
 import me.RonanCraft.BetterClaims.player.data.PlayerData;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesCore;
@@ -9,7 +9,7 @@ import me.RonanCraft.BetterClaims.resources.messages.MessagesHelp;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CmdAdminOverride implements PueblosCommand, PueblosCommandHelpable {
+public class CmdAdminOverride implements ClaimCommand, ClaimCommandHelpable {
 
     public String getName() {
         return "adminoverride";

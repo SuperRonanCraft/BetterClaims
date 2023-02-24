@@ -2,7 +2,7 @@ package me.RonanCraft.BetterClaims.player.command;
 
 import me.RonanCraft.BetterClaims.player.command.types.*;
 
-public enum PueblosCommandType {
+public enum ClaimCommandType {
     CREATE(new          CmdCreate()),
     RELOAD(new          CmdReload()),
     HELP(new            CmdHelp()),
@@ -17,13 +17,13 @@ public enum PueblosCommandType {
     ADDMEMBER(new       CmdAddMember()),
     ;
 
-    private final PueblosCommand cmd;
+    private final ClaimCommand cmd;
 
-    PueblosCommandType(PueblosCommand cmd) {
+    ClaimCommandType(ClaimCommand cmd) {
         this.cmd = cmd;
     }
 
-    public PueblosCommand getCmd() {
+    public ClaimCommand getCmd() {
         return cmd;
     }
 }

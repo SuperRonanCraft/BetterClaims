@@ -11,7 +11,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 import java.util.HashMap;
 
-public class EventDamage implements PueblosEvents {
+public class EventDamage implements ClaimEvents {
 
     private final HashMap<Entity, Integer> damageCooldown = new HashMap<>();
 

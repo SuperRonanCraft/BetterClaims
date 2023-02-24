@@ -16,20 +16,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryRequests extends PueblosInvLoader implements PueblosInv_Claim {
+public class InventoryRequests extends ClaimInvLoader implements ClaimInv_Claim {
 
-    private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
+    private final HashMap<Player, HashMap<Integer, ClaimItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, ClaimData> claim = new HashMap<>();
 
     @Override
     public Inventory open(Player p, ClaimData claimData) {
         Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, claimData));
 
-        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
+        HashMap<Integer, ClaimItem> itemInfo = new HashMap<>();
 
         addBorder(inv);
 
-        addButtonBack(inv, p, itemInfo, PueblosInventory.REQUESTS, claimData);
+        addButtonBack(inv, p, itemInfo, ClaimInventory.REQUESTS, claimData);
 
         int slot = 18;
         for (Claim_Request request : claimData.getRequests()) {
@@ -38,7 +38,7 @@ public class InventoryRequests extends PueblosInvLoader implements PueblosInv_Cl
                 break;
             ItemStack item = getItem(ITEMS.REQUEST.section, p, request);
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, request));
+            itemInfo.put(slot, new ClaimItem(item, ITEM_TYPE.NORMAL, request));
         }
         this.itemInfo.put(p, itemInfo);
         this.claim.put(p, claimData);
@@ -58,12 +58,12 @@ public class InventoryRequests extends PueblosInvLoader implements PueblosInv_Cl
         Claim_Request request = (Claim_Request) itemInfo.get(p).get(e.getSlot()).info;
         if (e.getClick().isLeftClick()) { //Accept
             HelperClaim.requestAction(true, p, request);
-            PueblosInventory.REQUESTS.open(p, claim.get(p), false);
+            ClaimInventory.REQUESTS.open(p, claim.get(p), false);
         } else if (e.getClick().isRightClick()) { //Decline
             if (e.getClick().isShiftClick()) //Ignore this player from any other requests in all their claims
-                PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.REQUEST_DECLINE_IGNORE, p, request), false);
+                ClaimInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.REQUEST_DECLINE_IGNORE, p, request), false);
             else //Decline this request
-                PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.REQUEST_DECLINE, p, request), false);
+                ClaimInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.REQUEST_DECLINE, p, request), false);
         }
     }
 

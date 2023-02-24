@@ -5,7 +5,7 @@
 
 package me.RonanCraft.BetterClaims.resources.helper;
 
-import me.RonanCraft.BetterClaims.inventory.PueblosInv;
+import me.RonanCraft.BetterClaims.inventory.ClaimInv;
 import me.RonanCraft.BetterClaims.resources.files.FileOther;
 import me.RonanCraft.BetterClaims.resources.messages.Message;
 import org.bukkit.Material;
@@ -24,12 +24,12 @@ public class HelperItem {
         if (item.getItemMeta() != null) {
             String name = item.getItemMeta().getDisplayName();
             name = Message.placeholder(p, name, info);
-            PueblosInv.setTitle(item, p, name);
+            ClaimInv.setTitle(item, p, name);
             //Item Lore
             if (item.getItemMeta().getLore() != null) {
                 List<String> lore = item.getItemMeta().getLore();
                 lore.forEach(str -> lore.set(lore.indexOf(str), Message.placeholder(p, str, info)));
-                PueblosInv.setLore(item, p, lore);
+                ClaimInv.setLore(item, p, lore);
             }
             /*if (item.getType() == Material.PLAYER_HEAD) {
                 SkullMeta meta = (SkullMeta) item.getItemMeta();
@@ -53,9 +53,9 @@ public class HelperItem {
         //Item
         ItemStack item = new ItemStack(getMat(file.getString(path + "Item")));
         //Name
-        PueblosInv.setTitle(item, null, file.getString(path + "Name"));
+        ClaimInv.setTitle(item, null, file.getString(path + "Name"));
         //Lore
-        PueblosInv.setLore(item, null, file.getStringList(path + "Lore"));
+        ClaimInv.setLore(item, null, file.getStringList(path + "Lore"));
         return item;
     }
 

@@ -13,7 +13,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 
 import java.util.List;
 
-public enum PueblosInventory {
+public enum ClaimInventory {
     MEMBERS(new InventoryClaimMembers(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.MEMBER),
     MEMBER(new InventoryClaimMember(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
     CLAIM(new InventoryClaim(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.MEMBER),
@@ -24,11 +24,11 @@ public enum PueblosInventory {
     FLAGS(new InventoryClaimFlags(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.OWNER),
     CONFIRM(new InventoryConfirm(), PermissionNodes.USE, CLAIM_PERMISSION_LEVEL.NONE);
 
-    private final PueblosInv inv;
+    private final ClaimInv inv;
     private final PermissionNodes permNode;
     private final CLAIM_PERMISSION_LEVEL claimLevel;
 
-    PueblosInventory(PueblosInv inv, PermissionNodes permNode, CLAIM_PERMISSION_LEVEL claimLevel) {
+    ClaimInventory(ClaimInv inv, PermissionNodes permNode, CLAIM_PERMISSION_LEVEL claimLevel) {
         this.inv = inv;
         this.permNode = permNode;
         this.claimLevel = claimLevel;
@@ -36,30 +36,30 @@ public enum PueblosInventory {
 
     public void open(Player p, ClaimData claimData, boolean from_command) {
         if (isAllowed(p, claimData))
-            if (inv instanceof PueblosInv_Claim)
-                BetterClaims.getInstance().getPlayerData(p).setInventory(((PueblosInv_Claim) inv).open(p, claimData), this, from_command);
+            if (inv instanceof ClaimInv_Claim)
+                BetterClaims.getInstance().getPlayerData(p).setInventory(((ClaimInv_Claim) inv).open(p, claimData), this, from_command);
             else
                 BetterClaims.getInstance().getLogger().severe(this.name() + " is not a claim type!");
     }
 
     public void open(Player p, Member member, boolean from_command) {
         if (isAllowed(p, member.claimData))
-            if (inv instanceof PueblosInv_Member)
-                BetterClaims.getInstance().getPlayerData(p).setInventory(((PueblosInv_Member) inv).open(p, member), this, from_command);
+            if (inv instanceof ClaimInv_Member)
+                BetterClaims.getInstance().getPlayerData(p).setInventory(((ClaimInv_Member) inv).open(p, member), this, from_command);
             else
                 BetterClaims.getInstance().getLogger().severe(this.name() + " is not a member type!");
     }
 
     public void open(Player p, List<ClaimData> claimData, boolean from_command) {
-        if (inv instanceof PueblosInv_MultiClaim)
-            BetterClaims.getInstance().getPlayerData(p).setInventory(((PueblosInv_MultiClaim) inv).open(p, claimData), this, from_command);
+        if (inv instanceof ClaimInv_MultiClaim)
+            BetterClaims.getInstance().getPlayerData(p).setInventory(((ClaimInv_MultiClaim) inv).open(p, claimData), this, from_command);
         else
             BetterClaims.getInstance().getLogger().severe(this.name() + " is not a request type!");
     }
 
     public void open(Player p, Confirmation confirmation, boolean from_command) {
-        if (inv instanceof PueblosInv_Confirming)
-            BetterClaims.getInstance().getPlayerData(p).setInventory(((PueblosInv_Confirming) inv).open(p, confirmation), this, from_command);
+        if (inv instanceof ClaimInv_Confirming)
+            BetterClaims.getInstance().getPlayerData(p).setInventory(((ClaimInv_Confirming) inv).open(p, confirmation), this, from_command);
         else
             BetterClaims.getInstance().getLogger().severe(this.name() + " is not a confirm type!");
     }
@@ -86,10 +86,10 @@ public enum PueblosInventory {
     }
 
     public void closeEvent(Player p) {
-        //Pueblos.getInstance().getSystems().getPlayerInfo().addPrevious(p, this);
+        //BetterClaims.getInstance().getSystems().getPlayerInfo().addPrevious(p, this);
     }
 
-    public PueblosInv get() {
+    public ClaimInv get() {
         return inv;
     }
 }

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public interface PueblosInv {
+public interface ClaimInv {
 
     default BetterClaims getPl() {
         return BetterClaims.getInstance();
@@ -45,28 +45,28 @@ public interface PueblosInv {
             }
     }
 
-    default void addButtonBack(Inventory inv, Player p, HashMap<Integer, PueblosItem> itemInfo, PueblosInventory currentinv, Object info) {
-        PueblosInventory pinv = getPl().getPlayerData(p).getPrevious(currentinv);
+    default void addButtonBack(Inventory inv, Player p, HashMap<Integer, ClaimItem> itemInfo, ClaimInventory currentinv, Object info) {
+        ClaimInventory pinv = getPl().getPlayerData(p).getPrevious(currentinv);
         if (pinv != null) {
             int slot = inv.firstEmpty();
             ItemStack item = BetterClaims.getInstance().getGlobalItems().getItem(GlobalItems.GLOBAL_ITEM.BACK, p, info);
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.BACK, pinv, info));
+            itemInfo.put(slot, new ClaimItem(item, ITEM_TYPE.BACK, pinv, info));
         }
     }
 
-    default boolean checkItems(InventoryClickEvent e, HashMap<Integer, PueblosItem> items) {
+    default boolean checkItems(InventoryClickEvent e, HashMap<Integer, ClaimItem> items) {
         return checkItems(e.getSlot(), (Player) e.getWhoClicked(), items);
     }
 
-    default boolean checkItems(int slot, Player p, HashMap<Integer, PueblosItem> items) {
+    default boolean checkItems(int slot, Player p, HashMap<Integer, ClaimItem> items) {
         if (items.containsKey(slot)) {
-            PueblosItem item = items.get(slot);
+            ClaimItem item = items.get(slot);
             if (item.type != ITEM_TYPE.NORMAL) {
                 switch (item.type) {
                     case BACK:
                     case NEXT:
-                        PueblosInventory inv = (PueblosInventory) item.info;
+                        ClaimInventory inv = (ClaimInventory) item.info;
                         BetterClaims.getInstance().getPlayerData(p).removePrevious();
                         inv.openCasted(p, item.info2);
                 }
@@ -88,10 +88,10 @@ public interface PueblosInv {
 
     void clear(Player p); //Called when a special item causes this inventory to close
 
-    default void goBack(Player p, HashMap<Integer, PueblosItem> itemInfo) {
-        for (Map.Entry<Integer, PueblosItem> info : itemInfo.entrySet()) {
+    default void goBack(Player p, HashMap<Integer, ClaimItem> itemInfo) {
+        for (Map.Entry<Integer, ClaimItem> info : itemInfo.entrySet()) {
             int slot = info.getKey();
-            PueblosItem item = info.getValue();
+            ClaimItem item = info.getValue();
             if (item.type == ITEM_TYPE.BACK)
                 checkItems(slot, p, itemInfo);
         }

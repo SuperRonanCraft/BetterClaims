@@ -16,7 +16,7 @@ public class Updater {
                 URLConnection con = new URL(getUrl() + project()).openConnection();
                 updatedVersion = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();
             } catch (Exception ex) {
-                Bukkit.getConsoleSender().sendMessage("[Pueblos] Failed to check for an update on spigot");
+                Bukkit.getConsoleSender().sendMessage("[BetterClaims] Failed to check for an update on spigot");
                 updatedVersion = pl.getDescription().getVersion();
             }
         });

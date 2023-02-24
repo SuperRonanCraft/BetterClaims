@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 
 public enum PermissionNodes {
 
-    //pueblos.<node>
+    //betterclaims.<node>
     USE("use"),
     RELOAD("reload"),
     REQUEST("request"),

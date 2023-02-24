@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryClaimMembers extends PueblosInvLoader implements PueblosInv_Claim {
+public class InventoryClaimMembers extends ClaimInvLoader implements ClaimInv_Claim {
 
-    private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
+    private final HashMap<Player, HashMap<Integer, ClaimItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, ClaimData> claim = new HashMap<>();
 
     @Override
@@ -26,7 +26,7 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
 
         addBorder(inv);
 
-        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
+        HashMap<Integer, ClaimItem> itemInfo = new HashMap<>();
 
         //Base Items
         for (ITEMS i : ITEMS.values()) {
@@ -36,10 +36,10 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
                 continue;
             ItemStack _item = getItem(i.section, p, claimData);
             inv.setItem(i.slot, _item);
-            itemInfo.put(i.slot, new PueblosItem(_item, ITEM_TYPE.NORMAL, i));
+            itemInfo.put(i.slot, new ClaimItem(_item, ITEM_TYPE.NORMAL, i));
         }
 
-        addButtonBack(inv, p, itemInfo, PueblosInventory.MEMBERS, claimData);
+        addButtonBack(inv, p, itemInfo, ClaimInventory.MEMBERS, claimData);
 
         int slot = 18;
 
@@ -50,7 +50,7 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
                 break;
             ItemStack item = getItem(_i.section, p, member);
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, member));
+            itemInfo.put(slot, new ClaimItem(item, ITEM_TYPE.NORMAL, member));
         }
         this.itemInfo.put(p, itemInfo);
         this.claim.put(p, claimData);
@@ -71,14 +71,14 @@ public class InventoryClaimMembers extends PueblosInvLoader implements PueblosIn
             ITEMS item = (ITEMS) itemInfo.get(p).get(e.getSlot()).info;
             switch (item) {
                 case REQUEST:
-                    PueblosInventory.REQUESTS.open(p, claim.get(p), false);
+                    ClaimInventory.REQUESTS.open(p, claim.get(p), false);
                 case LEAVE:
-                    PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_LEAVE, p, claim.get(p).getMember(p)), false);
+                    ClaimInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.CLAIM_LEAVE, p, claim.get(p).getMember(p)), false);
             }
         } else if (itemInfo.get(p).get(e.getSlot()).info instanceof Member) {
             Member member = (Member) itemInfo.get(p).get(e.getSlot()).info;
             //this.itemInfo.remove(p);
-            PueblosInventory.MEMBER.open(p, member, false);
+            ClaimInventory.MEMBER.open(p, member, false);
         }
     }
 

@@ -12,9 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv_MultiClaim {
+public class InventoryClaimSelect extends ClaimInvLoader implements ClaimInv_MultiClaim {
 
-    private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
+    private final HashMap<Player, HashMap<Integer, ClaimItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, List<ClaimData>> claims = new HashMap<>();
 
     @Override
@@ -23,7 +23,7 @@ public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv
 
         addBorder(inv);
 
-        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
+        HashMap<Integer, ClaimItem> itemInfo = new HashMap<>();
         int slot = 0;
         for (ClaimData claim : claimData) {
             slot = getNextSlot(slot, inv);
@@ -34,7 +34,7 @@ public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv
             //if (claim.contains(p.getLocation()))
             //    HelperItem.enchantItem(item, Enchantment.values()[0]);
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, claim));
+            itemInfo.put(slot, new ClaimItem(item, ITEM_TYPE.NORMAL, claim));
         }
 
         this.itemInfo.put(p, itemInfo);
@@ -53,7 +53,7 @@ public class InventoryClaimSelect extends PueblosInvLoader implements PueblosInv
             return;
 
         ClaimData claimData = (ClaimData) itemInfo.get(p).get(e.getSlot()).info;
-        PueblosInventory.CLAIM.open(p, claimData, false);
+        ClaimInventory.CLAIM.open(p, claimData, false);
     }
 
     @Override

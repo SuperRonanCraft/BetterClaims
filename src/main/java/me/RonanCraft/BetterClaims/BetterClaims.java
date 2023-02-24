@@ -6,8 +6,8 @@
 package me.RonanCraft.BetterClaims;
 
 import me.RonanCraft.BetterClaims.inventory.GlobalItems;
-import me.RonanCraft.BetterClaims.inventory.PueblosInvLoader;
-import me.RonanCraft.BetterClaims.inventory.PueblosInventory;
+import me.RonanCraft.BetterClaims.inventory.ClaimInvLoader;
+import me.RonanCraft.BetterClaims.inventory.ClaimInventory;
 import me.RonanCraft.BetterClaims.player.command.Commands;
 import me.RonanCraft.BetterClaims.player.data.PlayerData;
 import me.RonanCraft.BetterClaims.player.events.EventListener;
@@ -74,9 +74,9 @@ public class BetterClaims extends JavaPlugin {
         systems.load(reload);
         commands.load();
         permissions.register();
-        for (PueblosInventory inv : PueblosInventory.values())
-            if (inv.get() instanceof PueblosInvLoader)
-                ((PueblosInvLoader) inv.get()).load();
+        for (ClaimInventory inv : ClaimInventory.values())
+            if (inv.get() instanceof ClaimInvLoader)
+                ((ClaimInvLoader) inv.get()).load();
     }
 
     private void closeMenus() {

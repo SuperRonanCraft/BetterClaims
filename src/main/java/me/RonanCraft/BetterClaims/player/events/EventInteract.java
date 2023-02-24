@@ -21,7 +21,7 @@ import org.bukkit.util.Vector;
 
 import java.util.*;
 
-public class EventInteract implements PueblosEvents {
+public class EventInteract implements ClaimEvents {
 
     private final EventListener listener;
     private final HashMap<Player, Integer> cancelTimers = new HashMap<>();

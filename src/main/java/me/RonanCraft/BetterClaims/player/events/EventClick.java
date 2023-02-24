@@ -1,7 +1,7 @@
 package me.RonanCraft.BetterClaims.player.events;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
-import me.RonanCraft.BetterClaims.inventory.PueblosInventory;
+import me.RonanCraft.BetterClaims.inventory.ClaimInventory;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -13,7 +13,7 @@ public class EventClick {
         if (!validClick(e))
             return;
         e.setCancelled(true);
-        PueblosInventory inventory = BetterClaims.getInstance().getPlayerData((Player) e.getWhoClicked()).getCurrentInventory();
+        ClaimInventory inventory = BetterClaims.getInstance().getPlayerData((Player) e.getWhoClicked()).getCurrentInventory();
         if (inventory != null)
             inventory.click(e);
     }

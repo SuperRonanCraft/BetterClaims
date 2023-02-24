@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class EventPistons implements PueblosEvents {
+public class EventPistons implements ClaimEvents {
 
     void onPiston(BlockPistonExtendEvent e) {
         pistonEvent(e, e.getBlocks(), e.getDirection());

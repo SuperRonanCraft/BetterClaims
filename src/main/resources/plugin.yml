@@ -31,11 +31,11 @@ permissions:
         description: 'Teleport to a claim via the gui'
         default: op
     betterclaims.admin.claim:
-        description: 'Create & Edit admin claims, toggled with "/pueblos adminclaim"'
+        description: 'Create & Edit admin claims, toggled with "/claims adminclaim"'
         default: op
     betterclaims.admin.convert:
-        description: 'Convert claims from other plugins using "/pueblos convert <plugin>"'
+        description: 'Convert claims from other plugins using "/claims convert <plugin>"'
         default: op
     betterclaims.admin.override:
-        description: 'Override all claims when executing "/peublos override"'
+        description: 'Override all claims when executing "/claims override"'
         default: op

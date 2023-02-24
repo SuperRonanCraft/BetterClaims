@@ -3,7 +3,7 @@ package me.RonanCraft.BetterClaims.customevents;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-abstract class PueblosEventType_Basic extends Event {
+abstract class ClaimEventType_Basic extends Event {
 
     private static final HandlerList handler = new HandlerList();
 

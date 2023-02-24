@@ -13,7 +13,7 @@ import org.bukkit.World;
 import org.bukkit.util.Vector;
 
 /**
- * Most credit for this class, the heart of Pueblos goes to `GriefPrevention` by BigScary
+ * Most credit for this class, the heart of BetterClaims goes to `GriefPrevention` by BigScary
  * https://github.com/TechFortress/GriefPrevention/blob/master/src/main/java/me/ryanhamshire/GriefPrevention/util/BoundingBox.java
  */
 

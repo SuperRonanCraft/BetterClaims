@@ -1,7 +1,7 @@
 package me.RonanCraft.BetterClaims.player.command.types;
 
-import me.RonanCraft.BetterClaims.player.command.PueblosCommand;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandHelpable;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommand;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandHelpable;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_TYPE;
@@ -11,7 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class CmdCreate implements PueblosCommand, PueblosCommandHelpable {
+public class CmdCreate implements ClaimCommand, ClaimCommandHelpable {
 
     public String getName() {
         return "create";

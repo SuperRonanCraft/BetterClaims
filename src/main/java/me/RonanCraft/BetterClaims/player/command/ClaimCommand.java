@@ -3,7 +3,7 @@ package me.RonanCraft.BetterClaims.player.command;
 import me.RonanCraft.BetterClaims.BetterClaims;
 import org.bukkit.command.CommandSender;
 
-public interface PueblosCommand {
+public interface ClaimCommand {
 
     void execute(CommandSender sendi, String label, String[] args);
 

@@ -1,9 +1,9 @@
 package me.RonanCraft.BetterClaims.inventory.types;
 
 import me.RonanCraft.BetterClaims.inventory.ITEM_TYPE;
-import me.RonanCraft.BetterClaims.inventory.PueblosInvLoader;
-import me.RonanCraft.BetterClaims.inventory.PueblosInv_MultiClaim;
-import me.RonanCraft.BetterClaims.inventory.PueblosItem;
+import me.RonanCraft.BetterClaims.inventory.ClaimInvLoader;
+import me.RonanCraft.BetterClaims.inventory.ClaimInv_MultiClaim;
+import me.RonanCraft.BetterClaims.inventory.ClaimItem;
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.Claim;
 import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
@@ -17,9 +17,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryRequesting_Player extends PueblosInvLoader implements PueblosInv_MultiClaim {
+public class InventoryRequesting_Player extends ClaimInvLoader implements ClaimInv_MultiClaim {
 
-    private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
+    private final HashMap<Player, HashMap<Integer, ClaimItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, List<ClaimData>> claims = new HashMap<>();
 
     @Override
@@ -28,7 +28,7 @@ public class InventoryRequesting_Player extends PueblosInvLoader implements Pueb
 
         addBorder(inv);
 
-        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
+        HashMap<Integer, ClaimItem> itemInfo = new HashMap<>();
         for (ClaimData claim : claimData) {
             ItemStack item;
             if (!claim.hasRequestFrom(p))
@@ -37,7 +37,7 @@ public class InventoryRequesting_Player extends PueblosInvLoader implements Pueb
                 item = getItem(ITEMS.REQUESTED.section, p, claim);
             int slot = inv.firstEmpty();
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, claim));
+            itemInfo.put(slot, new ClaimItem(item, ITEM_TYPE.NORMAL, claim));
         }
         this.itemInfo.put(p, itemInfo);
         this.claims.put(p, claimData);

@@ -24,7 +24,7 @@ public class EventJoinLeave {
     private void updater(Player p) {
         if (!FileOther.FILETYPE.CONFIG.getBoolean("DisableUpdater") && PermissionNodes.UPDATE.check(p))
             if (!getPl().getDescription().getVersion().equals(Updater.updatedVersion))
-                Message.sms(p, "&7There is currently an update for &6Pueblos &7version &e#" +
+                Message.sms(p, "&7There is currently an update for &6BetterClaims &7version &e#" +
                         Updater.updatedVersion + " &7you have version &e#" + getPl().getDescription().getVersion(), null);
     }
 

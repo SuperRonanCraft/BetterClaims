@@ -4,7 +4,7 @@ import me.RonanCraft.BetterClaims.claims.ClaimData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
-public interface PueblosInv_Claim extends PueblosInv {
+public interface ClaimInv_Claim extends ClaimInv {
 
     Inventory open(Player p, ClaimData claimData);
 

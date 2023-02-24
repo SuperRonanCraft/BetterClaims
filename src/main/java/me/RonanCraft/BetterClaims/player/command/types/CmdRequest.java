@@ -3,10 +3,10 @@ package me.RonanCraft.BetterClaims.player.command.types;
 import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.claims.Claim;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_PERMISSION_LEVEL;
-import me.RonanCraft.BetterClaims.inventory.PueblosInventory;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommand;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandHelpable;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandTabComplete;
+import me.RonanCraft.BetterClaims.inventory.ClaimInventory;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommand;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandHelpable;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandTabComplete;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_FLAG;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CmdRequest implements PueblosCommand, PueblosCommandHelpable, PueblosCommandTabComplete {
+public class CmdRequest implements ClaimCommand, ClaimCommandHelpable, ClaimCommandTabComplete {
 
     public String getName() {
         return "request";
@@ -30,7 +30,7 @@ public class CmdRequest implements PueblosCommand, PueblosCommandHelpable, Puebl
         Player p = (Player) sendi;
         List<ClaimData> requestable = getRequestable(p, args.length >= 2 ? Bukkit.getPlayer(args[1]) : null);
         if (!requestable.isEmpty()) {
-            PueblosInventory.REQUESTING_ALL.open(p, requestable, true);
+            ClaimInventory.REQUESTING_ALL.open(p, requestable, true);
         } else
             Message.sms(p, "No claims to join!", null);
     }

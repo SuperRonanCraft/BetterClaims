@@ -1,9 +1,9 @@
 package me.RonanCraft.BetterClaims.player.command.types;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommand;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandHelpable;
-import me.RonanCraft.BetterClaims.player.command.PueblosCommandTabComplete;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommand;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandHelpable;
+import me.RonanCraft.BetterClaims.player.command.ClaimCommandTabComplete;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.claims.Claim;
 import me.RonanCraft.BetterClaims.claims.ClaimHandler;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CmdFlags implements PueblosCommand, PueblosCommandHelpable, PueblosCommandTabComplete {
+public class CmdFlags implements ClaimCommand, ClaimCommandHelpable, ClaimCommandTabComplete {
 
     public String getName() {
         return "flags";

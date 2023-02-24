@@ -7,7 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-public class EventMove implements PueblosEvents {
+public class EventMove implements ClaimEvents {
 
     private final EventListener listener;
 

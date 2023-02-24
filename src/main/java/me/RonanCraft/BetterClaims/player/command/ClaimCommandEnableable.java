@@ -1,6 +1,6 @@
 package me.RonanCraft.BetterClaims.player.command;
 
-public interface PueblosCommandEnableable {
+public interface ClaimCommandEnableable {
 
     boolean isEnabled();
 }

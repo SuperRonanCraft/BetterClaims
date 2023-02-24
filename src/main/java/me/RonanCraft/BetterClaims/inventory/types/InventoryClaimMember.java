@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv_Member {
+public class InventoryClaimMember extends ClaimInvLoader implements ClaimInv_Member {
 
-    private final HashMap<Player, HashMap<Integer, PueblosItem>> itemInfo = new HashMap<>();
+    private final HashMap<Player, HashMap<Integer, ClaimItem>> itemInfo = new HashMap<>();
     private final HashMap<Player, Member> member = new HashMap<>();
 
     @Override
@@ -25,9 +25,9 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
         Inventory inv = Bukkit.createInventory(null, 9 * 5, getTitle(p, member));
 
         addBorder(inv);
-        HashMap<Integer, PueblosItem> itemInfo = new HashMap<>();
+        HashMap<Integer, ClaimItem> itemInfo = new HashMap<>();
 
-        addButtonBack(inv, p, itemInfo, PueblosInventory.MEMBER, member.claimData);
+        addButtonBack(inv, p, itemInfo, ClaimInventory.MEMBER, member.claimData);
 
         for (ITEMS i : ITEMS.values()) {
             int slot = i.slot;
@@ -35,7 +35,7 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
                 continue;
             ItemStack item = getItem(i.section, p, member);
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, i));
+            itemInfo.put(slot, new ClaimItem(item, ITEM_TYPE.NORMAL, i));
         }
 
         //Flags
@@ -50,7 +50,7 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
             else
                 item = getItem(ITEMS.FLAG_DISABLED.section, p, new Object[]{member, flag});
             inv.setItem(slot, item);
-            itemInfo.put(slot, new PueblosItem(item, ITEM_TYPE.NORMAL, flag));
+            itemInfo.put(slot, new ClaimItem(item, ITEM_TYPE.NORMAL, flag));
         }
         this.itemInfo.put(p, itemInfo);
         this.member.put(p, member);
@@ -73,15 +73,15 @@ public class InventoryClaimMember extends PueblosInvLoader implements PueblosInv
             ITEMS item = (ITEMS) itemInfo.get(p).get(e.getSlot()).info;
             switch (item) {
                 case REMOVE:
-                    PueblosInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.MEMBER_REMOVE, p, member), false);
+                    ClaimInventory.CONFIRM.open(p, new Confirmation(CONFIRMATION_TYPE.MEMBER_REMOVE, p, member), false);
                     //HelperClaim.removeMember(p, member);
-                    //goBack(PueblosInventory.MEMBERS, p, member.claim);
+                    //goBack(ClaimInventory.MEMBERS, p, member.claim);
             }
         } else if (itemInfo.get(p).get(e.getSlot()).info instanceof CLAIM_FLAG_MEMBER) {
             CLAIM_FLAG_MEMBER flag = (CLAIM_FLAG_MEMBER) itemInfo.get(p).get(e.getSlot()).info;
             Object current_value = member.getFlags().getOrDefault(flag, flag.getDefault());
             this.member.get(p).setFlag(flag, flag.alter(current_value), true);
-            PueblosInventory.MEMBER.open(p, this.member.get(p), false);
+            ClaimInventory.MEMBER.open(p, this.member.get(p), false);
         }
     }
 
