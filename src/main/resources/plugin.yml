@@ -10,32 +10,32 @@ softdepend:
 api-version: '1.13'
 
 commands:
-    pueblos:
-        aliases: [pueblo, claim, claims]
-        description: 'Main pueblos command'
+    claim:
+        aliases: [bclaim, claims, bclaims, betterclaim, betterclaims]
+        description: 'Main claim command'
 
 permissions:
-    pueblos.use:
+    betterclaims.use:
         description: 'Use the plugin'
         default: true
-    pueblos.reload:
+    betterclaims.reload:
         description: 'Reload the plugin'
         default: op
-    pueblos.request:
+    betterclaims.request:
         description: 'Request to join a claim'
         default: true
-    pueblos.item:
+    betterclaims.item:
         description: 'Grab a copy of the claim creation item'
         default: op
-    pueblos.teleport:
+    betterclaims.teleport:
         description: 'Teleport to a claim via the gui'
         default: op
-    pueblos.admin.claim:
+    betterclaims.admin.claim:
         description: 'Create & Edit admin claims, toggled with "/pueblos adminclaim"'
         default: op
-    pueblos.admin.convert:
+    betterclaims.admin.convert:
         description: 'Convert claims from other plugins using "/pueblos convert <plugin>"'
         default: op
-    pueblos.admin.override:
+    betterclaims.admin.override:
         description: 'Override all claims when executing "/peublos override"'
         default: op

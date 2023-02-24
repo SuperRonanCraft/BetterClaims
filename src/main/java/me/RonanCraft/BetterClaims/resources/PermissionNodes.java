@@ -22,7 +22,7 @@ public enum PermissionNodes {
     public final String node;
 
     PermissionNodes(String node) {
-        this.node = "pueblos." + node;
+        this.node = "betterclaims." + node;
     }
 
     public boolean check(CommandSender sendi) {
