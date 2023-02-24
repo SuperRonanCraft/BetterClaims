@@ -1,5 +1,5 @@
 <p align="center">
-  <b><a>Welcome to Pueblos' repository!</a></b>
+  <b><a>Welcome to the BetterClaims' repository!</a></b>
 </p>
 
 ## Wheres the Wiki?
