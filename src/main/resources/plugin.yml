@@ -1,8 +1,8 @@
-main: me.RonanCraft.Pueblos.Pueblos
+main: me.RonanCraft.BetterClaims.BetterClaims
 version: ${project.version}
 website: "https://ronancraft.net"
 description: "Create protected regions of land quickly"
-name: Pueblos
+name: BetterClaims
 author: RonanCraft
 softdepend:
     - Vault
