@@ -34,41 +34,42 @@ public class PlayerClaimInteraction {
         if (locations.contains(loc)) {
             return CLAIM_ERRORS.LOCATION_ALREADY_EXISTS;
         } else {
-            for (Claim claim : BetterClaims.getInstance().getClaimHandler().getClaimsMain())
-                if (claim.contains(loc)) {
-                    if (editing == null && locations.size() == 0 && (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p)))) {
-                        if (claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
-                            mode = CLAIM_MODE.EDIT;
-                            //Show the claim we are editing
-                            Visualization vis = Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.EDIT, player.getLocation());
-                            Visualization.fromLocation(vis, loc, player.getLocation().getBlockY(), p.getLocation()).apply(player);
-                        } else {
-                            List<Claim_Child> children = BetterClaims.getInstance().getClaimHandler().getClaimsChild(claim);
-                            for (Claim_Child child : children)
-                                if (child.getBoundingBox().isCorner(loc)) {
-                                    mode = CLAIM_MODE.EDIT;
-                                    editing = child;
-                                    Visualization vis = Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.EDIT, player.getLocation());
-                                    Visualization.fromLocation(vis, loc, player.getLocation().getBlockY(), p.getLocation()).apply(player);
-                                    break;
-                                }
-                            if (editing == null)
-                                mode = CLAIM_MODE.SUBCLAIM;
-                        }
+            ClaimData claim = BetterClaims.getInstance().getClaimHandler().getClaimAt(loc, true);
+            if (claim != null) {
+                if (locations.size() == 0 && (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p)))) {
+                    if (claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
+                        mode = CLAIM_MODE.EDIT;
+                        //Show the claim we are editing
+                        Visualization vis = Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.EDIT, player.getLocation());
+                        Visualization.fromLocation(vis, loc, player.getLocation().getBlockY(), p.getLocation()).apply(player);
+                    } else {
+                        List<Claim_Child> children = BetterClaims.getInstance().getClaimHandler().getClaimsChild((Claim) claim);
+                        for (Claim_Child child : children)
+                            if (child.getBoundingBox().isCorner(loc)) {
+                                mode = CLAIM_MODE.EDIT;
+                                editing = child;
+                                Visualization vis = Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.EDIT, player.getLocation());
+                                Visualization.fromLocation(vis, loc, player.getLocation().getBlockY(), p.getLocation()).apply(player);
+                                break;
+                            }
                         if (editing == null)
-                            editing = claim;
-                        break;
+                            mode = CLAIM_MODE.SUBCLAIM;
                     }
-                    if (editing == null || (editing != claim && (!(editing instanceof Claim_Child) || ((Claim_Child) editing).getParent() != claim))) { //Not editing the current overlapping claim area
-                        Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
-                        //player.sendMessage("OVERLAPPING!");
-                        return CLAIM_ERRORS.OVERLAPPING;
-                    }
+                    if (editing == null)
+                        editing = claim;
                 }
+                if (editing == null || (editing != claim && (!(editing instanceof Claim_Child) || ((Claim_Child) editing).getParent() != claim))) { //Not editing the current overlapping claim area
+                    Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
+                    //player.sendMessage("OVERLAPPING!");
+                    return CLAIM_ERRORS.OVERLAPPING;
+                }
+            }
+            //Location world difference
             if (!locations.isEmpty() && !Objects.equals(locations.get(0).getWorld(), loc.getWorld())) {
                 lock();
                 return CLAIM_ERRORS.CANCELLED; //Another world was selected?
             }
+            //We clicked inside a claim, not on any corners or child corners
             if (mode == CLAIM_MODE.SUBCLAIM)
                 if (!locations.isEmpty() && !editing.contains(loc)) { //Disallow child claims to go outside of parent claim
                     Visualization.fromClaim(editing, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
@@ -78,12 +79,13 @@ public class PlayerClaimInteraction {
                     List<Claim_Child> children = BetterClaims.getInstance().getClaimHandler().getClaimsChild((Claim) editing);
                     for (Claim_Child child : children)
                         if (child.contains(loc)) {
-                            //player.sendMessage("OVERLAPPING2!");
+                            Visualization.fromClaim(editing, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);
                             return CLAIM_ERRORS.OVERLAPPING;
                         }
                 }
             locations.add(loc);
         }
+        //remove second location when other location failed
         if (locations.size() > 2)
             locations.remove(1);
         if (locations.size() == 1) { //First Location

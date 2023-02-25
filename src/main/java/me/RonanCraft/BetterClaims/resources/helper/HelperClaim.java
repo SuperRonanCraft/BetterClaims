@@ -130,9 +130,9 @@ public class HelperClaim {
                 case NONE:
                     MessagesCore.CLAIM_CREATE_SUCCESS.send(creator, claimData);
                     Visualization.fromClaim(claimData, creator.getLocation().getBlockY(), VisualizationType.CLAIM, creator.getLocation()).apply(creator);
-                case SIZE_SMALL:
-                case SIZE_LARGE:
-                case OVERLAPPING:
+                    break;
+                case DATABASE_ERROR:
+                    creator.sendMessage("Massive error occured syncronizing claim! Report this immediately!");
                     break;
             }
             //if (sendMsg)

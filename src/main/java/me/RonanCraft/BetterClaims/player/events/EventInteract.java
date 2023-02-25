@@ -89,15 +89,20 @@ public class EventInteract implements ClaimEvents {
                     List<Location> corners = claimInteraction.locations;
                     if (corners.size() >= 2) { //Create claim
                         switch (claimInteraction.mode) {
-                            //Normal user claim
                             case CREATE:
-                            //Create a claim with no owner, making it an admin claim
-                            case CREATE_ADMIN://Create a claim inside another claim
+                                //Normal user claim
+                            case CREATE_ADMIN:
+                                //Create a claim with no owner
                             case SUBCLAIM:
+                                //Create a claim inside another claim
                                 error = HelperClaim.registerClaim(p, p.getWorld(), corners.get(0), corners.get(1),
-                                        claimInteraction, claimInteraction.mode == CLAIM_MODE.SUBCLAIM ? CLAIM_TYPE.CHILD : CLAIM_TYPE.PARENT); break; //MODE will handle the rest
-                            //Edit a claims size
-                            case EDIT: error = resizeClaim(p, claimInteraction); errorInfo = claimInteraction.editing; break;
+                                        claimInteraction,
+                                        claimInteraction.mode == CLAIM_MODE.SUBCLAIM ? CLAIM_TYPE.CHILD : CLAIM_TYPE.PARENT);
+                                break; //MODE will handle the rest
+                            case EDIT:
+                                //Edits a claims size
+                                error = resizeClaim(p, claimInteraction); errorInfo = claimInteraction.editing;
+                                break;
                         }
                         if (error != CLAIM_ERRORS.SIZE_SMALL && error != CLAIM_ERRORS.SIZE_LARGE) //Let the player select another second location if error
                             claimInteraction.lock(); //Lock us from using the same locations again
