@@ -20,6 +20,7 @@ import me.RonanCraft.BetterClaims.database.DatabaseClaims;
 import me.RonanCraft.BetterClaims.resources.helper.HelperEvent;
 import me.RonanCraft.BetterClaims.resources.visualization.Visualization;
 import me.RonanCraft.BetterClaims.resources.visualization.VisualizationType;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -42,14 +43,17 @@ public class ClaimHandler {
     public void load() {
         mainClaims.clear();
         childClaims.clear();
-        HashMap<CLAIM_TYPE, List<ClaimData>> databaseClaims = getDatabase().getClaims();
-        if (databaseClaims.get(CLAIM_TYPE.PARENT) != null)
-            for (ClaimData claimData : databaseClaims.get(CLAIM_TYPE.PARENT))
-                this.mainClaims.add((Claim) claimData);
-        if (databaseClaims.get(CLAIM_TYPE.CHILD) != null)
-            for (ClaimData claimData : databaseClaims.get(CLAIM_TYPE.CHILD))
-                this.childClaims.add((Claim_Child) claimData);
-        //this.childClaims.addAll(getDatabase().getClaimsChild());
+        Bukkit.getScheduler().runTaskAsynchronously(BetterClaims.getInstance(), () -> {
+            HashMap<CLAIM_TYPE, List<ClaimData>> databaseClaims = getDatabase().getClaims();
+            if (databaseClaims.get(CLAIM_TYPE.PARENT) != null)
+                for (ClaimData claimData : databaseClaims.get(CLAIM_TYPE.PARENT))
+                    this.mainClaims.add((Claim) claimData);
+            if (databaseClaims.get(CLAIM_TYPE.CHILD) != null)
+                for (ClaimData claimData : databaseClaims.get(CLAIM_TYPE.CHILD))
+                    this.childClaims.add((Claim_Child) claimData);
+            //Load DynMap after claims all loaded
+            //BetterClaims.getInstance().getDynMap().load();
+        });
         claim_maxSize = BetterClaims.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE);
         if (claim_maxSize < 10)
             claim_maxSize = 10;

@@ -5,18 +5,18 @@
 
 package me.RonanCraft.BetterClaims;
 
-import me.RonanCraft.BetterClaims.inventory.GlobalItems;
+import me.RonanCraft.BetterClaims.claims.ClaimHandler;
+import me.RonanCraft.BetterClaims.database.DatabaseAuctions;
+import me.RonanCraft.BetterClaims.database.DatabaseClaims;
 import me.RonanCraft.BetterClaims.inventory.ClaimInvLoader;
 import me.RonanCraft.BetterClaims.inventory.ClaimInventory;
+import me.RonanCraft.BetterClaims.inventory.GlobalItems;
 import me.RonanCraft.BetterClaims.player.command.Commands;
 import me.RonanCraft.BetterClaims.player.data.PlayerData;
 import me.RonanCraft.BetterClaims.player.events.EventListener;
 import me.RonanCraft.BetterClaims.resources.Permissions;
 import me.RonanCraft.BetterClaims.resources.Settings;
 import me.RonanCraft.BetterClaims.resources.Systems;
-import me.RonanCraft.BetterClaims.claims.ClaimHandler;
-import me.RonanCraft.BetterClaims.database.DatabaseAuctions;
-import me.RonanCraft.BetterClaims.database.DatabaseClaims;
 import me.RonanCraft.BetterClaims.resources.files.Files;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesCore;
 import org.bukkit.Bukkit;
@@ -34,6 +34,7 @@ public class BetterClaims extends JavaPlugin {
     private final Permissions permissions = new Permissions();
     private final Commands commands = new Commands();
     private final Systems systems = new Systems();
+    //@Getter private final DynMap dynMap = new DynMap();
     private boolean PlaceholderAPI;
 
     @Override

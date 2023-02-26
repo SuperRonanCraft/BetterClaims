@@ -7,6 +7,7 @@ package me.RonanCraft.BetterClaims.claims.data;
 
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_FLAG;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -24,8 +25,8 @@ public class Claim_FlagHandler {
         claimData.updated(update);
     }
 
-    public Object getFlag(CLAIM_FLAG flag) {
-        return flags.getOrDefault(flag, flag.getDefault());
+    public Object getFlag(@Nullable CLAIM_FLAG flag) {
+        return flags.getOrDefault(flag, flag == null ? false : flag.getDefault());
     }
 
     public HashMap<CLAIM_FLAG, Object> getFlags() {
