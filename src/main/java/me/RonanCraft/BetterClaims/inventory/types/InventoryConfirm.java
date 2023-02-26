@@ -1,5 +1,6 @@
 package me.RonanCraft.BetterClaims.inventory.types;
 
+import me.RonanCraft.BetterClaims.claims.Claim_Child;
 import me.RonanCraft.BetterClaims.inventory.*;
 import me.RonanCraft.BetterClaims.claims.Claim;
 import me.RonanCraft.BetterClaims.claims.data.members.Member;
@@ -70,7 +71,10 @@ public class InventoryConfirm extends ClaimInvLoader implements ClaimInv_Confirm
                         HelperClaim.requestAction(false, p, (Claim_Request) confirmation.info);
                         break;
                     case CLAIM_DELETE:
-                        HelperClaim.deleteClaim(p, (Claim) confirmation.info);
+                        if (confirmation.info instanceof Claim)
+                            HelperClaim.deleteClaim(p, (Claim) confirmation.info);
+                        else
+                            HelperClaim.deleteClaimChild(p, (Claim_Child) confirmation.info);
                         p.closeInventory();
                         return;
                 }

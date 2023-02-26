@@ -23,8 +23,8 @@ public class DatabaseClaims extends SQLite {
     }
 
     public enum COLUMNS {
-        CLAIM_ID("id", "integer PRIMARY KEY AUTOINCREMENT"),
-        OWNER_UUID("uuid", "varchar(32) NOT NULL"),
+        CLAIM_ID("id", "integer PRIMARY KEY"),
+        OWNER_UUID("uuid", "varchar(48) NOT NULL"),
         OWNER_NAME("name", "varchar(32) NOT NULL"),
         POSITION("position", "text NOT NULL"),
         ADMIN_CLAIM("admin_claim", "boolean DEFAULT false"),
@@ -61,7 +61,7 @@ public class DatabaseClaims extends SQLite {
                     claimDataMains.add(claimData);
             }
             rs.close();
-            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE (" + COLUMNS.PARENT + " IS NOT NULL AND " + COLUMNS.PARENT + " IS NOT -1)");
+            ps = conn.prepareStatement("SELECT * FROM " + table + " WHERE (" + COLUMNS.PARENT + " IS NOT NULL AND " + COLUMNS.PARENT + " != -1)");
             rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -126,6 +126,18 @@ public class DatabaseClaims extends SQLite {
         return true;
     }
 
+    //Delete a main claim
+    public boolean deleteClaimChild(Claim_Child claim) {
+        String pre = "DELETE FROM ";
+        String sql = pre + table + " WHERE "
+                + COLUMNS.CLAIM_ID.name + " = ?";
+        List<Object> params = new ArrayList<Object>() {{
+            add(claim.claimId);
+        }};
+        return sqlUpdate(sql, params);
+
+    }
+
     //Update Members
     /*public boolean updateMembers(Claim claim) {
         String sql = "UPDATE " + table + " SET " + COLUMNS.MEMBERS.name + " = ?  WHERE" + " " + COLUMNS.CLAIM_ID.name + " = ?";
@@ -181,6 +193,7 @@ public class DatabaseClaims extends SQLite {
                     paramIndex++;
                 }
             }
+            //BetterClaims.getInstance().getLogger().info(claimData.getOwnerID().toString());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {

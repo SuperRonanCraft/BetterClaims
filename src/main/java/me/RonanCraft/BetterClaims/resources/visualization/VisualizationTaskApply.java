@@ -27,11 +27,11 @@ class VisualizationTaskApply implements Runnable
             try {
                 player.sendBlockChange(element.location, element.fakeBlock.mat, (byte) 0);
             } catch (Exception e) {
-                e.printStackTrace();
+                //e.printStackTrace();
 
-                Class<? extends Player> pClass = player.getClass();
-                for (Field f : pClass.getDeclaredFields())
-                    BetterClaims.getInstance().getLogger().info(f.getType().getCanonicalName() + " " + f.getName());
+                //Class<? extends Player> pClass = player.getClass();
+                //for (Field f : pClass.getDeclaredFields())
+                //    BetterClaims.getInstance().getLogger().info(f.getType().getCanonicalName() + " " + f.getName());
             }
         }
 

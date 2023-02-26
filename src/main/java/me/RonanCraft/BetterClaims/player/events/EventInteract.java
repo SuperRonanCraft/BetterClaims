@@ -69,8 +69,13 @@ public class EventInteract implements ClaimEvents {
 
         Bukkit.getScheduler().runTaskAsynchronously(BetterClaims.getInstance(), () -> {
             Block block = e.getClickedBlock();
-            if (block == null || block.getType() == Material.AIR) //Block aiming at distance
-                block = e.getPlayer().getTargetBlock((Set<Material>) null, 64);
+            if (block == null || block.getType() == Material.AIR) { //Block aiming at distance
+                try {
+                    block = e.getPlayer().getTargetBlock((Set<Material>) null, 64);
+                } catch (IllegalStateException ignored) {
+                    return;
+                }
+            }
             if (block.getType() == Material.AIR)
                 return;
             Location loc = block.getLocation();

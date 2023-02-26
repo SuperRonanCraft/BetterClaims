@@ -167,6 +167,17 @@ public class HelperClaim {
         });
     }
 
+    public static void deleteClaimChild(Player p, Claim_Child claim) {
+        Bukkit.getScheduler().runTaskAsynchronously(BetterClaims.getInstance(), () -> {
+            ClaimHandler handler = BetterClaims.getInstance().getClaimHandler();
+            CLAIM_ERRORS error = handler.deleteClaimChild(p, claim);
+            if (error == CLAIM_ERRORS.NONE)
+                MessagesCore.CLAIM_DELETE.send(p, claim);
+            else
+                error.sendMsg(p, claim);
+        });
+    }
+
     public static void sendClaimInfo(Player p, ClaimData claimData) {
         List<String> msg = BetterClaims.getInstance().getFiles().getLang().getStringList("ClaimInfo");
         Message.sms(p, msg, claimData);

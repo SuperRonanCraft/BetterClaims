@@ -133,7 +133,7 @@ public class SQLite {
         for (Enum<?> c : columns) {
             String _name = getColumnName(type, c);
             String _type = getColumnType(type, c);
-            str = str.concat("`" + _name + "` " + _type);
+            str = str.concat("`" + _name + "` " + _type + (c.ordinal() == 0 ? (sqlEnabled ? " AUTO_INCREMENT" : " AUTOINCREMENT") : ""));
             if (c.equals(columns[columns.length - 1]))
                 str = str.concat(")");
             else

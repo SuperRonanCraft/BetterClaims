@@ -6,17 +6,17 @@
 package me.RonanCraft.BetterClaims.claims;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
+import me.RonanCraft.BetterClaims.auction.AuctionManager;
 import me.RonanCraft.BetterClaims.claims.data.BoundingBox;
-import me.RonanCraft.BetterClaims.player.events.PlayerClaimInteraction;
-import me.RonanCraft.BetterClaims.resources.PermissionNodes;
-import me.RonanCraft.BetterClaims.resources.Settings;
+import me.RonanCraft.BetterClaims.claims.data.members.Member;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_FLAG;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_FLAG_MEMBER;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_TYPE;
-import me.RonanCraft.BetterClaims.claims.data.members.Member;
-import me.RonanCraft.BetterClaims.auction.AuctionManager;
 import me.RonanCraft.BetterClaims.database.DatabaseClaims;
+import me.RonanCraft.BetterClaims.player.events.PlayerClaimInteraction;
+import me.RonanCraft.BetterClaims.resources.PermissionNodes;
+import me.RonanCraft.BetterClaims.resources.Settings;
 import me.RonanCraft.BetterClaims.resources.helper.HelperEvent;
 import me.RonanCraft.BetterClaims.resources.visualization.Visualization;
 import me.RonanCraft.BetterClaims.resources.visualization.VisualizationType;
@@ -97,6 +97,17 @@ public class ClaimHandler {
             this.mainClaims.remove(claim);
             this.childClaims.removeAll(childrenClaims);
             HelperEvent.claimDelete(deletor, claim, childrenClaims);
+        } else
+            error = CLAIM_ERRORS.DATABASE_ERROR;
+        return error;
+    }
+
+    public CLAIM_ERRORS deleteClaimChild(Player deletor, Claim_Child claim) {
+        CLAIM_ERRORS error = CLAIM_ERRORS.NONE;
+        //DELETE ALL THESE CHILDREN TOO!
+        if (getDatabase().deleteClaimChild(claim)) {
+            this.childClaims.remove(claim);
+            //HelperEvent.claimDelete(deletor, claim, null);
         } else
             error = CLAIM_ERRORS.DATABASE_ERROR;
         return error;

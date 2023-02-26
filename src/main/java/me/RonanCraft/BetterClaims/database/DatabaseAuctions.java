@@ -17,7 +17,7 @@ public class DatabaseAuctions extends SQLite {
     }
 
     public enum COLUMNS {
-        AUCTION_ID("id", "integer PRIMARY KEY AUTOINCREMENT"),
+        AUCTION_ID("id", "integer PRIMARY KEY"),
         CLAIM_ID("claim_id", "integer NOT NULL"),
         PRICE("price", "integer NOT NULL"),
         HOURS("hours", "integer NOT NULL");
