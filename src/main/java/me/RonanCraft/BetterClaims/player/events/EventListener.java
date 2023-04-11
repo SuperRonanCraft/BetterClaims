@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
@@ -103,7 +104,11 @@ public class EventListener implements Listener {
     //PvP
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onDamage(EntityDamageByEntityEvent e) {
-        damage.onDamage(e);
+        damage.damageEntity(e);
+    }
+    @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    void onDamage(HangingBreakByEntityEvent e) {
+        damage.damageHanging(e);
     }
 
     //Blocks

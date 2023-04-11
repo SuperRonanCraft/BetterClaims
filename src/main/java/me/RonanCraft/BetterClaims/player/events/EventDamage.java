@@ -4,10 +4,12 @@ import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_FLAG;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 
 import java.util.HashMap;
 
@@ -16,7 +18,7 @@ public class EventDamage implements ClaimEvents {
     private final HashMap<Entity, Integer> damageCooldown = new HashMap<>();
 
     //Damage Entity (Mobs and Players)
-    void onDamage(EntityDamageByEntityEvent e) {
+    void damageEntity(EntityDamageByEntityEvent e) {
         final Entity damager = e.getDamager();
         final Entity damaged = e.getEntity();
 
@@ -39,11 +41,25 @@ public class EventDamage implements ClaimEvents {
                     return;
             } else if (damager instanceof Player && claimData.isMember((Player) damager)) {
                 return;
-            } else if (damaged instanceof Monster && damaged.getCustomName() == null) //Garbage mob
+            } else if (damaged instanceof Monster && damaged.getCustomName() == null) { //Garbage mob
                 return;
+            }
             e.setCancelled(true);
             cooldown(damaged);
             cooldown(damager);
+        }
+    }
+
+    void damageHanging(HangingBreakByEntityEvent e) {
+        final Entity damager = e.getRemover();
+        final Entity damaged = e.getEntity();
+
+        ClaimData claimData = getClaimAt(damager.getLocation(), false);
+        if (claimData == null)
+            claimData = getClaimAt(damaged.getLocation(), false);
+        if (claimData != null) {
+            if (!(damager instanceof Player && claimData.isMember((Player) damager)))
+                e.setCancelled(true);
         }
     }
 
