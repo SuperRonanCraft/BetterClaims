@@ -13,7 +13,7 @@ public enum ClaimCommandType {
     CONVERT(new         CmdConvert()),
     ADMIN_CLAIM(new CmdAdminClaim()),
     ADMIN_OVERRIDE(new  CmdAdminOverride()),
-    //CLAIMITEM(new       CmdClaimItem()),
+    CLAIMITEM(new       CmdClaimItem()),
     ADDMEMBER(new       CmdAddMember()),
     ;
 

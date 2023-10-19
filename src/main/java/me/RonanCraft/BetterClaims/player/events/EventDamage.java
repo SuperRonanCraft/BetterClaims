@@ -23,11 +23,11 @@ public class EventDamage implements ClaimEvents {
         final Entity damaged = e.getEntity();
 
         if (damageCooldown.containsKey(damaged)) {
-            cooldown(damaged);
+            //cooldown(damaged);
             e.setCancelled(true); //In a cooldown till we check the claims again
             return;
         } else if (damageCooldown.containsKey(damager)) {
-            cooldown(damager);
+            //cooldown(damager);
             e.setCancelled(true); //In a cooldown till we check the claims again
             return;
         }
