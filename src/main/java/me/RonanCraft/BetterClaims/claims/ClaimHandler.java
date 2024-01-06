@@ -5,6 +5,7 @@
 
 package me.RonanCraft.BetterClaims.claims;
 
+import lombok.Getter;
 import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.auction.AuctionManager;
 import me.RonanCraft.BetterClaims.claims.data.BoundingBox;
@@ -17,17 +18,21 @@ import me.RonanCraft.BetterClaims.database.DatabaseClaims;
 import me.RonanCraft.BetterClaims.player.events.PlayerClaimInteraction;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.resources.Settings;
+import me.RonanCraft.BetterClaims.resources.files.FileOther;
 import me.RonanCraft.BetterClaims.resources.helper.HelperEvent;
 import me.RonanCraft.BetterClaims.resources.visualization.Visualization;
 import me.RonanCraft.BetterClaims.resources.visualization.VisualizationType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.*;
 
 public class ClaimHandler {
@@ -35,6 +40,8 @@ public class ClaimHandler {
     private final List<Claim> mainClaims = new ArrayList<>();
     private final List<Claim_Child> childClaims = new ArrayList<>();
     private int claim_maxSize = 256;
+    @Getter HashMap<CLAIM_FLAG, Boolean> globalFlagDefaults = new HashMap<>();
+
 
     private DatabaseClaims getDatabase() {
         return BetterClaims.getInstance().getDatabaseClaims();
@@ -43,6 +50,8 @@ public class ClaimHandler {
     public void load() {
         mainClaims.clear();
         childClaims.clear();
+        loadClaimFlags();
+
         Bukkit.getScheduler().runTaskAsynchronously(BetterClaims.getInstance(), () -> {
             HashMap<CLAIM_TYPE, List<ClaimData>> databaseClaims = getDatabase().getClaims();
             if (databaseClaims.get(CLAIM_TYPE.PARENT) != null)
@@ -58,6 +67,26 @@ public class ClaimHandler {
         if (claim_maxSize < 10)
             claim_maxSize = 10;
         auctionManager.load();
+    }
+
+    /**
+     * Will auto generate flags.yml file
+     * **/
+    private void loadClaimFlags() {
+        YamlConfiguration yaml = FileOther.FILETYPE.CONFIG.getConfig();
+        ConfigurationSection config = yaml.getConfigurationSection("DefaultFlags");
+        for (CLAIM_FLAG flag : CLAIM_FLAG.values()) {
+            if (!config.contains(flag.name())) {
+                yaml.set("DefaultFlags." + flag.name(), flag.isDefaultValue());
+            }
+            globalFlagDefaults.put(flag, config.getBoolean(flag.name()));
+        }
+        try {
+            yaml.save(FileOther.FILETYPE.CONFIG.getFile());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        FileOther.FILETYPE.CONFIG.reload();
     }
 
     public CLAIM_ERRORS changeOwner(Claim claim, boolean save_oldOwner, @Nullable UUID id, boolean adminClaim) {
@@ -301,8 +330,11 @@ public class ClaimHandler {
             }
             return true;
         } else { //Cancel interactions if the claim flag is enabled
-            Object flagValue = claimData.getFlags().getFlag(flag); //Get the claims flag value
-            return ((Boolean) flagValue);
+            if (flag != null) {
+                Object flagValue = claimData.getFlags().getFlag(flag); //Get the claims flag value
+                return ((Boolean) flagValue);
+            }
+            return false;
         }
     }
 

@@ -5,6 +5,7 @@
 
 package me.RonanCraft.BetterClaims.claims;
 
+import lombok.Getter;
 import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.claims.data.BoundingBox;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
@@ -32,17 +33,18 @@ public abstract class ClaimData {
 
     public long claimId;
     UUID ownerId;
-    String ownerName;
-    private final BoundingBox boundingBox;
+    @Getter String ownerName;
+    @Getter private final BoundingBox boundingBox;
     public boolean deleted;
     //Loaded after
     private String claimName;
-    private final Claim_FlagHandler flags = new Claim_FlagHandler(this);
+    @Getter private final Claim_FlagHandler flags = new Claim_FlagHandler(this);
     final ClaimMembers members = new ClaimMembers(this);
-    private final List<Claim_Request> requests = new ArrayList<>();
+    //Requests
+    @Getter private final List<Claim_Request> requests = new ArrayList<>();
     public Date dateCreated;
     //Claim info
-    boolean adminClaim;
+    @Getter boolean adminClaim;
     public final CLAIM_TYPE claimType;
     boolean updated = false;
 
@@ -76,18 +78,6 @@ public abstract class ClaimData {
         return claimName != null ? claimName : (ownerName != null ? ownerName : (!isAdminClaim() ? getOwner().getName() : "Admin Claim"));
     }
 
-    public Claim_FlagHandler getFlags() {
-        return flags;
-    }
-
-    public BoundingBox getBoundingBox() {
-        return boundingBox;
-    }
-
-    public boolean isAdminClaim() {
-        return adminClaim;
-    }
-
     //Owner
     public boolean isOwner(Player p) {
         return p.getUniqueId().equals(ownerId);
@@ -95,10 +85,6 @@ public abstract class ClaimData {
 
     public UUID getOwnerID() {
         return ownerId;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
     }
 
     @Nullable
@@ -127,11 +113,6 @@ public abstract class ClaimData {
 
     public boolean isMember(Player p) {
         return members.isMember(p.getUniqueId());
-    }
-
-    //Requests
-    public List<Claim_Request> getRequests() {
-        return requests;
     }
 
     public Claim_Request getRequest(Player p) {

@@ -84,6 +84,10 @@ public class FileOther {
             config.set(path, value);
         }
 
+        public void reload() {
+            load();
+        }
+
         //PROCCESSING
         private void load() {
             if (!file.exists()) {

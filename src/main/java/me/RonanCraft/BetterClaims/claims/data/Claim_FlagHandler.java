@@ -5,14 +5,16 @@
 
 package me.RonanCraft.BetterClaims.claims.data;
 
+import lombok.Getter;
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_FLAG;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
 public class Claim_FlagHandler {
-    public HashMap<CLAIM_FLAG, Object> flags = new HashMap<>();
+    @Getter public HashMap<CLAIM_FLAG, Object> flags = new HashMap<>();
 
     private final ClaimData claimData;
 
@@ -25,11 +27,8 @@ public class Claim_FlagHandler {
         claimData.updated(update);
     }
 
-    public Object getFlag(@Nullable CLAIM_FLAG flag) {
-        return flags.getOrDefault(flag, flag == null ? false : flag.getDefault());
+    public Object getFlag(@NotNull CLAIM_FLAG flag) {
+        return flags.getOrDefault(flag, flag.getValue());
     }
 
-    public HashMap<CLAIM_FLAG, Object> getFlags() {
-        return flags;
-    }
 }

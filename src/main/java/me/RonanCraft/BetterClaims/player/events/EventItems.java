@@ -1,6 +1,7 @@
 package me.RonanCraft.BetterClaims.player.events;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
+import me.RonanCraft.BetterClaims.claims.enums.CLAIM_FLAG;
 import me.RonanCraft.BetterClaims.resources.Settings;
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import org.bukkit.Bukkit;
@@ -11,6 +12,7 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemDespawnEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -51,14 +53,25 @@ public class EventItems implements Listener, ClaimEvents {
             return; //Let players who died in another claim pick up their items
         }
         ClaimData claimData = getClaimMain(e.getItem().getLocation());
-        if (claimData != null && !claimData.isMember(e.getPlayer()))
-            e.setCancelled(true);
+        if (claimData != null) {
+            if (!((Boolean) claimData.getFlags().getFlag(CLAIM_FLAG.ALLOW_ITEM_PICKUP)) && !claimData.isMember(e.getPlayer()))
+                e.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    private void onDrop(PlayerDropItemEvent e) {
+        ClaimData claimData = getClaimMain(e.getItemDrop().getLocation());
+        if (claimData != null) {
+            if (!((Boolean) claimData.getFlags().getFlag(CLAIM_FLAG.ALLOW_ITEM_PICKUP)) && !claimData.isMember(e.getPlayer()))
+                e.setCancelled(true);
+        }
     }
 
     //(Added v1.1.0)
     //Disallow other players from picking up dead players items
     @EventHandler(priority = EventPriority.HIGHEST)
-    private void onDrop(PlayerDeathEvent e) {
+    private void onDeathDrop(PlayerDeathEvent e) {
         List<ItemStack> items = e.getDrops();
         for (ItemStack item : items) {
             Item drop = Objects.requireNonNull(e.getEntity().getLocation().getWorld()).dropItem(e.getEntity().getLocation(), item);

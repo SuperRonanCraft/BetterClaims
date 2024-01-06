@@ -1,12 +1,10 @@
 package me.RonanCraft.BetterClaims.resources.files;
 
-public class Files {
-    private final FileLanguage lang = new FileLanguage();
-    private final FileOther other = new FileOther();
+import lombok.Getter;
 
-    public FileLanguage getLang() {
-        return lang;
-    }
+public class Files {
+    @Getter private final FileLanguage lang = new FileLanguage();
+    private final FileOther other = new FileOther();
 
     //To call a file just grab the enum with FileOther.FILETYPE.<file>
 

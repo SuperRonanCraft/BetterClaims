@@ -15,6 +15,7 @@ import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,19 +33,18 @@ public class CmdFlags implements ClaimCommand, ClaimCommandHelpable, ClaimComman
         //Event
         if (args.length == 3) {
             CLAIM_FLAG flag = null;
-            Object value = null;
-            for (CLAIM_FLAG _flag : CLAIM_FLAG.values())
+            boolean value = false;
+            for (CLAIM_FLAG _flag : CLAIM_FLAG.values()) {
                 if (_flag.name().equalsIgnoreCase(args[1])) {
                     try {
-                        value = _flag.cast(args[2]);
-                        if (value == null)
-                            throw new Exception();
+                        value = Boolean.parseBoolean(args[2].toLowerCase());
                         flag = _flag;
                     } catch (Exception e) {
                         MessagesCore.INVALIDFLAGVALUE.send(sendi);
                         return;
                     }
                 }
+            }
             if (flag == null) {
                 MessagesCore.INVALIDFLAG.send(sendi);
                 return;

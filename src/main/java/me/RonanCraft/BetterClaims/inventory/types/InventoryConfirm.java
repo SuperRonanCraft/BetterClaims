@@ -63,6 +63,7 @@ public class InventoryConfirm extends ClaimInvLoader implements ClaimInv_Confirm
                 switch (confirmation.type) {
                     case CLAIM_LEAVE:
                         HelperClaim.leaveClaim(p, (Member) confirmation.info);
+                        p.closeInventory();
                         break;
                     case MEMBER_REMOVE:
                         HelperClaim.removeMember(p, (Member) confirmation.info);

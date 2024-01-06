@@ -5,9 +5,10 @@
 
 package me.RonanCraft.BetterClaims.claims.data;
 
+import lombok.Getter;
 import me.RonanCraft.BetterClaims.BetterClaims;
-import me.RonanCraft.BetterClaims.resources.Settings;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_CORNER;
+import me.RonanCraft.BetterClaims.resources.Settings;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -19,11 +20,11 @@ import org.bukkit.util.Vector;
 
 public class BoundingBox {
 
-    private int maxX, maxZ;
+    @Getter private int maxX, maxZ;
     private final int maxY;
-    private int minX, minZ;
+    @Getter private int minX, minZ;
     private final int minY;
-    private final World world;
+    @Getter private final World world;
 
     public BoundingBox(World world, int x1, int z1, int x2, int z2) {
         this.world = world;
@@ -40,22 +41,6 @@ public class BoundingBox {
         this(world, loc_1.getBlockX(), loc_1.getBlockZ(), loc_2.getBlockX(), loc_2.getBlockZ());
     }
 
-
-    public int getMaxX() {
-        return maxX;
-    }
-
-    public int getMaxZ() {
-        return maxZ;
-    }
-
-    public int getMinX() {
-        return minX;
-    }
-
-    public int getMinZ() {
-        return minZ;
-    }
 
     public int getLeft() {
         return Math.min(getMaxX(), getMinX());
@@ -190,7 +175,4 @@ public class BoundingBox {
                 && this.minZ <= other.maxZ && this.maxZ >= other.minZ;
     }
 
-    public World getWorld() {
-        return world;
-    }
 }

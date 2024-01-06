@@ -17,3 +17,5 @@ Global: # Settings that affect the whole server, not just claims
   RabbitsEatCrops: false
 Player:
   ProtectDeathDrops: true # If a player dies, their items will not be able to be picked up by others
+
+DefaultFlags: {}

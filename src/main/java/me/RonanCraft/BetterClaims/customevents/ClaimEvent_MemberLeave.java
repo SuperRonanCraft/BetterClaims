@@ -9,7 +9,7 @@ public class ClaimEvent_MemberLeave extends ClaimEventType_ClaimCancellable impl
     private final Member member;
 
     public ClaimEvent_MemberLeave(Member member) {
-        super(member.claimData, true);
+        super(member.claimData, false);
         this.member = member;
     }
 
