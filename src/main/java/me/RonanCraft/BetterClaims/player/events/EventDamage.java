@@ -4,10 +4,7 @@ import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_FLAG;
 import org.bukkit.Bukkit;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 
@@ -36,17 +33,47 @@ public class EventDamage implements ClaimEvents {
         if (claimData == null)
             claimData = getClaimAt(damaged.getLocation(), false);
         if (claimData != null) { //BUG: if one player is inside a child claim, attacker can hit, defender cannot
-            if (damaged instanceof Player && damager instanceof Player) { //Player vs Player
-                if (((Boolean) claimData.getFlags().getFlag(CLAIM_FLAG.PVP))) //PvP is allowed
-                    return;
-            } else if (damager instanceof Player && claimData.isMember((Player) damager)) {
-                return;
-            } else if (damaged instanceof Monster && damaged.getCustomName() == null) { //Garbage mob
-                return;
+            boolean cancel = false;
+            //Player vs Player
+            if (damaged instanceof Player && damager instanceof Player) {
+                if (!((Boolean) claimData.getFlags().getFlag(CLAIM_FLAG.PVP))) //PvP is allowed
+                    cancel = true;
+            //Is a Friendly Mob
+            } else if (damaged instanceof Creature && !(damaged instanceof Monster)) {
+                if (damager instanceof Player) {
+                    if (!claimData.isMember((Player) damager))
+                        cancel = true;
+                } else if (damager instanceof Projectile) {
+                    //Player vs Player
+                    if (damaged instanceof Player) {
+                        if (!((Boolean) claimData.getFlags().getFlag(CLAIM_FLAG.PVP))) //PvP is allowed
+                            cancel = true;
+                    } else {
+                        Projectile projectile = (Projectile) damager;
+                        if (projectile.getShooter() instanceof Player) {
+                            Player projectile_shooter = (Player) projectile.getShooter();
+                            if (!claimData.isMember(projectile_shooter))
+                                cancel = true;
+                        }
+                    }
+                }
+            //Projectiles
+            } else if (damager instanceof Projectile) {
+                Projectile projectile = (Projectile) damager;
+                if (projectile.getShooter() instanceof Player) {
+                    //Player vs Player (Projectiles)
+                    if (damaged instanceof Player) {
+                        if (!((Boolean) claimData.getFlags().getFlag(CLAIM_FLAG.PVP))) {
+                            cancel = true;
+                        }
+                    }
+                }
             }
-            e.setCancelled(true);
-            cooldown(damaged);
-            cooldown(damager);
+            if (cancel) {
+                e.setCancelled(true);
+                cooldown(damaged);
+                cooldown(damager);
+            }
         }
     }
 
