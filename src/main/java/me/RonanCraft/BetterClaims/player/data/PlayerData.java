@@ -16,8 +16,8 @@ public class PlayerData {
     @Getter @Setter private @Nullable Visualization visualization;
     @Getter private boolean overriding;
     @Getter private @Nullable Inventory inventory;
+    @Getter private @Nullable ClaimInventory claimInventory;
     private List<ClaimInventory> previous = new ArrayList<>();
-    @Getter private @Nullable ClaimInventory currentInventory;
     @Getter @Setter private @Nullable PlayerClaimInteraction claimInteraction;
     @Getter @Setter private Claim insideClaim;
 
@@ -30,7 +30,7 @@ public class PlayerData {
         if (from_command)
             clear();
         inventory = inv;
-        currentInventory = pinv;
+        claimInventory = pinv;
         addPrevious(pinv);
     }
 
@@ -62,7 +62,7 @@ public class PlayerData {
 
     public void clearInventory() {
         inventory = null;
-        currentInventory = null;
+        claimInventory = null;
     }
 
     //Overrides
@@ -78,7 +78,7 @@ public class PlayerData {
         visualization = null;
         overriding = false;
         inventory = null;
-        currentInventory = null;
+        claimInventory = null;
     }
 
     public void removeInsideClaim() {

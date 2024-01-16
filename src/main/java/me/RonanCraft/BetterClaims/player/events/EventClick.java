@@ -13,7 +13,7 @@ public class EventClick {
         if (!validClick(e))
             return;
         e.setCancelled(true);
-        ClaimInventory inventory = BetterClaims.getInstance().getPlayerData((Player) e.getWhoClicked()).getCurrentInventory();
+        ClaimInventory inventory = BetterClaims.getInstance().getPlayerData((Player) e.getWhoClicked()).getClaimInventory();
         if (inventory != null)
             inventory.click(e);
     }
