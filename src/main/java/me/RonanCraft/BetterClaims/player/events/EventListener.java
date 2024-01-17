@@ -3,6 +3,7 @@ package me.RonanCraft.BetterClaims.player.events;
 import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.player.data.PlayerData;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_MODE;
+import me.RonanCraft.BetterClaims.resources.helper.HelperPlayer;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesCore;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -41,8 +42,9 @@ public class EventListener implements Listener {
     }
 
     public void toggleAdminClaim(Player p) { //Can fail if not having the claim item equipped and has no locations
-        if (getPlayerData(p).getClaimInteraction() != null) {
-            PlayerClaimInteraction interaction = getPlayerData(p).getClaimInteraction();
+        PlayerData data = HelperPlayer.getData(p);
+        if (data.getClaimInteraction() != null) {
+            PlayerClaimInteraction interaction = data.getClaimInteraction();
             if (interaction.locations.isEmpty()) {
                 if (interaction.mode != CLAIM_MODE.CREATE_ADMIN) {
                     interaction.mode = CLAIM_MODE.CREATE_ADMIN;
@@ -166,9 +168,5 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     private void onMove(PlayerMoveEvent e) {
         move.onMove(e);
-    }
-
-    PlayerData getPlayerData(Player p) {
-        return BetterClaims.getInstance().getPlayerData(p);
     }
 }

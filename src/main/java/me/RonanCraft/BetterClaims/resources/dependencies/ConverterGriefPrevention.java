@@ -32,7 +32,6 @@ public class ConverterGriefPrevention {
         File file = getFile();
         if (!file.exists() || file.listFiles() == null)
             return;
-        ClaimHandler claimHandler = BetterClaims.getInstance().getClaimHandler();
         for (File f : Objects.requireNonNull(file.listFiles(filter()))) {
             try {
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(f);
@@ -40,7 +39,7 @@ public class ConverterGriefPrevention {
                 UUID uuid = getID(config);
                 ClaimData claimData;
                 claimData = HelperClaim.createClaimMain(position, uuid, null, uuid == null);
-                CLAIM_ERRORS error = claimHandler.uploadCreatedClaim(claimData, null, null);
+                CLAIM_ERRORS error = HelperClaim.getHandler().uploadCreatedClaim(claimData, null, null);
                 if (error != CLAIM_ERRORS.NONE) {
                     BetterClaims.getInstance().getLogger().warning(error.getMsg(claimData));
                     //error.sendMsg(converter, claim);

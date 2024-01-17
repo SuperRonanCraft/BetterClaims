@@ -8,6 +8,7 @@ import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.ClaimHandler;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.BetterClaims.auction.Auction;
+import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesCore;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesHelp;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesUsage;
@@ -25,14 +26,13 @@ public class CmdAuction implements ClaimCommand, ClaimCommandHelpable {
     }
 
     public void execute(CommandSender sendi, String label, String[] args) {
-        ClaimHandler handler = BetterClaims.getInstance().getClaimHandler();
         Player p = (Player) sendi;
-        ClaimData claimData = handler.getClaimAt(p.getLocation(), false);
+        ClaimData claimData = HelperClaim.getHandler().getClaimAt(p.getLocation(), false);
         if (claimData != null) {
             if (claimData.isOwner(p)) {
-                CLAIM_ERRORS error = handler.getAuctionManager().createAuction(claimData, 0, 0);
+                CLAIM_ERRORS error = HelperClaim.getHandler().getAuctionManager().createAuction(claimData, 0, 0);
                 if (error == CLAIM_ERRORS.NONE) {
-                    Auction auction = handler.getAuctionManager().getAuction(claimData);
+                    Auction auction = HelperClaim.getHandler().getAuctionManager().getAuction(claimData);
                     Visualization.fromClaim(claimData, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
                     MessagesCore.AUCTION_CREATED.send(sendi, auction);
                 } else

@@ -7,6 +7,7 @@ import me.RonanCraft.BetterClaims.claims.Claim_Child;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_MODE;
 import me.RonanCraft.BetterClaims.claims.Claim;
+import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesCore;
 import me.RonanCraft.BetterClaims.resources.visualization.Visualization;
 import me.RonanCraft.BetterClaims.resources.visualization.VisualizationType;
@@ -34,7 +35,7 @@ public class PlayerClaimInteraction {
         if (locations.contains(loc)) {
             return CLAIM_ERRORS.LOCATION_ALREADY_EXISTS;
         } else {
-            ClaimData claim = BetterClaims.getInstance().getClaimHandler().getClaimAt(loc, true);
+            ClaimData claim = HelperClaim.getHandler().getClaimAt(loc, true);
             if (claim != null) {
                 if (locations.size() == 0 && (claim.isOwner(p) || (claim.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p)))) {
                     if (claim.getBoundingBox().isCorner(loc)) { //Clicked a corner (first)
@@ -43,7 +44,7 @@ public class PlayerClaimInteraction {
                         Visualization vis = Visualization.fromClaim(claim, player.getLocation().getBlockY(), VisualizationType.EDIT, player.getLocation());
                         Visualization.fromLocation(vis, loc, player.getLocation().getBlockY(), p.getLocation()).apply(player);
                     } else {
-                        List<Claim_Child> children = BetterClaims.getInstance().getClaimHandler().getClaimsChild((Claim) claim);
+                        List<Claim_Child> children = HelperClaim.getHandler().getClaimsChild((Claim) claim);
                         for (Claim_Child child : children)
                             if (child.getBoundingBox().isCorner(loc)) {
                                 mode = CLAIM_MODE.EDIT;
@@ -76,7 +77,7 @@ public class PlayerClaimInteraction {
                     return CLAIM_ERRORS.OVERLAPPING;
                 } else {
                     //Disallow making multiple children claims on top of each other
-                    List<Claim_Child> children = BetterClaims.getInstance().getClaimHandler().getClaimsChild((Claim) editing);
+                    List<Claim_Child> children = HelperClaim.getHandler().getClaimsChild((Claim) editing);
                     for (Claim_Child child : children)
                         if (child.contains(loc)) {
                             Visualization.fromClaim(editing, player.getLocation().getBlockY(), VisualizationType.ERROR, player.getLocation()).apply(player);

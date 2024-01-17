@@ -54,7 +54,7 @@ public class EventInteract implements ClaimEvents {
         if (!allowInteract(e.getPlayer(), e.getClickedBlock()))
             e.setCancelled(true);
         if (e.getItem() != null && e.getItem().getType() == Material.STICK) {
-            HashMap<CLAIM_FLAG, Object> flags = BetterClaims.getInstance().getClaimHandler().getFlagsAt(e.getClickedBlock().getLocation(), false);
+            HashMap<CLAIM_FLAG, Object> flags = HelperClaim.getHandler().getFlagsAt(e.getClickedBlock().getLocation(), false);
         }
     }
 
@@ -154,7 +154,7 @@ public class EventInteract implements ClaimEvents {
         ignoredClaimData.add(claimInteraction.editing);
         if (claimInteraction.editing instanceof Claim_Child)
             ignoredClaimData.add(((Claim_Child) claimInteraction.editing).getParent());
-        CLAIM_ERRORS error = BetterClaims.getInstance().getClaimHandler().isLocationValid(greater, lower, p, ignoredClaimData /*Ignored claim*/, claimInteraction);
+        CLAIM_ERRORS error = HelperClaim.getHandler().isLocationValid(greater, lower, p, ignoredClaimData /*Ignored claim*/, claimInteraction);
         if (error == CLAIM_ERRORS.NONE) {
             //Save new position
             error = claimInteraction.editing.editCorners(p, positionStiff, positionMovingCorner);

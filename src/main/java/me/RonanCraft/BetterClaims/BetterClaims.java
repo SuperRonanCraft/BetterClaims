@@ -82,7 +82,7 @@ public class BetterClaims extends JavaPlugin {
 
     private void closeMenus() {
         for (Player plr : Bukkit.getOnlinePlayers())
-            if (systems.getPlayerData(plr).getInventory() != null)
+            if (getPlayerData(plr).getInventory() != null)
                 plr.closeInventory();
     }
 

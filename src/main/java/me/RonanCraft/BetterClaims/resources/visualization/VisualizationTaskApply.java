@@ -1,6 +1,7 @@
 package me.RonanCraft.BetterClaims.resources.visualization;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
+import me.RonanCraft.BetterClaims.resources.helper.HelperPlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
@@ -36,7 +37,7 @@ class VisualizationTaskApply implements Runnable
         }
 
         //remember the visualization applied to this player for later (so it can be inexpensively reverted)
-        BetterClaims.getInstance().getPlayerData(player).setVisualization(visualization);
+        HelperPlayer.getData(player).setVisualization(visualization);
 
         //schedule automatic visualization reversion in 60 seconds.
         BetterClaims.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(

@@ -4,6 +4,7 @@ import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.Updater;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.resources.files.FileOther;
+import me.RonanCraft.BetterClaims.resources.helper.HelperPlayer;
 import me.RonanCraft.BetterClaims.resources.messages.Message;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -12,7 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class EventJoinLeave {
 
     void leave(PlayerQuitEvent e) {
-        BetterClaims.getInstance().getPlayerData(e.getPlayer()).clear();
+        HelperPlayer.getData(e.getPlayer()).clear();
     }
 
     void join(PlayerJoinEvent e) {

@@ -7,6 +7,7 @@ package me.RonanCraft.BetterClaims.claims.enums;
 
 import lombok.Getter;
 import me.RonanCraft.BetterClaims.BetterClaims;
+import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
 
 @Getter public enum CLAIM_FLAG {
     PVP(false),
@@ -31,6 +32,6 @@ import me.RonanCraft.BetterClaims.BetterClaims;
     }
 
     public Object getValue() {
-        return BetterClaims.getInstance().getClaimHandler().getGlobalFlagDefaults().get(this);
+        return HelperClaim.getHandler().getGlobalFlagDefaults().get(this);
     }
 }

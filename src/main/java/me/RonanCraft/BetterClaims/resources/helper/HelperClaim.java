@@ -6,18 +6,20 @@
 package me.RonanCraft.BetterClaims.resources.helper;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
-import me.RonanCraft.BetterClaims.claims.data.BoundingBox;
-import me.RonanCraft.BetterClaims.player.events.PlayerClaimInteraction;
-import me.RonanCraft.BetterClaims.resources.Settings;
-import me.RonanCraft.BetterClaims.claims.*;
+import me.RonanCraft.BetterClaims.claims.Claim;
+import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.ClaimHandler;
+import me.RonanCraft.BetterClaims.claims.Claim_Child;
+import me.RonanCraft.BetterClaims.claims.data.BoundingBox;
 import me.RonanCraft.BetterClaims.claims.data.Claim_Request;
+import me.RonanCraft.BetterClaims.claims.data.members.Member;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_ERRORS;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_FLAG;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_MODE;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_TYPE;
-import me.RonanCraft.BetterClaims.claims.data.members.Member;
 import me.RonanCraft.BetterClaims.database.DatabaseClaims;
+import me.RonanCraft.BetterClaims.player.events.PlayerClaimInteraction;
+import me.RonanCraft.BetterClaims.resources.Settings;
 import me.RonanCraft.BetterClaims.resources.messages.Message;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesCore;
 import me.RonanCraft.BetterClaims.resources.visualization.Visualization;
@@ -34,6 +36,10 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class HelperClaim {
+
+    public static ClaimHandler getHandler() {
+        return BetterClaims.getInstance().getClaimHandler();
+    }
 
     public static void toggleFlag(Player p, ClaimData claimData, CLAIM_FLAG flag) {
         setFlag(p, claimData, flag, !(Boolean) claimData.getFlags().getFlag(flag));
@@ -105,7 +111,6 @@ public class HelperClaim {
     public static CLAIM_ERRORS registerClaim(@NotNull Player creator, @NotNull World world, @NotNull Location pos1,
                                              @NotNull Location pos2, @Nullable PlayerClaimInteraction claimInteraction, CLAIM_TYPE type) {
         CLAIM_ERRORS error;
-        ClaimHandler handler = BetterClaims.getInstance().getClaimHandler();
         BoundingBox box = new BoundingBox(pos1, pos2);
         ClaimData claimData;
 
@@ -120,12 +125,12 @@ public class HelperClaim {
 
         //Claim Max Count - on normal claim
         if (claimData.claimType == CLAIM_TYPE.PARENT && !claimData.isAdminClaim() &&
-                BetterClaims.getInstance().getClaimHandler().getClaims(creator.getUniqueId()).size() >= BetterClaims.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_COUNT))
+                getHandler().getClaims(creator.getUniqueId()).size() >= BetterClaims.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_COUNT))
             return CLAIM_ERRORS.CLAIM_COUNT;
 
         //Save claim/send error if any
         if (!HelperEvent.claimAttemptCreate(claimData, creator).isCancelled()) {
-            error = handler.uploadCreatedClaim(claimData, creator, claimInteraction);
+            error = getHandler().uploadCreatedClaim(claimData, creator, claimInteraction);
             switch (error) {
                 case NONE:
                     MessagesCore.CLAIM_CREATE_SUCCESS.send(creator, claimData);
@@ -158,8 +163,7 @@ public class HelperClaim {
 
     public static void deleteClaim(Player p, Claim claim) {
         Bukkit.getScheduler().runTaskAsynchronously(BetterClaims.getInstance(), () -> {
-            ClaimHandler handler = BetterClaims.getInstance().getClaimHandler();
-            CLAIM_ERRORS error = handler.deleteClaim(p, claim);
+            CLAIM_ERRORS error = getHandler().deleteClaim(p, claim);
             if (error == CLAIM_ERRORS.NONE)
                 MessagesCore.CLAIM_DELETE.send(p, claim);
             else
@@ -169,8 +173,7 @@ public class HelperClaim {
 
     public static void deleteClaimChild(Player p, Claim_Child claim) {
         Bukkit.getScheduler().runTaskAsynchronously(BetterClaims.getInstance(), () -> {
-            ClaimHandler handler = BetterClaims.getInstance().getClaimHandler();
-            CLAIM_ERRORS error = handler.deleteClaimChild(p, claim);
+            CLAIM_ERRORS error = getHandler().deleteClaimChild(p, claim);
             if (error == CLAIM_ERRORS.NONE)
                 MessagesCore.CLAIM_DELETE.send(p, claim);
             else

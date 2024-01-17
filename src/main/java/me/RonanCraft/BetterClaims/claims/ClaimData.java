@@ -17,6 +17,7 @@ import me.RonanCraft.BetterClaims.claims.enums.CLAIM_TYPE;
 import me.RonanCraft.BetterClaims.claims.data.members.ClaimMembers;
 import me.RonanCraft.BetterClaims.claims.data.members.Member;
 import me.RonanCraft.BetterClaims.auction.Auction;
+import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
 import me.RonanCraft.BetterClaims.resources.helper.HelperEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -149,7 +150,7 @@ public abstract class ClaimData {
 
     public CLAIM_ERRORS editCorners(@NotNull Player editor, Vector loc_1, Vector loc_2) {
         if (!HelperEvent.claimResize(editor, this, editor, loc_1, loc_2).isCancelled()) {
-            if (BetterClaims.getInstance().getClaimHandler().canResize(editor, this, new BoundingBox(editor.getWorld(), loc_1, loc_2))) {
+            if (HelperClaim.getHandler().canResize(editor, this, new BoundingBox(editor.getWorld(), loc_1, loc_2))) {
                 getBoundingBox().editCorners(loc_1, loc_2);
                 updated(true);
                 return CLAIM_ERRORS.NONE;
@@ -180,7 +181,7 @@ public abstract class ClaimData {
     }
 
     public Auction getAuction() {
-        return BetterClaims.getInstance().getClaimHandler().getAuctionManager().getAuction(this);
+        return HelperClaim.getHandler().getAuctionManager().getAuction(this);
     }
 
     public void setClaimName(String name, boolean update) {

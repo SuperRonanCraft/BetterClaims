@@ -8,6 +8,7 @@ import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.claims.ClaimHandler;
 import me.RonanCraft.BetterClaims.claims.Claim;
 import me.RonanCraft.BetterClaims.claims.data.members.Member;
+import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesCore;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesHelp;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesUsage;
@@ -26,9 +27,8 @@ public class CmdAddMember implements ClaimCommand, ClaimCommandHelpable, ClaimCo
     }
 
     public void execute(CommandSender sendi, String label, String[] args) {
-        ClaimHandler handler = BetterClaims.getInstance().getClaimHandler();
         Player p = (Player) sendi;
-        Claim claim = handler.getClaimMain(p.getLocation());
+        Claim claim = HelperClaim.getHandler().getClaimMain(p.getLocation());
         if (args.length >= 2) {
             Player playerAdd = Bukkit.getPlayer(args[1]);
             if (playerAdd != null) {

@@ -2,6 +2,7 @@ package me.RonanCraft.BetterClaims.player.events;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.inventory.ClaimInventory;
+import me.RonanCraft.BetterClaims.resources.helper.HelperPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -13,7 +14,7 @@ public class EventClick {
         if (!validClick(e))
             return;
         e.setCancelled(true);
-        ClaimInventory inventory = BetterClaims.getInstance().getPlayerData((Player) e.getWhoClicked()).getClaimInventory();
+        ClaimInventory inventory = HelperPlayer.getData((Player) e.getWhoClicked()).getClaimInventory();
         if (inventory != null)
             inventory.click(e);
     }
@@ -23,7 +24,7 @@ public class EventClick {
             return false;
 
         // Clicks the inventory
-        if (!e.getInventory().equals(BetterClaims.getInstance().getPlayerData((Player) e.getWhoClicked()).getInventory()))
+        if (!e.getInventory().equals(HelperPlayer.getData((Player) e.getWhoClicked()).getInventory()))
             return false;
 
         // Clicks number key
@@ -38,7 +39,7 @@ public class EventClick {
             return false;
 
         // Clicks their own inventory
-        if (!e.getClickedInventory().equals(BetterClaims.getInstance().getPlayerData((Player) e.getWhoClicked()).getInventory())) {
+        if (!e.getClickedInventory().equals(HelperPlayer.getData((Player) e.getWhoClicked()).getInventory())) {
             e.setCancelled(true);
             return false;
         }

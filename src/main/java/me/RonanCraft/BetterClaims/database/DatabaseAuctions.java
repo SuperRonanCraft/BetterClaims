@@ -2,6 +2,7 @@ package me.RonanCraft.BetterClaims.database;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.auction.Auction;
+import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
@@ -42,7 +43,7 @@ public class DatabaseAuctions extends SQLite {
 
             rs = ps.executeQuery();
             while (rs.next()) {
-                Auction auction = BetterClaims.getInstance().getClaimHandler().getAuctionManager().loadAuction(rs);
+                Auction auction = HelperClaim.getHandler().getAuctionManager().loadAuction(rs);
                 if (auction != null)
                     list.add(auction);
             }

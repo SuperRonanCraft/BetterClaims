@@ -1,6 +1,7 @@
 package me.RonanCraft.BetterClaims.inventory;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
+import me.RonanCraft.BetterClaims.resources.helper.HelperPlayer;
 import me.RonanCraft.BetterClaims.resources.messages.Message;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -46,7 +47,7 @@ public interface ClaimInv {
     }
 
     default void addButtonBack(Inventory inv, Player p, HashMap<Integer, ClaimItem> itemInfo, ClaimInventory currentinv, Object info) {
-        ClaimInventory pinv = getPl().getPlayerData(p).getPrevious(currentinv);
+        ClaimInventory pinv = HelperPlayer.getData(p).getPrevious(currentinv);
         if (pinv != null) {
             int slot = inv.firstEmpty();
             ItemStack item = BetterClaims.getInstance().getGlobalItems().getItem(GlobalItems.GLOBAL_ITEM.BACK, p, info);
@@ -67,7 +68,7 @@ public interface ClaimInv {
                     case BACK:
                     case NEXT:
                         ClaimInventory inv = (ClaimInventory) item.info;
-                        BetterClaims.getInstance().getPlayerData(p).removePrevious();
+                        HelperPlayer.getData(p).removePrevious();
                         inv.openCasted(p, item.info2);
                 }
                 clear(p);

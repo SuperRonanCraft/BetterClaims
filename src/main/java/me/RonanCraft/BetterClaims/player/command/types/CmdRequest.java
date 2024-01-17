@@ -10,6 +10,7 @@ import me.RonanCraft.BetterClaims.player.command.ClaimCommandTabComplete;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_FLAG;
+import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
 import me.RonanCraft.BetterClaims.resources.messages.Message;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesHelp;
 import org.bukkit.Bukkit;
@@ -38,7 +39,7 @@ public class CmdRequest implements ClaimCommand, ClaimCommandHelpable, ClaimComm
     public static List<ClaimData> getRequestable(Player p, @Nullable Player target) { //Get all claims a player can request to be in
         List<ClaimData> requestable = new ArrayList<>();
         if (target == null) {
-            for (Claim claim : BetterClaims.getInstance().getClaimHandler().getClaimsMain())
+            for (Claim claim : HelperClaim.getHandler().getClaimsMain())
                 //Not the owner or member and claim is accepting requests
                 if (!claim.isAdminClaim() //Not an admin Claim
                         && claim.getOwnerID() != null //Owners UUID isnt trash
@@ -48,7 +49,7 @@ public class CmdRequest implements ClaimCommand, ClaimCommandHelpable, ClaimComm
                     requestable.add(claim);
                 }
         } else {
-            for (ClaimData claim : BetterClaims.getInstance().getClaimHandler().getClaims(target.getUniqueId())) {
+            for (ClaimData claim : HelperClaim.getHandler().getClaims(target.getUniqueId())) {
                 if (claim.checkPermLevel(target, CLAIM_PERMISSION_LEVEL.OWNER))
                     requestable.add(claim);
             }

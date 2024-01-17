@@ -4,6 +4,8 @@ import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.claims.*;
 import me.RonanCraft.BetterClaims.claims.ClaimHandler;
 import me.RonanCraft.BetterClaims.claims.data.BoundingBox;
+import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
+import me.RonanCraft.BetterClaims.resources.helper.HelperPlayer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -22,7 +24,7 @@ public class Visualization {
 
     public void apply(Player player) {
         //if he has any current visualization, clear it first
-        if (BetterClaims.getInstance().getPlayerData(player).getVisualization() != null) {
+        if (HelperPlayer.getData(player).getVisualization() != null) {
             revert(player);
         }
 
@@ -35,7 +37,7 @@ public class Visualization {
     public void revert(Player player) {
         if (!player.isOnline()) return;
 
-        Visualization visualization = BetterClaims.getInstance().getPlayerData(player).getVisualization();
+        Visualization visualization = HelperPlayer.getData(player).getVisualization();
 
         if (visualization != null) {
             //locality
@@ -62,7 +64,7 @@ public class Visualization {
                 }
             }
 
-            BetterClaims.getInstance().getPlayerData(player).removeVisualization();
+            HelperPlayer.getData(player).removeVisualization();
         }
     }
 
@@ -78,14 +80,13 @@ public class Visualization {
         Visualization visualization = new Visualization();
 
         //add subdivisions first
-        ClaimHandler handler = BetterClaims.getInstance().getClaimHandler();
 
         if (claimData instanceof Claim_Child) {
             claimData = ((Claim_Child) claimData).parent;
             visualizationType = VisualizationType.CLAIM;
         }
 
-        List<Claim_Child> children = handler.getClaimsChild((Claim) claimData);
+        List<Claim_Child> children = HelperClaim.getHandler().getClaimsChild((Claim) claimData);
         for (Claim_Child child : children) {
             VisualizationType type = VisualizationType.CLAIM_SUB;
             if (child.getAuction() != null)

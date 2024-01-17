@@ -28,7 +28,6 @@ public class CmdFlags implements ClaimCommand, ClaimCommandHelpable, ClaimComman
 
     public void execute(CommandSender sendi, String label, String[] args) {
         Player p = (Player) sendi;
-        ClaimHandler handler = BetterClaims.getInstance().getClaimHandler();
 
         //Event
         if (args.length == 3) {
@@ -49,7 +48,7 @@ public class CmdFlags implements ClaimCommand, ClaimCommandHelpable, ClaimComman
                 MessagesCore.INVALIDFLAG.send(sendi);
                 return;
             }
-            Claim claim = handler.getClaimMain(p.getLocation());
+            Claim claim = HelperClaim.getHandler().getClaimMain(p.getLocation());
             if (claim != null) {
                 if (claim.isOwner(p)) {
                     HelperClaim.setFlag(p, claim, flag, value);

@@ -8,6 +8,7 @@ import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.claims.*;
 import me.RonanCraft.BetterClaims.claims.Claim;
 import me.RonanCraft.BetterClaims.claims.ClaimHandler;
+import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesCore;
 import me.RonanCraft.BetterClaims.resources.messages.MessagesHelp;
 import org.bukkit.command.CommandSender;
@@ -24,9 +25,8 @@ public class CmdInfo implements ClaimCommand, ClaimCommandHelpable {
     }
 
     public void execute(CommandSender sendi, String label, String[] args) {
-        ClaimHandler handler = BetterClaims.getInstance().getClaimHandler();
         Player p = (Player) sendi;
-        Claim claim = handler.getClaimMain(p.getLocation());
+        Claim claim = HelperClaim.getHandler().getClaimMain(p.getLocation());
         if (claim != null) {
             if (claim.isMember(p)) {
                 ClaimInventory.CLAIM.open(p, claim, true);
@@ -40,7 +40,7 @@ public class CmdInfo implements ClaimCommand, ClaimCommandHelpable {
                     MessagesCore.CLAIM_PERMISSION_CLAIM.send(sendi, claim);
             }
         } else {
-            List<ClaimData> claimData = handler.getClaims(p.getUniqueId());
+            List<ClaimData> claimData = HelperClaim.getHandler().getClaims(p.getUniqueId());
             if (!claimData.isEmpty()) {
                 if (claimData.size() == 1)
                     ClaimInventory.CLAIM.open(p, claimData.get(0), true);

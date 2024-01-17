@@ -171,7 +171,7 @@ public class DatabaseClaims extends SQLite {
     }
 
     public void saveChanges() {
-        for (ClaimData claimData : BetterClaims.getInstance().getClaimHandler().getClaimsAll())
+        for (ClaimData claimData : HelperClaim.getHandler().getClaimsAll())
             if (claimData.wasUpdated())
                 saveClaim(claimData);
     }

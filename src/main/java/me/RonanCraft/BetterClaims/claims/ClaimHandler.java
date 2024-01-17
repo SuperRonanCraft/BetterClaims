@@ -19,7 +19,9 @@ import me.RonanCraft.BetterClaims.player.events.PlayerClaimInteraction;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.resources.Settings;
 import me.RonanCraft.BetterClaims.resources.files.FileOther;
+import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
 import me.RonanCraft.BetterClaims.resources.helper.HelperEvent;
+import me.RonanCraft.BetterClaims.resources.helper.HelperPlayer;
 import me.RonanCraft.BetterClaims.resources.visualization.Visualization;
 import me.RonanCraft.BetterClaims.resources.visualization.VisualizationType;
 import org.bukkit.Bukkit;
@@ -167,7 +169,7 @@ public class ClaimHandler {
         for (Claim _claim : mainClaims) {
             if (claimDataIgnored != null && claimDataIgnored.contains(_claim)) {
                 if (claimInteraction != null && claimInteraction.editing instanceof Claim_Child)
-                    for (Claim_Child child : BetterClaims.getInstance().getClaimHandler().getClaimsChild(_claim)) { //Dont allow overlapping children when resizing child
+                    for (Claim_Child child : HelperClaim.getHandler().getClaimsChild(_claim)) { //Dont allow overlapping children when resizing child
                         if (!claimDataIgnored.contains(child)) //Ignore the child being resized
                             if (child.getBoundingBox().intersects(new BoundingBox(greater, lower))) {
                                 if (p != null)
@@ -282,7 +284,7 @@ public class ClaimHandler {
             return true;
         else if (claimData.isAdminClaim() && PermissionNodes.ADMIN_CLAIM.check(p)) //Is an admin CLAIM, and player is an admin
             return true;
-        else if (BetterClaims.getInstance().getPlayerData(p).isOverriding()) //Is an admin and wants to override claims
+        else if (HelperPlayer.getData(p).isOverriding()) //Is an admin and wants to override claims
             return true;
         else {
             return claimData.canBuild(p);

@@ -8,6 +8,7 @@ import me.RonanCraft.BetterClaims.claims.enums.CLAIM_PERMISSION_LEVEL;
 import me.RonanCraft.BetterClaims.claims.Claim;
 import me.RonanCraft.BetterClaims.claims.data.members.Member;
 import me.RonanCraft.BetterClaims.inventory.confirmation.Confirmation;
+import me.RonanCraft.BetterClaims.resources.helper.HelperPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
@@ -37,7 +38,7 @@ public enum ClaimInventory {
     public void open(Player p, ClaimData claimData, boolean from_command) {
         if (isAllowed(p, claimData))
             if (inv instanceof ClaimInv_Claim)
-                BetterClaims.getInstance().getPlayerData(p).setInventory(((ClaimInv_Claim) inv).open(p, claimData), this, from_command);
+                HelperPlayer.getData(p).setInventory(((ClaimInv_Claim) inv).open(p, claimData), this, from_command);
             else
                 BetterClaims.getInstance().getLogger().severe(this.name() + " is not a claim type!");
     }
@@ -45,21 +46,21 @@ public enum ClaimInventory {
     public void open(Player p, Member member, boolean from_command) {
         if (isAllowed(p, member.claimData))
             if (inv instanceof ClaimInv_Member)
-                BetterClaims.getInstance().getPlayerData(p).setInventory(((ClaimInv_Member) inv).open(p, member), this, from_command);
+                HelperPlayer.getData(p).setInventory(((ClaimInv_Member) inv).open(p, member), this, from_command);
             else
                 BetterClaims.getInstance().getLogger().severe(this.name() + " is not a member type!");
     }
 
     public void open(Player p, List<ClaimData> claimData, boolean from_command) {
         if (inv instanceof ClaimInv_MultiClaim)
-            BetterClaims.getInstance().getPlayerData(p).setInventory(((ClaimInv_MultiClaim) inv).open(p, claimData), this, from_command);
+            HelperPlayer.getData(p).setInventory(((ClaimInv_MultiClaim) inv).open(p, claimData), this, from_command);
         else
             BetterClaims.getInstance().getLogger().severe(this.name() + " is not a request type!");
     }
 
     public void open(Player p, Confirmation confirmation, boolean from_command) {
         if (inv instanceof ClaimInv_Confirming)
-            BetterClaims.getInstance().getPlayerData(p).setInventory(((ClaimInv_Confirming) inv).open(p, confirmation), this, from_command);
+            HelperPlayer.getData(p).setInventory(((ClaimInv_Confirming) inv).open(p, confirmation), this, from_command);
         else
             BetterClaims.getInstance().getLogger().severe(this.name() + " is not a confirm type!");
     }

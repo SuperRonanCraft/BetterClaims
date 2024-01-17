@@ -8,6 +8,7 @@ package me.RonanCraft.BetterClaims.claims;
 import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.claims.data.BoundingBox;
 import me.RonanCraft.BetterClaims.claims.data.members.Member;
+import me.RonanCraft.BetterClaims.resources.helper.HelperClaim;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
@@ -47,6 +48,6 @@ public class Claim extends ClaimData {
     }
 
     public List<ClaimData> getChildren() {
-        return new ArrayList<>(BetterClaims.getInstance().getClaimHandler().getClaimsChild(this));
+        return new ArrayList<>(HelperClaim.getHandler().getClaimsChild(this));
     }
 }

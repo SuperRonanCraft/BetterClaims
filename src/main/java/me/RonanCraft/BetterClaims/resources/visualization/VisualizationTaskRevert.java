@@ -1,6 +1,7 @@
 package me.RonanCraft.BetterClaims.resources.visualization;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
+import me.RonanCraft.BetterClaims.resources.helper.HelperPlayer;
 import org.bukkit.entity.Player;
 
 class VisualizationTaskRevert implements Runnable {
@@ -17,7 +18,7 @@ class VisualizationTaskRevert implements Runnable {
     public void run()
     {
         //don't do anything if the player's current visualization is different from the one scheduled to revert
-        if (BetterClaims.getInstance().getPlayerData(player).getVisualization() != visualization) return;
+        if (HelperPlayer.getData(player).getVisualization() != visualization) return;
 
         // alert plugins of a visualization
         //Bukkit.getPluginManager().callEvent(new VisualizationEvent(player, null, Collections.<Claim>emptySet()));
