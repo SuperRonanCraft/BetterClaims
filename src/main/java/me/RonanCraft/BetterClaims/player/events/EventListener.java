@@ -21,7 +21,7 @@ public class EventListener implements Listener {
 
     //Events
     EventBlocks blocks = new EventBlocks();
-    EventInteract interact = new EventInteract(this);
+    EventInteract interact = new EventInteract();
     EventItemChange itemChange = new EventItemChange(this);
     EventPistons pistons = new EventPistons();
     EventExplosion explosion = new EventExplosion();
@@ -32,7 +32,7 @@ public class EventListener implements Listener {
     EventItems items = new EventItems();
     EventFallingBlock fallingBlock = new EventFallingBlock();
     EventPortal portal = new EventPortal();
-    EventMove move = new EventMove(this);
+    EventMove move = new EventMove();
 
     public void load(boolean reload) {
         if (!reload)

@@ -70,7 +70,7 @@
         <!-- PlaceholderAPI Repo -->
         <repository>
             <id>placeholderapi</id>
-            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+            <url>https://repo.helpch.at/releases/</url>
         </repository>
         <!-- For GitHub repos -->
         <repository>
@@ -91,6 +91,19 @@
             <artifactId>spigot-api</artifactId>
             <version>1.8.8-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>net.md-5</groupId>
+                    <artifactId>bungeecord-chat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- Replace Spigot's unavailable chat snapshot with the release used by our editor tests. -->
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-chat</artifactId>
+            <version>1.16-R0.4</version>
+            <scope>provided</scope>
         </dependency>
         <!-- Vault -->
         <dependency>
@@ -103,7 +116,7 @@
         <dependency>
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
-            <version>2.11.2</version>
+            <version>2.11.6</version>
             <scope>provided</scope>
         </dependency>
         <!-- Grief Prevention (Database exchanging) -->
@@ -121,7 +134,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
+            <version>1.18.38</version>
             <scope>provided</scope>
         </dependency>
         <!-- DynMap Support -->

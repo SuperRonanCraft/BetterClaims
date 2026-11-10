@@ -3,6 +3,7 @@ package me.RonanCraft.BetterClaims.player.events;
 import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.claims.data.BoundingBox;
 import me.RonanCraft.BetterClaims.player.data.PlayerData;
+import me.RonanCraft.BetterClaims.resources.helper.HelperPlayer;
 import me.RonanCraft.BetterClaims.resources.Settings;
 import me.RonanCraft.BetterClaims.claims.*;
 import me.RonanCraft.BetterClaims.claims.enums.*;
@@ -23,13 +24,8 @@ import java.util.*;
 
 public class EventInteract implements ClaimEvents {
 
-    private final EventListener listener;
     private final HashMap<Player, Integer> cancelTimers = new HashMap<>();
     Material claim_item;
-
-    EventInteract(EventListener listener) {
-        this.listener = listener;
-    }
 
     void load() {
         String item = BetterClaims.getInstance().getSettings().getString(Settings.SETTING.CLAIM_ITEM);
@@ -82,7 +78,7 @@ public class EventInteract implements ClaimEvents {
 
             e.setCancelled(true);
             Player p = e.getPlayer();
-            PlayerData data = listener.getPlayerData(p);
+            PlayerData data = HelperPlayer.getData(p);
             if (data.getClaimInteraction() == null)
                 data.setClaimInteraction(new PlayerClaimInteraction(p, CLAIM_MODE.CREATE));
             PlayerClaimInteraction claimInteraction = data.getClaimInteraction();
@@ -172,8 +168,8 @@ public class EventInteract implements ClaimEvents {
         if (cancelTimers.containsKey(p))
             Bukkit.getScheduler().cancelTask(cancelTimers.get(p));
         cancelTimers.put(p, Bukkit.getScheduler().scheduleSyncDelayedTask(BetterClaims.getInstance(), () -> {
-            if (listener.getPlayerData(p).getClaimInteraction() != null)
-                Objects.requireNonNull(listener.getPlayerData(p).getClaimInteraction()).reset();
+            if (HelperPlayer.getData(p).getClaimInteraction() != null)
+                Objects.requireNonNull(HelperPlayer.getData(p).getClaimInteraction()).reset();
         }, time * 20L));
     }
 }

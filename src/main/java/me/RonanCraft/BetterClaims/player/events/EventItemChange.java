@@ -2,6 +2,7 @@ package me.RonanCraft.BetterClaims.player.events;
 
 import me.RonanCraft.BetterClaims.BetterClaims;
 import me.RonanCraft.BetterClaims.player.data.PlayerData;
+import me.RonanCraft.BetterClaims.resources.helper.HelperPlayer;
 import me.RonanCraft.BetterClaims.resources.PermissionNodes;
 import me.RonanCraft.BetterClaims.claims.ClaimData;
 import me.RonanCraft.BetterClaims.claims.enums.CLAIM_MODE;
@@ -20,17 +21,18 @@ import java.util.HashMap;
 public class EventItemChange implements ClaimEvents {
 
     private final EventListener listener;
-    private final HashMap<Player, Integer> claimShowing = new HashMap<>();
 
     EventItemChange(EventListener listener) {
         this.listener = listener;
     }
 
+    private final HashMap<Player, Integer> claimShowing = new HashMap<>();
+
     //Show claiming message when claim item is equipped and start a `claimInteraction`
     void onItemChange(PlayerItemHeldEvent e) {
         if (!HelperClaim.worldEnabled(e.getPlayer().getWorld()))
             return;
-        PlayerData data = listener.getPlayerData(e.getPlayer());
+        PlayerData data = HelperPlayer.getData(e.getPlayer());
         data.removeClaimInteraction();
         if (claimShowing.containsKey(e.getPlayer()))
             return;
