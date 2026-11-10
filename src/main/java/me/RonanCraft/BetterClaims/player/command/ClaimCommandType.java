@@ -3,6 +3,8 @@ package me.RonanCraft.BetterClaims.player.command;
 import me.RonanCraft.BetterClaims.player.command.types.*;
 
 public enum ClaimCommandType {
+    EDITOR(new CmdEditor()),
+    EDITORSYNC(new CmdEditorSync()),
     CREATE(new          CmdCreate()),
     RELOAD(new          CmdReload()),
     HELP(new            CmdHelp()),

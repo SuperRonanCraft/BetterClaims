@@ -29,7 +29,8 @@ public class Commands {
     }
 
     public void commandExecuted(CommandSender sendi, String label, String[] args) {
-        if (PermissionNodes.USE.check(sendi)) {
+        if (PermissionNodes.USE.check(sendi) || (args != null && args.length > 0 &&
+                (args[0].equalsIgnoreCase("editor") || args[0].equalsIgnoreCase("editorsync")))) {
             if (args != null && args.length > 0) {
                 for (ClaimCommand cmd : commands) {
                     if (cmd.getName().equalsIgnoreCase(args[0])) {

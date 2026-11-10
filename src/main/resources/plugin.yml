@@ -15,6 +15,9 @@ commands:
         description: 'Main claim command'
 
 permissions:
+    betterclaims.editor:
+        description: Upload and apply web editor configurations
+        default: op
     betterclaims.use:
         description: 'Use the plugin'
         default: true

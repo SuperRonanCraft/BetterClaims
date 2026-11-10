@@ -30,6 +30,10 @@ import java.util.List;
 
 public class BetterClaims extends JavaPlugin {
     private static BetterClaims instance;
+    private me.RonanCraft.BetterClaims.web.editor.EditorBridge editor;
+
+    public me.RonanCraft.BetterClaims.web.editor.EditorBridge getEditor() { return editor; }
+
     private final Files files = new Files();
     private final Permissions permissions = new Permissions();
     private final Commands commands = new Commands();
@@ -41,11 +45,16 @@ public class BetterClaims extends JavaPlugin {
     public void onEnable() {
         instance = this;
         loadAll(false);
+        editor = new me.RonanCraft.BetterClaims.web.editor.EditorBridge(this,
+                task -> Bukkit.getScheduler().runTask(this, task), this::reload,
+                sender -> !(sender instanceof Player) || sender.hasPermission("betterclaims.editor"),
+                () -> me.RonanCraft.BetterClaims.resources.files.FileOther.FILETYPE.CONFIG.getConfig().saveToString());
         new Updater(this);
     }
 
     @Override
     public void onDisable() {
+        if (editor != null) editor.close();
         closeMenus();
         systems.getDatabaseClaims().saveChanges();
     }
