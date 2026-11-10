@@ -101,6 +101,8 @@ Help:
   AdminOverride: ' &7- &e/%command% adminoverride &7- Enable the ability to edit in any claim'
   Auction: ' &7- &e/%command% auction <create/delete/sign> &7- Sell off claims to others for a price and time!'
   AddMember: ' &7- &e/%command% addmember <player_name> &7- Add a member to the claim you are standing in'
+  Editor: ' &7- &e/%command% editor &7- Generate a private token/url to edit your config online'
+  EditorSync:  ' &7- &e/%command% editorsync <token> &7- Sync your online edits to the config'
 
 Usage:
   Convert: '&cUsage&7: /%command% convert <plugin_name>'

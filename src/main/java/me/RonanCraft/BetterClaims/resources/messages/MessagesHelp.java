@@ -10,6 +10,8 @@ public enum MessagesHelp {
     REQUEST("Request"),
     FLAGS("Flags"),
     PREFIX("Prefix"),
+    EDITOR("Editor"),
+    EDITOR_SYNC("EditorSync"),
     CONVERT("Convert"),
     CLAIM_ITEM("ClaimItem"),
     ADMIN_CLAIM("AdminClaim"),
