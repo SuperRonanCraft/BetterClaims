@@ -12,7 +12,7 @@ public class CmdEditor implements ClaimCommand, ClaimCommandHelpable {
     
     public boolean permission(CommandSender sender) { return !(sender instanceof Player) || sender.hasPermission("betterclaims.editor"); }
     
-    public String getHelp() { return MessagesHelp.CREATE.get(); }
+    public String getHelp() { return MessagesHelp.EDITOR.get(); }
     
     public void execute(CommandSender sendi, String label, String[] args) {
         if (args.length != 1) { sendi.sendMessage("§eUsage: /betterclaims editor"); return; }
