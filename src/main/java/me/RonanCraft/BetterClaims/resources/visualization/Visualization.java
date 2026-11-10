@@ -21,6 +21,7 @@ import java.util.Objects;
 public class Visualization {
 
     List<VisualizationElement> elements = new ArrayList<>();
+    private final List<java.util.concurrent.CompletableFuture<Void>> sampling = new ArrayList<>();
 
     public void apply(Player player) {
         //if he has any current visualization, clear it first
@@ -28,10 +29,19 @@ public class Visualization {
             revert(player);
         }
 
-        //if they are online, create a task to send them the visualization
-        if (player.isOnline() && elements.size() > 0 && Objects.equals(elements.get(0).location.getWorld(), player.getWorld())) {
-            BetterClaims.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(BetterClaims.getInstance(), new VisualizationTaskApply(player, this), 5L);
-        }
+        if (!player.isOnline()) return;
+        // Record the request before region sampling finishes; a newer request supersedes it.
+        HelperPlayer.getData(player).setVisualization(this);
+        java.util.concurrent.CompletableFuture.allOf(sampling.toArray(new java.util.concurrent.CompletableFuture[0]))
+            .whenComplete((ignored, failure) -> BetterClaims.getInstance().getTasks().later(player, () -> {
+                if (HelperPlayer.getData(player).getVisualization() != this) return;
+                if (failure != null) {
+                    HelperPlayer.getData(player).removeVisualization();
+                    BetterClaims.getInstance().getLogger().log(java.util.logging.Level.WARNING, "Could not sample claim border", failure);
+                    return;
+                }
+                new VisualizationTaskApply(player, this).run();
+            }, 5L));
     }
 
     public void revert(Player player) {
@@ -47,18 +57,19 @@ public class Visualization {
             int maxz = player.getLocation().getBlockZ() + 100;
 
             //remove any elements which are too far away
-            visualization.removeElementsOutOfRange(visualization.elements, minx, minz, maxx, maxz);
+            List<VisualizationElement> visible;
+            synchronized (visualization.elements) { visible = new ArrayList<>(visualization.elements); }
+            visualization.removeElementsOutOfRange(visible, minx, minz, maxx, maxz);
 
             //send real block information for any remaining elements
-            for (int i = 0; i < visualization.elements.size(); i++) {
-                VisualizationElement element = visualization.elements.get(i);
+            for (int i = 0; i < visible.size(); i++) {
+                VisualizationElement element = visible.get(i);
+                if (!element.applied) continue;
 
-                //check player still in world where visualization exists
-                if (i == 0)
-                    if (!player.getWorld().equals(element.location.getWorld())) return;
+                if (!player.getWorld().equals(element.location.getWorld())) continue;
 
                 try {
-                    player.sendBlockChange(element.location, element.realBlock.mat, (byte) 0);
+                    element.realBlock.send(player, element.location);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -160,7 +171,8 @@ public class Visualization {
     //adds a general claim cuboid (represented by min and max) visualization to the current visualization
     void addSides(Location min, Location max, Location locality, int height, BlockData cornerBlockData, BlockData accentBlockData, int STEP) {
         World world = min.getWorld();
-        boolean waterIsTransparent = locality.getBlock().getType() == Material.WATER;
+        boolean waterIsTransparent = BetterClaims.getInstance().getTasks().owns(locality)
+                && locality.getBlock().getType() == Material.WATER;
 
         int smallx = min.getBlockX();
         int smallz = min.getBlockZ();
@@ -227,23 +239,39 @@ public class Visualization {
             }
         }
 
-        //set Y values and real block information for any remaining visualization blocks
+        // Read terrain on the region that owns each column, then publish a completed snapshot.
+        final int sampleHeight = height;
         for (VisualizationElement element : newElements) {
-            Location tempLocation = element.location;
-            element.location = getVisibleLocation(tempLocation.getWorld(), tempLocation.getBlockX(), height, tempLocation.getBlockZ(), waterIsTransparent);
-            height = element.location.getBlockY();
-            element.realBlock = new BlockData(element.location.getBlock().getType());//.getBlockData();
+            elements.add(element); // Preserve parent-over-child ordering regardless of region completion order.
+            java.util.concurrent.CompletableFuture<Void> ready = new java.util.concurrent.CompletableFuture<>();
+            sampling.add(ready);
+            BetterClaims.getInstance().getTasks().location(element.location, () -> {
+                try {
+                    Location loc = element.location;
+                    if (world.isChunkLoaded(loc.getBlockX() >> 4, loc.getBlockZ() >> 4)) {
+                        element.location = getVisibleLocation(world, loc.getBlockX(), sampleHeight, loc.getBlockZ(), waterIsTransparent);
+                        element.realBlock = new BlockData(element.location.getBlock());
+                        element.sampled = true;
+                    }
+                    ready.complete(null);
+                } catch (Exception error) {
+                    ready.completeExceptionally(error);
+                }
+            });
         }
-
-        this.elements.addAll(newElements);
     }
 
     //finds a block the player can probably see.  this is how visualizations "cling" to the ground or ceiling
     private static Location getVisibleLocation(World world, int x, int y, int z, boolean waterIsTransparent) {
+        int minimum = 0;
+        try { minimum = (Integer) World.class.getMethod("getMinHeight").invoke(world); }
+        catch (NoSuchMethodException ignored) { /* Before extended world height. */ }
+        catch (ReflectiveOperationException error) { throw new IllegalStateException(error); }
+        y = Math.max(minimum, Math.min(y, world.getMaxHeight() - 1));
         Block block = world.getBlockAt(x, y, z);
         BlockFace direction = (isTransparent(block, waterIsTransparent)) ? BlockFace.DOWN : BlockFace.UP;
 
-        while (block.getY() >= 1 &&
+        while (block.getY() > minimum &&
                 block.getY() < world.getMaxHeight() - 1 &&
                 (!isTransparent(block.getRelative(BlockFace.UP), waterIsTransparent) || isTransparent(block, waterIsTransparent)))
         {
@@ -257,10 +285,7 @@ public class Visualization {
     private static boolean isTransparent(Block block, boolean waterIsTransparent) {
         Material blockMaterial = block.getType();
         //Blacklist
-        switch (blockMaterial) {
-            case SNOW:
-                return false;
-        }
+        if (blockMaterial == Material.SNOW) return false;
 
         //Whitelist TODO: some of this might already be included in isTransparent()
         if (blockMaterial == Material.AIR || blockMaterial.name().contains("FENCE"))

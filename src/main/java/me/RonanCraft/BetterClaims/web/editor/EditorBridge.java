@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import org.bukkit.command.CommandSender;
@@ -38,7 +39,7 @@ public final class EditorBridge {
     private final JavaPlugin plugin;
     private final String editorPlugin;
     private final String editorName;
-    private final Consumer<Runnable> sync;
+    private final BiConsumer<UUID, Consumer<CommandSender>> sync;
     private final Consumer<CommandSender> reload;
     private final Predicate<CommandSender> allowed;
     private final Supplier<String> loadedConfig;
@@ -48,11 +49,11 @@ public final class EditorBridge {
     private volatile boolean applying;
     private volatile boolean stopped;
 
-    public EditorBridge(JavaPlugin plugin, Consumer<Runnable> sync, Consumer<CommandSender> reload,
+    public EditorBridge(JavaPlugin plugin, BiConsumer<UUID, Consumer<CommandSender>> sync, Consumer<CommandSender> reload,
                         Predicate<CommandSender> allowed, Supplier<String> loadedConfig) {
         this(plugin, sync, reload, allowed, loadedConfig, "betterclaims");
     }
-    public EditorBridge(JavaPlugin plugin, Consumer<Runnable> sync, Consumer<CommandSender> reload,
+    public EditorBridge(JavaPlugin plugin, BiConsumer<UUID, Consumer<CommandSender>> sync, Consumer<CommandSender> reload,
                         Predicate<CommandSender> allowed, Supplier<String> loadedConfig, String editorPlugin) {
         if (!Arrays.asList("betterclaims").contains(editorPlugin)) throw new IllegalArgumentException("Unknown editor plugin");
         this.editorPlugin = editorPlugin;
@@ -90,9 +91,8 @@ public final class EditorBridge {
                     String browserToken = result.get("token").getAsString();
                     if (!browserToken.matches("[A-Za-z0-9_-]{8}")) throw new IOException("Invalid relay response.");
                     if (stopped) return;
-                    sync.accept(() -> {
+                    sync.accept(upload.player, recipient -> {
                         if (stopped) return;
-                        CommandSender recipient = recipient(upload);
                         if (recipient == null || !allowed.test(recipient)) return;
                         String url = WEBSITE + "/editor/" + editorPlugin + "?token=" + browserToken;
                         recipient.sendMessage("§ePrivate editor link: expires in 24 hours. Save online, then run the sync command here. Do not share it.");
@@ -111,15 +111,13 @@ public final class EditorBridge {
     }
 
     private Path configPath() { return plugin.getDataFolder().toPath().resolve("config.yml"); }
-    private CommandSender recipient(Upload upload) { return upload.player == null ? Bukkit.getConsoleSender() : Bukkit.getPlayer(upload.player); }
     private void message(Upload upload, String text) {
-        if (!stopped) sync.accept(() -> {
-            CommandSender sender = recipient(upload); if (sender != null) sender.sendMessage("§eEditor: " + text);
+        if (!stopped) sync.accept(upload.player, sender -> {
+            if (sender != null) sender.sendMessage("§eEditor: " + text);
         });
     }
     private void message(UUID playerId, String text) {
-        if (!stopped) sync.accept(() -> {
-            CommandSender player = playerId == null ? Bukkit.getConsoleSender() : Bukkit.getPlayer(playerId);
+        if (!stopped) sync.accept(playerId, player -> {
             if (player != null) player.sendMessage("§eEditor: " + text);
         });
     }
@@ -139,7 +137,7 @@ public final class EditorBridge {
                 // Public commands can come from any editor; validate against this server, not a browser baseline.
                 String original = new String(EditorConfig.read(configPath()), StandardCharsets.UTF_8);
                 EditorConfig.validate(original, edited);
-                sync.accept(() -> apply(original, edited, expires, executor));
+                sync.accept(executor, recipient -> apply(original, edited, expires, executor, recipient));
             } catch (Exception error) {
                 applying = false;
                 message(executor, "Sync failed: " + safeError(error) + " Save online again for a new command if this token was consumed.");
@@ -154,11 +152,10 @@ public final class EditorBridge {
         return "Request or validation failed (" + error.getClass().getSimpleName() + ").";
     }
 
-    private void apply(String original, String edited, long tokenExpires, UUID executor) {
+    private void apply(String original, String edited, long tokenExpires, UUID executor, CommandSender sender) {
         try {
             if (stopped) return;
             if (System.currentTimeMillis() >= tokenExpires) throw new IOException("Sync token expired before apply.");
-            CommandSender sender = executor == null ? Bukkit.getConsoleSender() : Bukkit.getPlayer(executor);
             if (sender == null || !allowed.test(sender)) throw new IOException("The syncing player must be online and still have editor permission.");
             Path backup = EditorConfig.apply(configPath(), original.getBytes(StandardCharsets.UTF_8), edited, () -> {
                 reload.accept(sender);

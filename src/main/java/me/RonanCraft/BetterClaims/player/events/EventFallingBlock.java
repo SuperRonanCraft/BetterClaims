@@ -48,7 +48,7 @@ public class EventFallingBlock implements ClaimEvents {
             }
         }
         //Prevent breaking lilypads via collision with a boat.
-        else if (event.getEntity() instanceof Vehicle && !event.getEntity().getPassenger().isEmpty()) {
+        else if (event.getEntity() instanceof Vehicle && event.getEntity().getPassenger() != null) {
             Entity driver = event.getEntity().getPassenger();//.getPassengers().get(0);
             if (driver instanceof Player) {
                 Block block = event.getBlock();

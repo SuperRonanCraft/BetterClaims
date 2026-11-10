@@ -19,14 +19,17 @@ class VisualizationTaskApply implements Runnable
 
     @Override
     public void run() {
+        if (!player.isOnline() || HelperPlayer.getData(player).getVisualization() != visualization) return;
         //for each element (=block) of the visualization
         for (int i = 0; i < visualization.elements.size(); i++) {
             VisualizationElement element = visualization.elements.get(i);
 
             //send the player a fake block change event
-            if (!element.location.getChunk().isLoaded()) continue;  //cheap distance check
+            if (!element.sampled || !player.getWorld().equals(element.location.getWorld())
+                    || player.getLocation().distanceSquared(element.location) > 100 * 100) continue;
             try {
-                player.sendBlockChange(element.location, element.fakeBlock.mat, (byte) 0);
+                element.fakeBlock.send(player, element.location);
+                element.applied = true;
             } catch (Exception e) {
                 //e.printStackTrace();
 
@@ -40,8 +43,8 @@ class VisualizationTaskApply implements Runnable
         HelperPlayer.getData(player).setVisualization(visualization);
 
         //schedule automatic visualization reversion in 60 seconds.
-        BetterClaims.getInstance().getServer().getScheduler().scheduleSyncDelayedTask(
-                BetterClaims.getInstance(),
+        BetterClaims.getInstance().getTasks().later(
+                player,
                 new VisualizationTaskRevert(player, visualization),
                 20L * 60);  //60 seconds
     }

@@ -50,21 +50,20 @@ public class ClaimHandler {
     }
 
     public void load() {
-        mainClaims.clear();
-        childClaims.clear();
         loadClaimFlags();
 
-        Bukkit.getScheduler().runTaskAsynchronously(BetterClaims.getInstance(), () -> {
-            HashMap<CLAIM_TYPE, List<ClaimData>> databaseClaims = getDatabase().getClaims();
-            if (databaseClaims.get(CLAIM_TYPE.PARENT) != null)
-                for (ClaimData claimData : databaseClaims.get(CLAIM_TYPE.PARENT))
-                    this.mainClaims.add((Claim) claimData);
-            if (databaseClaims.get(CLAIM_TYPE.CHILD) != null)
-                for (ClaimData claimData : databaseClaims.get(CLAIM_TYPE.CHILD))
-                    this.childClaims.add((Claim_Child) claimData);
-            //Load DynMap after claims all loaded
-            //BetterClaims.getInstance().getDynMap().load();
-        });
+        HashMap<CLAIM_TYPE, List<ClaimData>> databaseClaims = getDatabase().getClaims();
+        if (databaseClaims == null) throw new IllegalStateException("Cannot load claims; existing protection cache was retained");
+        mainClaims.clear();
+        childClaims.clear();
+        if (databaseClaims.get(CLAIM_TYPE.PARENT) != null)
+            for (ClaimData claimData : databaseClaims.get(CLAIM_TYPE.PARENT))
+                this.mainClaims.add((Claim) claimData);
+        if (databaseClaims.get(CLAIM_TYPE.CHILD) != null)
+            for (ClaimData claimData : databaseClaims.get(CLAIM_TYPE.CHILD))
+                this.childClaims.add((Claim_Child) claimData);
+        //Load DynMap after claims all loaded
+        //BetterClaims.getInstance().getDynMap().load();
         claim_maxSize = BetterClaims.getInstance().getSettings().getInt(Settings.SETTING.CLAIM_MAXSIZE);
         if (claim_maxSize < 10)
             claim_maxSize = 10;
@@ -257,11 +256,11 @@ public class ClaimHandler {
     }
 
     public List<Claim> getClaimsMain() {
-        return mainClaims;
+        return new ArrayList<>(mainClaims);
     }
 
     public List<Claim_Child> getClaimsChild() {
-        return childClaims;
+        return new ArrayList<>(childClaims);
     }
 
     public List<Claim_Child> getClaimsChild(Claim claim) {

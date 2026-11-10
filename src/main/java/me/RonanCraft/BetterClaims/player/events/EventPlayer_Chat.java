@@ -26,9 +26,11 @@ public class EventPlayer_Chat implements Listener {
 
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
-        if (!e.getPlayer().equals(chat.player))
-            return;
-        e.getPlayer().sendMessage("Chat event!");
-        stop();
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            if (!e.getPlayer().equals(chat.player))
+                return;
+            BetterClaims.getInstance().getTasks().entity(e.getPlayer(), () -> e.getPlayer().sendMessage("Chat event!"));
+            stop();
+        }
     }
 }

@@ -6,13 +6,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 public class PlayerInfoHandler {
-    private final HashMap<Player, PlayerData> data = new HashMap<>();
+    private final java.util.concurrent.ConcurrentMap<Player, PlayerData> data = new java.util.concurrent.ConcurrentHashMap<>();
 
     @NotNull
     public PlayerData getData(Player p) {
-        if (!data.containsKey(p))
-            data.put(p, new PlayerData());
-        return data.get(p);
+        return data.computeIfAbsent(p, ignored -> new PlayerData());
     }
 
     public void clear() {

@@ -60,7 +60,7 @@ public class HelperClaim {
             MessagesCore.REQUEST_REQUESTER_SENT.send(p, request);
             Visualization.fromClaim(claimData, p.getLocation().getBlockY(), VisualizationType.CLAIM, p.getLocation()).apply(p);
             if (Objects.requireNonNull(claimData.getOwner()).isOnline())
-                MessagesCore.REQUEST_NEW.send((Player) claimData.getOwner(), request);
+                MessagesCore.REQUEST_NEW.send(claimData.getOwner().getPlayer(), request);
         }
         return true;
     }
@@ -154,15 +154,20 @@ public class HelperClaim {
 
     public static void teleportTo(Player p, ClaimData claimData) {
         if (!HelperEvent.teleportToClaim(p, claimData, p, p.getLocation()).isCancelled()) {
-            Location loc = claimData.getGreaterBoundaryCorner();
-            loc.setY(Objects.requireNonNull(loc.getWorld()).getHighestBlockYAt(loc.getBlockX(), loc.getBlockZ()) + 1);
-            p.teleport(loc);
-            MessagesCore.CLAIM_TELEPORT.send(p, claimData);
+            Location loc = claimData.getGreaterBoundaryCorner().clone();
+            BetterClaims.getInstance().getTasks().location(loc, () -> {
+                loc.setY(Objects.requireNonNull(loc.getWorld()).getHighestBlockYAt(loc.getBlockX(), loc.getBlockZ()) + 1);
+                BetterClaims.getInstance().getTasks().entity(p, () ->
+                    BetterClaims.getInstance().getTasks().teleport(p, loc).whenComplete((success, failure) -> {
+                        if (failure == null && Boolean.TRUE.equals(success))
+                            BetterClaims.getInstance().getTasks().entity(p, () -> MessagesCore.CLAIM_TELEPORT.send(p, claimData));
+                    }));
+            });
         }
     }
 
     public static void deleteClaim(Player p, Claim claim) {
-        Bukkit.getScheduler().runTaskAsynchronously(BetterClaims.getInstance(), () -> {
+        BetterClaims.getInstance().getTasks().entity(p, () -> {
             CLAIM_ERRORS error = getHandler().deleteClaim(p, claim);
             if (error == CLAIM_ERRORS.NONE)
                 MessagesCore.CLAIM_DELETE.send(p, claim);
@@ -172,7 +177,7 @@ public class HelperClaim {
     }
 
     public static void deleteClaimChild(Player p, Claim_Child claim) {
-        Bukkit.getScheduler().runTaskAsynchronously(BetterClaims.getInstance(), () -> {
+        BetterClaims.getInstance().getTasks().entity(p, () -> {
             CLAIM_ERRORS error = getHandler().deleteClaimChild(p, claim);
             if (error == CLAIM_ERRORS.NONE)
                 MessagesCore.CLAIM_DELETE.send(p, claim);

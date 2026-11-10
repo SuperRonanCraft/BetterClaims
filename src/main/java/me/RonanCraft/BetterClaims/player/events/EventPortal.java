@@ -11,11 +11,10 @@ public class EventPortal implements ClaimEvents {
     //(Added v1.2.0)
     //Stop portal creations when target is inside a claim
     void onPortal(PortalCreateEvent e) {
-        if (e.getReason() != PortalCreateEvent.CreateReason.OBC_DESTINATION)
+        if (!e.getReason().name().equals("OBC_DESTINATION") && !e.getReason().name().equals("NETHER_PAIR"))
             return;
         List<Location> top_locs = new ArrayList<>();
-        for (Block block : e.getBlocks()) { //Add all blocks to check
-            Location loc = block.getLocation();
+        for (Location loc : me.RonanCraft.BetterClaims.platform.PortalBlocks.locations(e)) {
             boolean add = true;
             for (Location top_loc : top_locs) { //Just check the tallest blocks of the portal
                 if (top_loc.getBlockZ() == loc.getBlockZ() && top_loc.getBlockX() == loc.getBlockX()) { //X & Y equal to each other (also replace if Y is taller)

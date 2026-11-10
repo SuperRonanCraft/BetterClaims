@@ -26,15 +26,23 @@ public class Message {
     }
 
     public static void sms(CommandSender sendi, String msg, Object placeholderInfo) {
-        if (!msg.equals(""))
+        if (sendi instanceof Player && !BetterClaims.getInstance().getTasks().owns((Player) sendi)) {
+            BetterClaims.getInstance().getTasks().entity((Player) sendi, () -> sms(sendi, msg, placeholderInfo));
+            return;
+        }
+        if (msg != null && !msg.equals(""))
             sendi.sendMessage(placeholder(sendi, getPrefix() + msg, placeholderInfo));
     }
 
     public static void sms(CommandSender sendi, List<String> msg, Object placeholderInfo) {
-        if (msg != null && !msg.isEmpty()) {
-            msg.forEach(str -> msg.set(msg.indexOf(str), placeholder(sendi, str, placeholderInfo)));
-            sendi.sendMessage(msg.toArray(new String[0]));
+        if (msg == null || msg.isEmpty()) return;
+        List<String> copy = new java.util.ArrayList<>(msg);
+        if (sendi instanceof Player && !BetterClaims.getInstance().getTasks().owns((Player) sendi)) {
+            BetterClaims.getInstance().getTasks().entity((Player) sendi, () -> sms(sendi, copy, placeholderInfo));
+            return;
         }
+        for (int i = 0; i < copy.size(); i++) copy.set(i, placeholder(sendi, copy.get(i), placeholderInfo));
+        sendi.sendMessage(copy.toArray(new String[0]));
     }
 
     private static String getPrefix() {

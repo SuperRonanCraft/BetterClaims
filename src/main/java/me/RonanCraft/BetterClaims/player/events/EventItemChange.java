@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 
 public class EventItemChange implements ClaimEvents {
 
@@ -26,7 +27,7 @@ public class EventItemChange implements ClaimEvents {
         this.listener = listener;
     }
 
-    private final HashMap<Player, Integer> claimShowing = new HashMap<>();
+    private final java.util.concurrent.ConcurrentMap<Player, WrappedTask> claimShowing = new java.util.concurrent.ConcurrentHashMap<>();
 
     //Show claiming message when claim item is equipped and start a `claimInteraction`
     void onItemChange(PlayerItemHeldEvent e) {
@@ -48,7 +49,7 @@ public class EventItemChange implements ClaimEvents {
     //Delay showing the claim and message to not spam player scrolling through inventory
     private void showClaimLater(ClaimData claimData, Player p) {
         claimShowing.put(p,
-            Bukkit.getScheduler().scheduleSyncDelayedTask(BetterClaims.getInstance(), () -> {
+            BetterClaims.getInstance().getTasks().later(p, () -> {
                 ItemStack item = p.getInventory().getItemInHand();//.getItemInMainHand();
                 if (item.getType().equals(getClaimItem())) {
                     if (claimData != null) {
@@ -64,7 +65,7 @@ public class EventItemChange implements ClaimEvents {
                         MessagesCore.CLAIM_ITEM_NOCLAIM.send(p);
                     }
                     claimShowing.put(p,
-                        Bukkit.getScheduler().scheduleSyncDelayedTask(BetterClaims.getInstance(), () -> {
+                        BetterClaims.getInstance().getTasks().later(p, () -> {
                             claimShowing.remove(p);
                         }, 20L * 10));
                 } else
@@ -76,4 +77,8 @@ public class EventItemChange implements ClaimEvents {
         return listener.interact.claim_item;
     }
 
+    void forget(Player player) {
+        WrappedTask task = claimShowing.remove(player);
+        if (task != null) task.cancel();
+    }
 }

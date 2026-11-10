@@ -8,10 +8,10 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class Updater {
-    public static String updatedVersion = BetterClaims.getInstance().getDescription().getVersion();
+    public static volatile String updatedVersion = BetterClaims.getInstance().getDescription().getVersion();
 
     public Updater(BetterClaims pl) {
-        Bukkit.getScheduler().runTaskAsynchronously(pl, () -> {
+        pl.getTasks().async( () -> {
             try {
                 URLConnection con = new URL(getUrl() + project()).openConnection();
                 updatedVersion = new BufferedReader(new InputStreamReader(con.getInputStream())).readLine();

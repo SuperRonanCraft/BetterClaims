@@ -20,12 +20,10 @@ public class CmdCreate implements ClaimCommand, ClaimCommandHelpable {
     public void execute(CommandSender sendi, String label, String[] args) {
         Player p = (Player) sendi;
 
-        Bukkit.getScheduler().runTaskAsynchronously(getPl(), () -> {
-            CLAIM_ERRORS error = HelperClaim.registerClaim(p,
-                    p.getWorld(), p.getLocation().clone().add(-7, 0, -7),
-                    p.getLocation().clone().add(8, 0, 8), null, CLAIM_TYPE.PARENT);
-            error.sendMsg(sendi, null);
-        });
+        CLAIM_ERRORS error = HelperClaim.registerClaim(p,
+                p.getWorld(), p.getLocation().clone().add(-7, 0, -7),
+                p.getLocation().clone().add(8, 0, 8), null, CLAIM_TYPE.PARENT);
+        error.sendMsg(sendi, null);
     }
 
     public boolean permission(CommandSender sendi) {

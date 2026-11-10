@@ -9,10 +9,11 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 
 import java.util.HashMap;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 
 public class EventDamage implements ClaimEvents {
 
-    private final HashMap<Entity, Integer> damageCooldown = new HashMap<>();
+    private final java.util.concurrent.ConcurrentMap<Entity, WrappedTask> damageCooldown = new java.util.concurrent.ConcurrentHashMap<>();
 
     //Damage Entity (Mobs and Players)
     void damageEntity(EntityDamageByEntityEvent e) {
@@ -29,7 +30,7 @@ public class EventDamage implements ClaimEvents {
             return;
         }
 
-        ClaimData claimData = getClaimAt(damager.getLocation(), false);
+        ClaimData claimData = damager == null ? null : getClaimAt(damager.getLocation(), false);
         if (claimData == null)
             claimData = getClaimAt(damaged.getLocation(), false);
         if (claimData != null) { //BUG: if one player is inside a child claim, attacker can hit, defender cannot
@@ -81,7 +82,7 @@ public class EventDamage implements ClaimEvents {
         final Entity damager = e.getRemover();
         final Entity damaged = e.getEntity();
 
-        ClaimData claimData = getClaimAt(damager.getLocation(), false);
+        ClaimData claimData = damager == null ? null : getClaimAt(damager.getLocation(), false);
         if (claimData == null)
             claimData = getClaimAt(damaged.getLocation(), false);
         if (claimData != null) {
@@ -92,8 +93,8 @@ public class EventDamage implements ClaimEvents {
 
     void cooldown(Entity e) {
         if (damageCooldown.containsKey(e))
-            Bukkit.getScheduler().cancelTask(damageCooldown.get(e));
-        damageCooldown.put(e, Bukkit.getScheduler().scheduleSyncDelayedTask(BetterClaims.getInstance(), () -> {
+            damageCooldown.get(e).cancel();
+        damageCooldown.put(e, BetterClaims.getInstance().getTasks().laterGlobal(() -> {
             damageCooldown.remove(e);
             //Bukkit.getServer().broadcastMessage("Removed " + e.getName());
         }, 20L));

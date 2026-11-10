@@ -2,6 +2,42 @@
   <b><a>Welcome to the BetterClaims' repository!</a></b>
 </p>
 
+## Server compatibility and builds
+
+One JAR targets Spigot/Paper from Minecraft 1.8.8 onward and modern Folia. Folia
+itself does not exist for Minecraft 1.8.8. The plugin compiles against the 1.8.8
+API with Java 8 bytecode; the server still needs the Java version required by
+its Minecraft release. FoliaLib is bundled and relocated inside the JAR, so no
+separate scheduler plugin or Folia-specific download is required.
+
+```sh
+mvn clean package
+mvn -f tests/editor/pom.xml clean test
+```
+
+Deploy `target/BetterClaims-3.0.4.jar`. The build removes Maven's unshaded backup JAR.
+Build with JDK 17 or newer. To run the tests on a Java 8 runtime while building
+with a newer JDK, add `-Djvm=/path/to/java8/bin/java` to the second command.
+
+Player work uses the entity scheduler, world reads use the owning region, and
+teleports use the platform's asynchronous teleport implementation. Shared plugin
+state is serialized across commands, events, scheduled callbacks, and reloads;
+never block waiting for another region while holding the state lock. Database
+mutations remain serialized too, so slow storage can delay plugin operations.
+Optional integrations need their own server-compatible versions.
+
+Verification: the automated suite covers scheduling ownership, disconnects,
+shutdown, concurrent state updates, editor validation, and loading the packaged
+scheduler with the 1.8.8 API. The packaged scheduler was exercised on Java 8;
+direct Bukkit member references were also checked against Spigot 26.2. These
+checks do **not** replace real-server testing. In-game compatibility across the
+full version range and Folia is not yet verified.
+
+Before release, test startup, commands, menus, editor sync, reload, player logout,
+and restart persistence on 1.8.8, pre/post-1.13 servers, and current Spigot/Paper/Folia.
+On Folia, also test simultaneous overlapping claim creation/resizing from separate
+regions, boundary protection, border visualization across regions, and claim teleports.
+
 ## Web configuration editor
 
 [Open the BetterClaims editor](https://www.minecentral.net/editor/betterclaims) to start with defaults or upload config.yml. Edit claim limits, enabled worlds, global/player settings, and default flags.

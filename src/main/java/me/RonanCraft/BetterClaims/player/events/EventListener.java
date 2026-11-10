@@ -62,17 +62,23 @@ public class EventListener implements Listener {
     //Player Interact
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onInteract(PlayerInteractEvent e) {
-        interact.onInteract(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            interact.onInteract(e);
+        }
     }
 
     @EventHandler (priority = EventPriority.LOWEST)
     void onInteractCreateClaim(PlayerInteractEvent e) {
-        interact.onInteractCreateClaim(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            interact.onInteractCreateClaim(e);
+        }
     }
 
     @EventHandler (ignoreCancelled = true, priority = EventPriority.NORMAL)
     void onItemChange(PlayerItemHeldEvent e) {
-        itemChange.onItemChange(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            itemChange.onItemChange(e);
+        }
     }
 
     //Items OWN LISTENER EVENT
@@ -89,84 +95,116 @@ public class EventListener implements Listener {
     //Explosion
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onExplosion(EntityExplodeEvent e) {
-        explosion.onExplosion(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            explosion.onExplosion(e);
+        }
     }
 
     //Pistons
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onPiston(BlockPistonExtendEvent e) {
-        pistons.onPiston(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            pistons.onPiston(e);
+        }
     }
 
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onPiston(BlockPistonRetractEvent e) {
-        pistons.onPiston(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            pistons.onPiston(e);
+        }
     }
 
     //PvP
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onDamage(EntityDamageByEntityEvent e) {
-        damage.damageEntity(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            damage.damageEntity(e);
+        }
     }
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onDamage(HangingBreakByEntityEvent e) {
-        damage.damageHanging(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            damage.damageHanging(e);
+        }
     }
 
     //Blocks
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onBreak(BlockBreakEvent e) {
-        blocks.onBreak(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            blocks.onBreak(e);
+        }
     }
 
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGHEST)
     void onPlace(BlockPlaceEvent e) {
-        blocks.onPlace(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            blocks.onPlace(e);
+        }
     }
 
     @EventHandler
     void onSignChange(SignChangeEvent e) {
-        blocks.onSignChange(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            blocks.onSignChange(e);
+        }
     }
 
     //Click Inventory
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGH)
     void onClick(InventoryClickEvent e) {
-        click.click(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            click.click(e);
+        }
     }
 
     //Close Inventory
     @EventHandler (ignoreCancelled = true, priority = EventPriority.HIGH)
     void onClose(InventoryCloseEvent e) {
-        close.exit(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            close.exit(e);
+        }
     }
 
     //Player Join/Quit Event
     @EventHandler
     private void onJoin(PlayerJoinEvent e) {
-        joinLeave.join(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            joinLeave.join(e);
+        }
     }
 
     @EventHandler
     private void onQuit(PlayerQuitEvent e) {
-        joinLeave.leave(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            interact.forget(e.getPlayer());
+            itemChange.forget(e.getPlayer());
+            joinLeave.leave(e);
+        }
     }
 
     //Falling Blocks
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGH)
     private void fallingBlock(EntityChangeBlockEvent e) {
-        fallingBlock.onEntityChangeBLock(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            fallingBlock.onEntityChangeBLock(e);
+        }
     }
 
     //Nether Portal
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
     private void portal(PortalCreateEvent e) {
-        portal.onPortal(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            portal.onPortal(e);
+        }
     }
 
     //Move
     @EventHandler(priority = EventPriority.MONITOR)
     private void onMove(PlayerMoveEvent e) {
-        move.onMove(e);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            move.onMove(e);
+        }
     }
 }

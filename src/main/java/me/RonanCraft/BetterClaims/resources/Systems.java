@@ -45,6 +45,10 @@ public class Systems {
         return events;
     }
 
+    public void clearPlayerData(Player p) {
+        playerInfo.clear(p);
+    }
+
     public PlayerData getPlayerData(Player p) {
         return playerInfo.getData(p);
     }

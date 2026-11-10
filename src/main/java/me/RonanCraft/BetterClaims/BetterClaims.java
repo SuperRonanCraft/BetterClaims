@@ -41,12 +41,16 @@ public class BetterClaims extends JavaPlugin {
     //@Getter private final DynMap dynMap = new DynMap();
     private boolean PlaceholderAPI;
 
+    private me.RonanCraft.BetterClaims.platform.PlatformTasks tasks;
+    public me.RonanCraft.BetterClaims.platform.PlatformTasks getTasks() { return tasks; }
+
     @Override
     public void onEnable() {
         instance = this;
+        tasks = new me.RonanCraft.BetterClaims.platform.PlatformTasks(this);
         loadAll(false);
         editor = new me.RonanCraft.BetterClaims.web.editor.EditorBridge(this,
-                task -> Bukkit.getScheduler().runTask(this, task), this::reload,
+                tasks::player, this::reload,
                 sender -> !(sender instanceof Player) || sender.hasPermission("betterclaims.editor"),
                 () -> me.RonanCraft.BetterClaims.resources.files.FileOther.FILETYPE.CONFIG.getConfig().saveToString());
         new Updater(this);
@@ -55,26 +59,40 @@ public class BetterClaims extends JavaPlugin {
     @Override
     public void onDisable() {
         if (editor != null) editor.close();
-        closeMenus();
-        systems.getDatabaseClaims().saveChanges();
+        if (tasks != null) {
+            synchronized (tasks.stateLock()) {
+                // Legacy servers permit closing menus during disable on their main thread.
+                if (!tasks.isFolia())
+                    for (Player player : Bukkit.getOnlinePlayers())
+                        if (getPlayerData(player).getInventory() != null) player.closeInventory();
+                tasks.close();
+                systems.getDatabaseClaims().saveChanges();
+            }
+        }
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sendi, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        commands.commandExecuted(sendi, label, args);
-        return true;
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            commands.commandExecuted(sendi, label, args);
+            return true;
+        }
     }
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sendi, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
-        return commands.onTabComplete(sendi, args);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            return commands.onTabComplete(sendi, args);
+        }
     }
 
     public void reload(CommandSender sendi) {
-        systems.getDatabaseClaims().saveChanges();
-        closeMenus();
-        loadAll(true);
-        MessagesCore.RELOAD.send(sendi);
+        synchronized (BetterClaims.getInstance().getTasks().stateLock()) {
+            systems.getDatabaseClaims().saveChanges();
+            closeMenus();
+            loadAll(true);
+            MessagesCore.RELOAD.send(sendi);
+        }
     }
 
     //(Re)Load all plugin systems/files/cache
@@ -92,7 +110,7 @@ public class BetterClaims extends JavaPlugin {
     private void closeMenus() {
         for (Player plr : Bukkit.getOnlinePlayers())
             if (getPlayerData(plr).getInventory() != null)
-                plr.closeInventory();
+                tasks.entity(plr, plr::closeInventory);
     }
 
     private void registerDependencies() {
@@ -133,6 +151,10 @@ public class BetterClaims extends JavaPlugin {
 
     public EventListener getEvents() {
         return systems.getEvents();
+    }
+
+    public void clearPlayerData(Player p) {
+        systems.clearPlayerData(p);
     }
 
     public PlayerData getPlayerData(Player p) {

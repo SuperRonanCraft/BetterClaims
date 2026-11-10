@@ -7,6 +7,8 @@ public class VisualizationElement {
     Location location;
     BlockData fakeBlock;
     BlockData realBlock;
+    boolean sampled;
+    boolean applied;
 
     public VisualizationElement(Location location, BlockData visualizedBlock, BlockData realBlock){
         this.location = location;

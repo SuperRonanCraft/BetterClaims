@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 public class EventJoinLeave {
 
     void leave(PlayerQuitEvent e) {
-        HelperPlayer.getData(e.getPlayer()).clear();
+        BetterClaims.getInstance().clearPlayerData(e.getPlayer());
     }
 
     void join(PlayerJoinEvent e) {
