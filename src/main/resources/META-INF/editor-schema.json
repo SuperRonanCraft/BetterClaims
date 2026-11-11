@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ronanplugins.com/betterclaims/1",
+  "title": "BetterClaims editor configuration",
+  "type": "object",
+  "required": [
+    "Claim",
+    "Global",
+    "Player",
+    "DefaultFlags"
+  ],
+  "properties": {
+    "Claim": {
+      "type": "object",
+      "properties": {
+        "MaxSize": {
+          "minimum": 0
+        },
+        "MaxDepth": {
+          "minimum": 0
+        },
+        "MaxClaims": {
+          "minimum": 0
+        },
+        "WorldsEnabled": {
+          "type": "array",
+          "maxItems": 1000,
+          "items": {
+            "type": "string",
+            "pattern": "\\S"
+          }
+        },
+        "Item": {
+          "type": "string",
+          "x-serverCheck": "material"
+        }
+      }
+    },
+    "Global": {
+      "type": "object"
+    },
+    "Player": {
+      "type": "object"
+    },
+    "DefaultFlags": {
+      "type": "object",
+      "properties": {
+        "PVP": {
+          "type": "boolean",
+          "default": false
+        },
+        "TNT": {
+          "type": "boolean",
+          "default": false
+        },
+        "ALLOW_DOOR": {
+          "type": "boolean",
+          "default": false
+        },
+        "ALLOW_LEVER": {
+          "type": "boolean",
+          "default": false
+        },
+        "ALLOW_BUTTON": {
+          "type": "boolean",
+          "default": false
+        },
+        "ALLOW_BED": {
+          "type": "boolean",
+          "default": false
+        },
+        "ALLOW_REQUESTS": {
+          "type": "boolean",
+          "default": true
+        },
+        "ALLOW_ITEM_PICKUP": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "additionalProperties": false,
+      "x-editableProperties": true,
+      "x-equivalentDefaults": true
+    },
+    "Language-File": {
+      "type": "string",
+      "x-immutable": true,
+      "description": "Change the language file locally."
+    },
+    "DateFormat": {
+      "type": "string",
+      "x-serverCheck": "date"
+    }
+  },
+  "x-bettersync": {
+    "format": 1,
+    "plugin": "betterclaims",
+    "schemaVersion": "1",
+    "displayName": "BetterClaims"
+  },
+  "x-rules": []
+}

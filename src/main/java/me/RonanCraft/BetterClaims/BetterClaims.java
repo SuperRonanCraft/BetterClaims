@@ -6,7 +6,7 @@
 package me.RonanCraft.BetterClaims;
 
 import com.ronanplugins.bettersync.editor.EditorClient;
-import com.ronanplugins.bettersync.editor.EditorProfile;
+import com.ronanplugins.bettersync.editor.EditorSchema;
 
 
 import me.RonanCraft.BetterClaims.claims.ClaimHandler;
@@ -54,7 +54,7 @@ public class BetterClaims extends JavaPlugin {
         tasks = new me.RonanCraft.BetterClaims.platform.PlatformTasks(this);
         loadAll(false);
         editor = new EditorClient(this,
-                EditorProfile.BETTERCLAIMS,
+                EditorSchema.load(this, "META-INF/editor-schema.json"),
                 EditorClient.website(this, "META-INF/betterclaims-editor.properties"),
                 tasks::player, this::reload,
                 sender -> !(sender instanceof Player) || sender.hasPermission("betterclaims.editor"),
