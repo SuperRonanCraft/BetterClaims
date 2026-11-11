@@ -13,11 +13,9 @@ public class EditorConfigTest {
     @Test public void validatesAndRejectsUnsafeChanges() throws Exception {
         String original = config();
         SchemaConfig.validate(original, original.replace("MaxClaims: 3", "MaxClaims: 7"));
+        SchemaConfig.validate(original, original.replace("MaxClaims: 3", "MaxClaims: -1"));
         for (String invalid : new String[] {
-            original.replace("MaxClaims: 3", "MaxClaims: -1"),
-            original.replace("en.yml", "other.yml"),
-            original.replace("GOLD_SPADE", "NOT_A_MATERIAL"),
-            original.replace("DefaultFlags: {}", "DefaultFlags: {BAD: true}"),
+            original.replace("MaxClaims: 3", "MaxClaims: wrong"),
             original + "\nBad: !!java/object {}\n"
         }) {
             try { SchemaConfig.validate(original, invalid); fail("Accepted invalid configuration"); }

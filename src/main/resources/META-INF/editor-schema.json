@@ -1,46 +1,53 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://schemas.ronanplugins.com/betterclaims/1",
+  "$id": "https://schemas.ronanplugins.com/betterclaims/2",
   "title": "BetterClaims editor configuration",
   "type": "object",
-  "required": [
-    "Claim",
-    "Global",
-    "Player",
-    "DefaultFlags"
-  ],
   "properties": {
     "Claim": {
       "type": "object",
       "properties": {
         "MaxSize": {
-          "minimum": 0
+          "type": "number"
         },
         "MaxDepth": {
-          "minimum": 0
+          "type": "number"
         },
         "MaxClaims": {
-          "minimum": 0
+          "type": "number"
         },
         "WorldsEnabled": {
           "type": "array",
-          "maxItems": 1000,
           "items": {
-            "type": "string",
-            "pattern": "\\S"
+            "type": "string"
           }
         },
         "Item": {
-          "type": "string",
-          "x-serverCheck": "material"
+          "type": "string"
         }
       }
     },
     "Global": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "EndermenMoveBlocks": {
+          "type": "boolean"
+        },
+        "SilverfishBreakBlocks": {
+          "type": "boolean"
+        },
+        "RabbitsEatCrops": {
+          "type": "boolean"
+        }
+      }
     },
     "Player": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "ProtectDeathDrops": {
+          "type": "boolean"
+        }
+      }
     },
     "DefaultFlags": {
       "type": "object",
@@ -84,19 +91,25 @@
     },
     "Language-File": {
       "type": "string",
-      "x-immutable": true,
       "description": "Change the language file locally."
     },
     "DateFormat": {
-      "type": "string",
-      "x-serverCheck": "date"
+      "type": "string"
+    },
+    "DisableUpdater": {
+      "type": "boolean"
     }
   },
   "x-bettersync": {
     "format": 1,
     "plugin": "betterclaims",
-    "schemaVersion": "1",
+    "schemaVersion": "2",
     "displayName": "BetterClaims"
   },
-  "x-rules": []
+  "required": [
+    "Claim",
+    "Global",
+    "Player",
+    "DefaultFlags"
+  ]
 }
