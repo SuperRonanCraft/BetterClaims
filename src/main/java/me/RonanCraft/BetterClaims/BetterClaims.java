@@ -5,6 +5,10 @@
 
 package me.RonanCraft.BetterClaims;
 
+import com.ronanplugins.bettersync.editor.EditorClient;
+import com.ronanplugins.bettersync.editor.EditorProfile;
+
+
 import me.RonanCraft.BetterClaims.claims.ClaimHandler;
 import me.RonanCraft.BetterClaims.database.DatabaseAuctions;
 import me.RonanCraft.BetterClaims.database.DatabaseClaims;
@@ -30,9 +34,9 @@ import java.util.List;
 
 public class BetterClaims extends JavaPlugin {
     private static BetterClaims instance;
-    private me.RonanCraft.BetterClaims.web.editor.EditorBridge editor;
+    private EditorClient editor;
 
-    public me.RonanCraft.BetterClaims.web.editor.EditorBridge getEditor() { return editor; }
+    public EditorClient getEditor() { return editor; }
 
     private final Files files = new Files();
     private final Permissions permissions = new Permissions();
@@ -49,7 +53,9 @@ public class BetterClaims extends JavaPlugin {
         instance = this;
         tasks = new me.RonanCraft.BetterClaims.platform.PlatformTasks(this);
         loadAll(false);
-        editor = new me.RonanCraft.BetterClaims.web.editor.EditorBridge(this,
+        editor = new EditorClient(this,
+                EditorProfile.BETTERCLAIMS,
+                EditorClient.website(this, "META-INF/betterclaims-editor.properties"),
                 tasks::player, this::reload,
                 sender -> !(sender instanceof Player) || sender.hasPermission("betterclaims.editor"),
                 () -> me.RonanCraft.BetterClaims.resources.files.FileOther.FILETYPE.CONFIG.getConfig().saveToString());

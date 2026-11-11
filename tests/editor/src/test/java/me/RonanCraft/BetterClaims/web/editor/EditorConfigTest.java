@@ -1,5 +1,6 @@
 package me.RonanCraft.BetterClaims.web.editor;
 
+import com.ronanplugins.bettersync.editor.betterclaims.EditorConfig;
 import org.junit.Test;
 import java.nio.file.*;
 import java.nio.charset.StandardCharsets;
@@ -37,7 +38,7 @@ public class EditorConfigTest {
         try {
             EditorConfig.apply(file, edited.getBytes(StandardCharsets.UTF_8), edited, () -> { throw new Exception("reload failed"); });
             fail("Expected reload failure");
-        } catch (EditorConfig.ReloadFailure expected) { }
+        } catch (com.ronanplugins.bettersync.editor.EditorFiles.ReloadFailure expected) { }
         assertEquals(edited, new String(Files.readAllBytes(file), StandardCharsets.UTF_8));
     }
 }

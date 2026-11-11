@@ -43,8 +43,10 @@
                 <configuration>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <minimizeJar>false</minimizeJar>
-                    <artifactSet><includes><include>com.tcoded:FoliaLib</include></includes></artifactSet>
-                    <relocations><relocation>
+                    <artifactSet><includes><include>com.tcoded:FoliaLib</include><include>com.github.RonanPlugins:BetterSync</include></includes></artifactSet>
+                    <relocations>
+                        <relocation><pattern>com.ronanplugins.bettersync</pattern><shadedPattern>me.RonanCraft.BetterClaims.lib.bettersync</shadedPattern></relocation>
+                    <relocation>
                         <pattern>com.tcoded.folialib</pattern>
                         <shadedPattern>me.RonanCraft.BetterClaims.lib.folialib</shadedPattern>
                     </relocation></relocations>
@@ -79,6 +81,7 @@
     </build>
 
     <properties>
+        <bettersync.version>1.0.1</bettersync.version>
         <maven.compiler.release>8</maven.compiler.release>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -120,6 +123,12 @@
     </repositories>
 
     <dependencies>
+        <!-- Download the tagged GitHub library through JitPack; bundled by Shade. -->
+        <dependency>
+            <groupId>com.github.RonanPlugins</groupId>
+            <artifactId>BetterSync</artifactId>
+            <version>${bettersync.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.tcoded</groupId>
             <artifactId>FoliaLib</artifactId>
