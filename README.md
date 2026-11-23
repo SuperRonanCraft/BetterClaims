@@ -15,7 +15,7 @@ mvn clean package
 mvn -f tests/editor/pom.xml clean test
 ```
 
-Deploy `target/BetterClaims-3.0.4.jar`. The build removes Maven's unshaded backup JAR.
+Deploy `target/BetterClaims-3.0.5.jar`. The build removes Maven's unshaded backup JAR.
 Build with JDK 17 or newer. To run the tests on a Java 8 runtime while building
 with a newer JDK, add `-Djvm=/path/to/java8/bin/java` to the second command.
 
@@ -40,7 +40,7 @@ regions, boundary protection, border visualization across regions, and claim tel
 
 ## Web configuration editor
 
-[Open the BetterClaims editor](https://www.minecentral.net/editor/betterclaims) to start with defaults or upload config.yml. Edit claim limits, enabled worlds, global/player settings, and default flags.
+[Open the BetterClaims editor](https://www.minecentral.net/plugins/betterclaims/editor) to start with defaults or upload config.yml. Edit claim limits, enabled worlds, global/player settings, and default flags.
 
 1. Run `/betterclaims editor` on your server and open the private link it returns.
 2. Edit the form or YAML and choose **Save and get sync command**.
@@ -70,8 +70,8 @@ The wiki is available [here](../../wiki)!
 ## Shared editor library
 
 The web editor uses [BetterSync](https://github.com/RonanPlugins/BetterSync),
-downloaded by Maven from JitPack as `com.github.RonanPlugins:BetterSync:2.0.0`.
-No local BetterSync project or manual Maven install is required. Release `2.0.0` is published on JitPack. Update `bettersync.version` in the plugin and editor-test
+downloaded by Maven from JitPack as `com.github.RonanPlugins:BetterSync:2.0.1`.
+No local BetterSync project or manual Maven install is required. Release `2.0.1` is published on JitPack. Update `bettersync.version` in the plugin and editor-test
 POMs together when upgrading. Shade bundles and relocates the library into the
 plugin JAR; server owners do not install a separate BetterSync plugin.
 
@@ -87,8 +87,7 @@ BetterSync checks basic types and required sections; it does not enforce busines
 rules such as ranges, material names or relationships between fields.
 
 When a stable GitHub release is published, `.github/workflows/publish-editor-schema.yml`
-attaches the schema from that exact release tag to this repository's release. BetterRTP
-publishes both Core and Addons schemas. The workflow uses the built-in GitHub token;
+attaches the BetterClaims schema from that exact release tag to this repository's release. The workflow uses the built-in GitHub token;
 no cross-repository publishing secret is needed. Release tags must include the workflow
 and the schema resource. Do not replace a published schema; increment `schemaVersion`
 when changing field metadata.
@@ -104,12 +103,30 @@ Use the website's schema-version database migrations before deploying these clie
 ### Automatic Maven releases
 
 `.github/workflows/release.yml` runs on pushes to `main` (or manually from
-that branch). It reads the effective Maven project versions, builds the plugin JARs,
-runs the editor tests, and publishes a stable GitHub release with the JARs and schemas
-attached together. For the current POMs the title is `BetterClaims 3.0.4` and the tag is
-`v3.0.4`. BetterRTP includes both module versions so an Addons-only version bump
-can produce a new release containing both schemas.
+that branch). It reads the Maven project version, builds the shaded plugin JAR,
+runs the editor tests, and publishes a stable GitHub release with exactly one JAR
+and the BetterClaims editor schema attached together. For the current POM the title
+is `BetterClaims 3.0.5` and the tag is `v3.0.5`.
 
 An existing release is left untouched. Bump the owning plugin's POM version to publish
 again; SNAPSHOT versions are rejected. GitHub's built-in token needs Contents write
 permission, which the workflow declares. No extra publishing token is required.
+
+### Website release importing
+
+The release Action publishes to GitHub. MineCentral imports the JAR through its
+signed GitHub Releases webhook; no website upload credentials belong in the Action.
+
+1. Add an entry to the website runtime's `GITHUB_RELEASE_WEBHOOKS_JSON` for
+   repository `SuperRonanCraft/BetterClaims`, plugin key `betterclaims`, and a unique
+   random secret of at least 32 characters. Preserve the existing plugin mappings.
+2. Redeploy the website with that runtime configuration.
+3. In this repository's Settings → Webhooks, add
+   `https://www.minecentral.net/api/webhooks/github/releases` with JSON content,
+   the same secret, and the **Releases** event. Keep existing webhooks unchanged.
+4. Publish the release and verify the `published` delivery returns HTTP 200 and
+   the version appears on the BetterClaims website page. Redeliver failed events
+   after correcting configuration. Release edits do not trigger an import.
+
+The repository name must match GitHub exactly; this repository is owned by
+`SuperRonanCraft`, not `RonanPlugins`. Never commit the signing secret.

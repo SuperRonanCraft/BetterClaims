@@ -14,7 +14,7 @@ import static org.junit.Assert.*;
 /** Loads the relocated library from the distributable, using only the 1.8.8 API. */
 public class PackagedSchedulerTest {
     @Test public void packagedSchedulerLoadsAndRunsWithoutModernServerClasses() throws Exception {
-        File jar = new File("../../target/BetterClaims-3.0.4.jar");
+        File jar = new File("../../target/BetterClaims-3.0.5.jar");
         org.junit.Assume.assumeTrue("Run mvn package in the project root first", jar.isFile());
         java.util.List<Runnable> pending = new java.util.ArrayList<>();
         BukkitTask task = (BukkitTask) Proxy.newProxyInstance(getClass().getClassLoader(), new Class<?>[]{BukkitTask.class},

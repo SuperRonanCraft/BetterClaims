@@ -7,7 +7,7 @@
     <groupId>me.superronancraft</groupId>
     <artifactId>BetterClaims</artifactId>
     <packaging>jar</packaging>
-    <version>3.0.4</version>
+    <version>3.0.5</version>
 
     <profiles>
         <profile>
@@ -81,7 +81,7 @@
     </build>
 
     <properties>
-        <bettersync.version>2.0.0</bettersync.version>
+        <bettersync.version>2.0.1</bettersync.version>
         <maven.compiler.release>8</maven.compiler.release>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>

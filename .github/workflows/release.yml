@@ -1,4 +1,4 @@
-name: Release Maven version
+name: Release BetterClaims Maven version
 on:
   push:
     branches: [main]
@@ -21,7 +21,7 @@ jobs:
           distribution: temurin
           java-version: '17'
           cache: maven
-      - name: Read Maven versions
+      - name: Read BetterClaims Maven version
         id: version
         shell: bash
         run: |
@@ -50,7 +50,7 @@ jobs:
         run: |
           mvn -B clean verify
           mvn -B -f tests/editor/pom.xml verify
-      - name: Prepare JARs and schemas
+      - name: Prepare BetterClaims JAR and editor schema
         if: steps.existing.outputs.exists != 'true'
         env:
           SCHEMA_PATHS: ./src/main/resources/META-INF/editor-schema.json
